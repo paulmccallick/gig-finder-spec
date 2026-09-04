@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gigfinder.local/spec/contracts/operations/search_gigs_and_people.schema.json",
+  "title": "search_gigs_and_people",
+  "description": "Wire contract for supported agent-tool operation search_gigs_and_people. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "input",
+    "result"
+  ],
+  "properties": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "companyNames": {
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200
+          },
+          "description": "Company names to match against gigs and people; use an empty array when none are known."
+        },
+        "personNames": {
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200
+          },
+          "description": "Person names to match against people; use an empty array when none are known."
+        }
+      },
+      "required": [
+        "companyNames",
+        "personNames"
+      ],
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object"
+    }
+  }
+}

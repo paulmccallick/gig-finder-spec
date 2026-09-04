@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gigfinder.local/spec/contracts/operations/update_gig.schema.json",
+  "title": "update_gig",
+  "description": "Wire contract for supported agent-tool operation update_gig. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "input",
+    "result"
+  ],
+  "properties": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact durable record ID returned by the corresponding list tool."
+        },
+        "changes": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "set",
+                  "clear"
+                ],
+                "description": "Use set to assign a value or clear to remove a nullable value."
+              },
+              "field": {
+                "type": "string",
+                "enum": [
+                  "company",
+                  "title",
+                  "externalJobId",
+                  "stage",
+                  "outcome",
+                  "statusSummary",
+                  "lastActivity",
+                  "nextAction",
+                  "nextAction.description",
+                  "nextAction.due",
+                  "fit.rating",
+                  "fit.summary",
+                  "payRange",
+                  "payRange.currency",
+                  "payRange.minimum",
+                  "payRange.maximum",
+                  "payRange.period",
+                  "payRange.notes",
+                  "sourceUrl",
+                  "tags",
+                  "location",
+                  "workArrangement",
+                  "postedDate",
+                  "businessUnitTeam",
+                  "recruiterSource",
+                  "bonus",
+                  "equity",
+                  "otherCompensation"
+                ],
+                "description": "Exact mutable domain field path; nested fields use dot notation."
+              },
+              "value": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Company offering the role."
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Role title."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "External job ID, or null."
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "identified",
+                      "applied",
+                      "recruiter_contact",
+                      "screening",
+                      "technical_interview",
+                      "final_round",
+                      "offer",
+                      "monitoring",
+                      "closed"
+                    ],
+                    "description": "Pipeline stage."
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "accepted",
+                      "rejected",
+                      "withdrawn",
+                      "not_pursuing",
+                      "role_pulled",
+                      "no_response",
+                      "position_filled",
+                      "on_hold",
+                      "stale_or_unverified"
+                    ],
+                    "description": "Pipeline outcome."
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Current status summary."
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "description": "Most recent activity date."
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "What the candidate should do next."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Due date, or null."
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "strong",
+                      "good",
+                      "stretch",
+                      "long_shot",
+                      "weak",
+                      "poor",
+                      "support",
+                      "tbd",
+                      "not_applicable"
+                    ],
+                    "description": "Candidate fit rating."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Fit explanation, or null."
+                  },
+                  {
+                    "type": "string",
+                    "const": "USD",
+                    "description": "Compensation currency."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Minimum compensation, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Maximum compensation, or null."
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "hour",
+                      "year"
+                    ],
+                    "description": "Hourly or annual compensation."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Compensation notes, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Canonical source URL, or null."
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": "Replacement tag list."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Location, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Work arrangement, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Posted date, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Business unit or team, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Recruiter source, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Bonus details, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Equity details, or null."
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Other compensation, or null."
+                  }
+                ],
+                "description": "Value validated by the selected entity-owned domain field schema."
+              }
+            },
+            "required": [
+              "operation",
+              "field",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "description": "One or more explicit changes to mutable gig fields."
+        }
+      },
+      "required": [
+        "id",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "record", "changeId"],
+          "properties": {
+            "status": {
+              "const": "ok"
+            },
+            "record": { "type": "object" },
+            "changeId": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "error",
+            "message"
+          ],
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "error": {
+              "enum": [
+                "duplicate_change",
+                "duplicate",
+                "not_found",
+                "consistency_error",
+                "not_revertible",
+                "revision_conflict",
+                "validation_failed",
+                "unsupported",
+                "tool_failed"
+              ]
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

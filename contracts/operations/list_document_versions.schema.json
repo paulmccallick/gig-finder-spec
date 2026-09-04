@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gigfinder.local/spec/contracts/operations/list_document_versions.schema.json",
+  "title": "list_document_versions",
+  "description": "Wire contract for supported agent-tool operation list_document_versions. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "input",
+    "result"
+  ],
+  "properties": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "documentId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact managed-document ID."
+        },
+        "offset": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Zero-based number of matching records to skip. Uses 0 when not specified."
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Maximum number of records to return, from 1 to 50. Uses 20 when not specified."
+        }
+      },
+      "required": [
+        "documentId",
+        "offset",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "items",
+            "page"
+          ],
+          "properties": {
+            "status": {
+              "const": "ok"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "page": {
+              "type": "object",
+              "required": [
+                "offset",
+                "limit",
+                "total",
+                "nextOffset"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "limit": {
+                  "type": "integer"
+                },
+                "total": {
+                  "type": "integer"
+                },
+                "nextOffset": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "error",
+            "message"
+          ],
+          "properties": {
+            "status": {
+              "const": "error"
+            },
+            "error": {
+              "enum": [
+                "duplicate_change",
+                "duplicate",
+                "not_found",
+                "consistency_error",
+                "not_revertible",
+                "revision_conflict",
+                "validation_failed",
+                "unsupported",
+                "tool_failed"
+              ]
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
