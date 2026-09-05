@@ -1,6 +1,7 @@
 ---
 id: browse-tasks
 capability: tasks
+feature: task-tracking
 title: Browse and prioritize tasks
 summary: Filter current tasks and inspect due, priority, status, and related context.
 aliases: [task list, overdue work, action queue]
@@ -51,10 +52,10 @@ Browsing does not complete tasks or advance status.
 
 Missing exact IDs fail visibly. Dashboard data failure produces the application data-fault view.
 
-## Known current behavior and limitations
+## Current limitations
 
 The dashboard is read-only and explicitly directs updates to the CLI, even though agent task mutations are also supported. It does not navigate from a related label to the Gig/Person.
 
-## Related workflows
+## Related specifications
 
 - [Maintain a task](maintain-task.md)

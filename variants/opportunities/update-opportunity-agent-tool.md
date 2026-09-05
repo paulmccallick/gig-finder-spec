@@ -1,11 +1,12 @@
 ---
 id: update-opportunity-agent-tool
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/maintain-opportunity.md
 surface: agent-tool
 summary: Agent update applies confirmed ordered set/clear operations to one exact Gig.
 aliases: [update_gig, edit Gig]
-requires: [../../workflows/opportunities/maintain-opportunity.md, ../../contracts/operations/update_gig.schema.json]
+requires: [../../workflows/opportunities/maintain-opportunity.md]
 contract: ../../contracts/operations/update_gig.schema.json
 ---
 
@@ -39,10 +40,10 @@ Missing Gig, invalid clear/set, cross-field contradiction, or concurrent revisio
 
 Success triggers dashboard reload.
 
-## Known limitations
+## Current limitations
 
 No caller-supplied expected revision and no availability field.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/maintain-opportunity.md)

@@ -1,11 +1,14 @@
 {
-  "files": 75,
-  "markdown": 45,
-  "links": 167,
+  "files": 121,
+  "markdown": 84,
+  "capabilities": 7,
+  "features": 19,
+  "workflows": 19,
+  "operationalModels": 4,
+  "qualityScenarios": 15,
+  "variants": 10,
+  "foundations": 6,
+  "links": 216,
   "operationContracts": 27,
-  "workflowTokenRange": [
-    435,
-    2129
-  ],
   "failures": []
 }

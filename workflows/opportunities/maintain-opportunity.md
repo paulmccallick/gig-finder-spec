@@ -1,6 +1,7 @@
 ---
 id: maintain-opportunity
 capability: opportunities
+feature: opportunity-records
 title: Create or maintain an opportunity
 summary: Create a complete Gig or change explicit mutable fields while preserving unrelated state.
 aliases: [add gig, update gig, touch gig]
@@ -35,6 +36,7 @@ Agent creation requires duplicate resolution and explicit confirmation. Update r
 ## Decisions and variants
 
 - Every stage other than `closed` requires outcome `pending`; `closed` accepts any defined non-pending outcome and requires `nextAction: null`.
+- Stages are `identified`, `applied`, `recruiter_contact`, `screening`, `technical_interview`, `final_round`, `offer`, `monitoring`, and `closed`. Outcomes are `pending`, `accepted`, `rejected`, `withdrawn`, `not_pursuing`, `role_pulled`, `no_response`, `position_filled`, `on_hold`, and `stale_or_unverified`. Fit ratings are `strong`, `good`, `stretch`, `long_shot`, `weak`, `poor`, `support`, `tbd`, and `not_applicable`.
 - Compensation, when present, uses USD and period `hour` or `year`; numeric bounds are nonnegative and minimum cannot exceed maximum.
 - Agent operations always include `operation`, `field`, and `value`: `set` requires a non-null value valid for that exact field; `clear` requires null. Duplicate paths and a whole-object path combined with one of its nested paths are rejected. Whole `nextAction`/`payRange` are clear-only. Clearable paths are `externalJobId`, `nextAction`, `nextAction.due`, `fit.summary`, `payRange`, `payRange.minimum`, `payRange.maximum`, `payRange.notes`, `sourceUrl`, `location`, `workArrangement`, `postedDate`, `businessUnitTeam`, `recruiterSource`, `bonus`, `equity`, and `otherCompensation`.
 - All operations are first assembled into one patch and the final merged Gig is validated; intermediate operation order has no separate validation effect. A nested leaf merges into an existing object. When its current parent is null, the partial parent lacks required siblings and fails final validation (`nextAction` needs description and due; `payRange` needs currency, minimum, maximum, period, and notes). Because whole-object set is prohibited, first establishing either object through agent update is currently unsupported; agent creation or CLI whole-object patch can establish it.
@@ -58,16 +60,16 @@ Invalid or contradictory input fails atomically. JSON Schema captures the wire-r
 
 Agent error mapping is: domain/schema validation to `validation_failed`; a missing Gig message to `not_found`; mutation codes such as `duplicate`, `duplicate_change`, or `revision_conflict` retain that code; persistence composition faults map to `consistency_error`; unclassified exceptions map to `tool_failed` with a generic message.
 
-## Known current behavior and limitations
+## Current limitations
 
 - Direct general Gig edits do not expose availability; Scout owns posting-observation updates.
-- Agent create requires every defined mutable field, including nullable/empty values, making it more verbose than CLI creation.
+- Agent and CLI create require every defined mutable field, including nullable and empty-array values; Scout promotion is the creation path with feature-owned defaults.
 - Agent confirmation and the tool-call-derived change/idempotency identity are conversation/runtime protocol, not fields in the tool input schema.
 - No temporal ordering is enforced among valid activity, posted, and due calendar dates.
 - Any syntactically valid absolute URL accepted by the runtime URL validator is allowed; no HTTP-only or canonicalization rule is added. A successful update writes an audit change and advances revision even when requested values equal current values.
 - No dashboard create/edit form exists.
 
-## Related workflows
+## Related specifications
 
 - [Browse opportunities](browse-opportunities.md)
 - [Review and promote Scout positions](../scout/review-and-promote.md)

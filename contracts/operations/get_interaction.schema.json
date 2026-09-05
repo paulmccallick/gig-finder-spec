@@ -1,99 +1,276 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/get_interaction.schema.json",
-  "title": "get_interaction",
-  "description": "Wire contract for supported agent-tool operation get_interaction. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Exact durable record ID returned by the corresponding list tool."
-        }
-      },
-      "required": [
-        "id"
-      ],
-      "additionalProperties": false
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "record"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "record": {
-              "type": "object"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "id"
-          ],
-          "properties": {
-            "status": {
-              "enum": [
-                "not_found",
-                "unsupported",
-                "consistency_error"
-              ]
-            },
-            "id": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status",
-            "error",
-            "message"
-          ],
-          "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
-          }
-        }
-      ]
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/get_interaction.schema.json",
+ "title": "get_interaction",
+ "description": "Wire contract for supported agent-tool operation get_interaction. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Exact durable record ID returned by the corresponding list tool."
     }
+   },
+   "required": [
+    "id"
+   ],
+   "additionalProperties": false
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "record"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
+      },
+      "record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
+        "subject",
+        "kind",
+        "channel",
+        "direction",
+        "status",
+        "startsAt",
+        "endsAt",
+        "timezone",
+        "location",
+        "summary",
+        "notes",
+        "personIds",
+        "gigId",
+        "supersedesInteractionId",
+        "originChangeId",
+        "structuredData",
+        "revision",
+        "isDeleted",
+        "createdAt",
+        "updatedAt"
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
+        },
+        "subject": {
+         "type": "string",
+         "minLength": 1
+        },
+        "kind": {
+         "type": "string",
+         "enum": [
+          "message",
+          "call",
+          "meeting",
+          "interview",
+          "conversation",
+          "other"
+         ]
+        },
+        "channel": {
+         "type": "string",
+         "enum": [
+          "email",
+          "linkedin",
+          "sms",
+          "chat",
+          "phone",
+          "video",
+          "in_person",
+          "other"
+         ]
+        },
+        "direction": {
+         "type": "string",
+         "enum": [
+          "inbound",
+          "outbound",
+          "mutual",
+          "unknown"
+         ]
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "planned",
+          "confirmed",
+          "completed",
+          "canceled",
+          "no_show"
+         ]
+        },
+        "startsAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "endsAt": {
+         "anyOf": [
+          {
+           "type": "string",
+           "format": "date-time"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "timezone": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "location": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "summary": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "notes": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "personIds": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "gigId": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "supersedesInteractionId": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "originChangeId": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "structuredData": {
+         "type": "object",
+         "additionalProperties": true,
+         "description": "Caller-defined structured payload; keys and JSON-compatible values are intentionally unconstrained."
+        },
+        "revision": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "isDeleted": {
+         "type": "boolean"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "id"
+     ],
+     "properties": {
+      "status": {
+       "const": "not_found"
+      },
+      "id": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "id",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "consistency_error"
+      },
+      "id": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
+      },
+      "error": {
+       "type": "string",
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
+      }
+     }
+    }
+   ]
   }
+ }
 }

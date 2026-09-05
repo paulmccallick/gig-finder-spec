@@ -21,7 +21,8 @@ A durable mutation completes as one audited transaction or leaves no durable pro
 - Optimistic operations reject stale expected revisions or versions.
 - Reusing a successful agent change identity with the same creation payload returns the existing creation; conflicting reuse fails.
 - Updating a Task to `completed` establishes `completedAt`; moving it away clears `completedAt`.
-- Reverting restores eligible recorded before-state only if no later change would be overwritten.
+- Reversal snapshots exist only for Gigs, People, Gig–Person relationships, Tasks, Interactions, and Interaction-participant links. Creation is snapshot-enabled for relationships, Tasks, and Interactions, but not general Gig or Person creation. Updates/deletes in these repositories snapshot prior state.
+- Reverting inverts a create by soft-delete, a delete by full restore, an update by full prior-state restore, and a restoration by soft-delete, only if every affected record remains at the immediately following revision.
 
 ## Prohibited behavior
 
@@ -39,10 +40,11 @@ Supported reads expose record revisions or document versions where relevant. Dat
 
 ## Used by
 
-- [Create or maintain an opportunity](../workflows/opportunities/maintain-opportunity.md)
-- [Create or maintain a person](../workflows/networking/maintain-person.md)
-- [Create or maintain a task](../workflows/tasks/maintain-task.md)
-- [Record or correct an interaction](../workflows/interactions/maintain-interaction.md)
-- [Update managed content](../workflows/documents/update-managed-document.md)
-- [Revert an agent change](../workflows/agent/revert-change.md)
-- [Review and promote Scout positions](../workflows/scout/review-and-promote.md)
+- [Opportunity records](../features/opportunities/opportunity-records.md)
+- [People](../features/networking/people.md)
+- [Person–opportunity relationships](../features/networking/opportunity-relationships.md)
+- [Task tracking](../features/tasks/task-tracking.md)
+- [Interaction history](../features/interactions/interaction-history.md)
+- [Managed documents](../features/documents/managed-documents.md)
+- [Change reversal](../features/agent/change-reversal.md)
+- [Position review and promotion](../features/scout/review-promotion.md)

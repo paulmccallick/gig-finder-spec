@@ -1,6 +1,7 @@
 ---
 id: use-conversation
 capability: conversational-agent
+feature: conversations
 title: Use the conversational agent
 summary: Ask context-aware questions and carry supported work across persisted conversation turns.
 aliases: [chat with agent, resume conversation, retry response]
@@ -53,11 +54,11 @@ Follow consent/privacy foundation. Input history has a bounded character estimat
 
 Aborted turns and finish-reason error are not persisted. Disconnect/error or zero delivered text yields an interrupted warning. Completed tool mutations are not rolled back by a later model failure; inspect state before retry/regenerate.
 
-## Known current behavior and limitations
+## Current limitations
 
 Conversation history truncation is character-estimated, not provider-tokenized. Title generation failure silently falls back. Sanitization targets known identifier patterns and is not a general data-loss-prevention system.
 
-## Related workflows
+## Related specifications
 
 - [Stage an upload](stage-upload.md)
 - [Choose a model](choose-model.md)

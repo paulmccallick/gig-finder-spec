@@ -38,9 +38,9 @@ The UI shows tool activity and mutation-triggered data refresh. Persisted assist
 
 ## Used by
 
-- [Use the conversational agent](../workflows/agent/use-conversation.md)
-- [Stage an upload](../workflows/agent/stage-upload.md)
-- [Revert an agent change](../workflows/agent/revert-change.md)
-- [Create or maintain an opportunity](../workflows/opportunities/maintain-opportunity.md)
-- [Create or maintain a person](../workflows/networking/maintain-person.md)
-- [Create managed content](../workflows/documents/create-managed-document.md)
+- [Conversations](../features/agent/conversations.md)
+- [Upload staging](../features/agent/upload-staging.md)
+- [Change reversal](../features/agent/change-reversal.md)
+- [Opportunity records](../features/opportunities/opportunity-records.md)
+- [People](../features/networking/people.md)
+- [Managed documents](../features/documents/managed-documents.md)

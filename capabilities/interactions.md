@@ -18,12 +18,11 @@ Lets the candidate record planned or completed communications involving one or m
 | participant | A unique existing Person linked to the Interaction. |
 | supersedes | Marks a correction chain without erasing the prior Interaction. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Browse interactions | Search or inspect contact history | [Open](../workflows/interactions/browse-interactions.md) |
-| Maintain an interaction | Record, correct, or delete contact history | [Open](../workflows/interactions/maintain-interaction.md) |
+| Interaction history | Search, record, correct, supersede, or soft-delete contact events | [Open](../features/interactions/interaction-history.md) |
 
 ## Shared foundations
 

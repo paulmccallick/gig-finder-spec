@@ -37,7 +37,8 @@ UI metrics and ordering change at the Pacific calendar boundary. Stored Interact
 
 ## Used by
 
-- [Browse opportunities](../workflows/opportunities/browse-opportunities.md)
-- [Browse tasks](../workflows/tasks/browse-tasks.md)
-- [Browse interactions](../workflows/interactions/browse-interactions.md)
-- [Record or correct an interaction](../workflows/interactions/maintain-interaction.md)
+- [Opportunity records](../features/opportunities/opportunity-records.md)
+- [Posting availability](../features/opportunities/posting-availability.md)
+- [Contact recency](../features/networking/contact-recency.md)
+- [Task tracking](../features/tasks/task-tracking.md)
+- [Interaction history](../features/interactions/interaction-history.md)

@@ -1,6 +1,7 @@
 ---
 id: maintain-task-cli
 capability: tasks
+feature: task-tracking
 workflow: ../../workflows/tasks/maintain-task.md
 surface: cli
 summary: CLI uses flags for creation/completion, JSON patch for updates, caller IDs, and dry run.
@@ -38,10 +39,10 @@ General/non-general related-ID mismatch and immutable fields fail before write.
 
 Optional mutation date defaults to Pacific today except complete's required date.
 
-## Known limitations
+## Current limitations
 
 No delete command.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/tasks/maintain-task.md)

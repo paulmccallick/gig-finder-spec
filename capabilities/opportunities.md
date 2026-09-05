@@ -19,12 +19,12 @@ Lets the candidate track a role from identification through application outcomes
 | outcome | `pending` while open; a terminal/non-pending result when closed. |
 | availability | Posting observation: `unknown`, `available`, or `unavailable`; separate from stage/outcome. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Browse opportunities | Inspect, filter, or open pipeline records | [Open](../workflows/opportunities/browse-opportunities.md) |
-| Maintain an opportunity | Create or change a Gig | [Open](../workflows/opportunities/maintain-opportunity.md) |
+| Opportunity records | Browse, create, or change a Gig and its pipeline details | [Open](../features/opportunities/opportunity-records.md) |
+| Posting availability | Understand Scout-observed available/unavailable state and board segmentation | [Open](../features/opportunities/posting-availability.md) |
 
 ## Shared foundations
 

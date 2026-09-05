@@ -1,6 +1,7 @@
 ---
 id: browse-interactions
 capability: interactions
+feature: interaction-history
 title: Browse interaction history
 summary: Search chronological contact events by participants, Gigs, classifications, time, or text.
 aliases: [contact history, meeting list, communication log]
@@ -50,10 +51,10 @@ Reads never alter Person last-contact projections.
 
 Malformed bounds fail. Invalid stored structured JSON or broken references produce consistency/validation failure rather than a partial record.
 
-## Known current behavior and limitations
+## Current limitations
 
 There is no dashboard Interaction list. CLI exposes filtering but not a friendly participant-name join; consumers must resolve IDs separately.
 
-## Related workflows
+## Related specifications
 
 - [Maintain an interaction](maintain-interaction.md)

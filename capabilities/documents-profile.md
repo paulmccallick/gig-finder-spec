@@ -8,7 +8,7 @@ aliases: [managed document, profile context, artifact]
 
 ## Purpose and boundary
 
-Lets the candidate attach durable text content to Gigs, People, or the candidate Profile, read immutable versions, download content, and maintain editable documents. Temporary agent uploads and Scout-created descriptions feed this capability but retain their initiating workflows.
+Lets the candidate attach durable text content to Gigs, People, or the candidate Profile, read immutable versions, download content, and maintain editable documents. Temporary agent uploads and Scout-created descriptions feed this capability but retain their initiating workflows. Candidate-Profile document bodies are available only through exact reads; the conversational agent receives a metadata catalog, not their content.
 
 ## Vocabulary
 
@@ -16,15 +16,14 @@ Lets the candidate attach durable text content to Gigs, People, or the candidate
 |---|---|
 | managed document | Registered text with ownership and versions. |
 | staged document | Temporary converted upload available to one agent workflow. |
-| candidate Profile | Singleton owner `profile:candidate` whose named documents form agent context. |
+| candidate Profile | Singleton owner `profile:candidate` whose named documents appear in the agent's metadata catalog and may then be read by exact ID. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Discover and read | List metadata, view, or download a version | [Open](../workflows/documents/read-documents.md) |
-| Create managed content | Save inline or staged source content | [Open](../workflows/documents/create-managed-document.md) |
-| Update managed content | Append a replacement version | [Open](../workflows/documents/update-managed-document.md) |
+| Managed documents | List, read, create, or append exact versioned content | [Open](../features/documents/managed-documents.md) |
+| Candidate Profile context | Understand metadata-only discovery and exact reads for singleton private documents | [Open](../features/documents/candidate-profile-context.md) |
 
 ## Shared foundations
 

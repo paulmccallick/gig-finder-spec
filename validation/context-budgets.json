@@ -1,36 +1,213 @@
 {
-  "method": "Estimated tokens = UTF-8 JavaScript string characters divided by four and rounded up; this intentionally matches GigFinder's own conversation-budget heuristic and is not provider tokenization.",
+  "method": "Estimated tokens = JavaScript UTF-16 string code units divided by four and rounded up; this intentionally matches GigFinder's own conversation-budget heuristic and is not provider tokenization.",
+  "routing": "Every route includes README, the owning capability, the mandatory functional feature, the requested detail when any, and transitive requires dependencies. Strict contracts are measured one operation at a time.",
   "limits": {
     "root": 1000,
     "capability": 1500,
-    "workflowHardMaximum": 5000,
+    "featureHardMaximum": 5000,
+    "detailHardMaximum": 5000,
+    "qualityScenario": 1500,
     "typicalRoutedBundle": 10000
   },
   "maximumRoutedBundle": {
-    "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/create-managed-document.md -> variants/documents/create-managed-document-agent-tool.md",
-    "estimatedTokens": 9441,
+    "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-reprocessing.md -> operational-models/scout/position-reprocessing.md",
+    "estimatedTokens": 9219,
     "files": [
       "README.md",
-      "capabilities/documents-profile.md",
-      "contracts/operations/create_document.schema.json",
-      "foundations/agent-consent-and-privacy.md",
-      "foundations/identity-and-references.md",
-      "foundations/managed-document-integrity.md",
-      "variants/documents/create-managed-document-agent-tool.md",
-      "workflows/documents/create-managed-document.md"
+      "capabilities/gig-scout.md",
+      "features/scout/company-sources.md",
+      "features/scout/position-processing.md",
+      "features/scout/position-reprocessing.md",
+      "features/scout/relevance-configuration.md",
+      "operational-models/scout/position-processing.md",
+      "operational-models/scout/position-reprocessing.md"
     ]
   },
-  "routeCount": 29,
+  "routeCount": 95,
+  "featureRouteCount": 19,
+  "detailRouteCount": 76,
   "allWithinTypicalBudget": true,
   "routes": [
     {
-      "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/create-managed-document.md -> variants/documents/create-managed-document-agent-tool.md",
-      "estimatedTokens": 9441,
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-reprocessing.md -> operational-models/scout/position-reprocessing.md",
+      "estimatedTokens": 9219,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/position-reprocessing.md",
+        "features/scout/relevance-configuration.md",
+        "operational-models/scout/position-processing.md",
+        "operational-models/scout/position-reprocessing.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> contracts/operations/create_document.schema.json",
+      "estimatedTokens": 8618,
       "files": [
         "README.md",
         "capabilities/documents-profile.md",
         "contracts/operations/create_document.schema.json",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> contracts/operations/update_gig.schema.json",
+      "estimatedTokens": 8518,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "contracts/operations/update_gig.schema.json",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> operational-models/scout/discovery-runs.md",
+      "estimatedTokens": 8379,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/opportunities/posting-availability.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/queries-and-pagination.md",
+        "operational-models/scout/discovery-runs.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> contracts/operations/create_gig.schema.json",
+      "estimatedTokens": 8263,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "contracts/operations/create_gig.schema.json",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> contracts/operations/list_gigs.schema.json",
+      "estimatedTokens": 7657,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "contracts/operations/list_gigs.schema.json",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/conversations.md -> workflows/agent/use-conversation.md",
+      "estimatedTokens": 7586,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/conversations.md",
+        "features/documents/candidate-profile-context.md",
+        "features/documents/managed-documents.md",
         "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "workflows/agent/use-conversation.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/maintain-opportunity-agent-tool.md",
+      "estimatedTokens": 7029,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "variants/opportunities/maintain-opportunity-agent-tool.md",
+        "workflows/opportunities/maintain-opportunity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/review-promotion.md -> workflows/scout/review-and-promote.md",
+      "estimatedTokens": 7003,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/review-promotion.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "workflows/scout/review-and-promote.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/conversations.md -> quality-scenarios/agent/interrupted-turn.md",
+      "estimatedTokens": 6956,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/conversations.md",
+        "features/documents/candidate-profile-context.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "quality-scenarios/agent/interrupted-turn.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/update-opportunity-agent-tool.md",
+      "estimatedTokens": 6928,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "variants/opportunities/update-opportunity-agent-tool.md",
+        "workflows/opportunities/maintain-opportunity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/maintain-opportunity-cli.md",
+      "estimatedTokens": 6895,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "variants/opportunities/maintain-opportunity-cli.md",
+        "workflows/opportunities/maintain-opportunity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> variants/documents/create-managed-document-agent-tool.md",
+      "estimatedTokens": 6886,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
         "foundations/identity-and-references.md",
         "foundations/managed-document-integrity.md",
         "variants/documents/create-managed-document-agent-tool.md",
@@ -38,14 +215,436 @@
       ]
     },
     {
-      "route": "README.md -> capabilities/interactions.md -> workflows/interactions/maintain-interaction.md -> variants/interactions/maintain-interaction-agent-tool.md",
-      "estimatedTokens": 8283,
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> contracts/operations/get_gig.schema.json",
+      "estimatedTokens": 6825,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "contracts/operations/get_gig.schema.json",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/conversations.md",
+      "estimatedTokens": 6683,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/conversations.md",
+        "features/documents/candidate-profile-context.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-processing.md -> operational-models/scout/position-processing.md",
+      "estimatedTokens": 6621,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/relevance-configuration.md",
+        "operational-models/scout/position-processing.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> variants/documents/create-managed-document-cli.md",
+      "estimatedTokens": 6614,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "variants/documents/create-managed-document-cli.md",
+        "workflows/documents/create-managed-document.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> contracts/operations/update_person.schema.json",
+      "estimatedTokens": 6568,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/update_person.schema.json",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> workflows/opportunities/maintain-opportunity.md",
+      "estimatedTokens": 6559,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "workflows/opportunities/maintain-opportunity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/review-promotion.md -> operational-models/scout/review-promotion.md",
+      "estimatedTokens": 6433,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/review-promotion.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "operational-models/scout/review-promotion.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> contracts/operations/list_people.schema.json",
+      "estimatedTokens": 6327,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/list_people.schema.json",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> contracts/operations/list_document_versions.schema.json",
+      "estimatedTokens": 6302,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "contracts/operations/list_document_versions.schema.json",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> contracts/operations/list_interactions.schema.json",
+      "estimatedTokens": 6298,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "contracts/operations/list_interactions.schema.json",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/browse-opportunities-agent-tool.md",
+      "estimatedTokens": 6298,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "variants/opportunities/browse-opportunities-agent-tool.md",
+        "workflows/opportunities/browse-opportunities.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> workflows/documents/create-managed-document.md",
+      "estimatedTokens": 6285,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "workflows/documents/create-managed-document.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/browse-opportunities-ui.md",
+      "estimatedTokens": 6254,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "variants/opportunities/browse-opportunities-ui.md",
+        "workflows/opportunities/browse-opportunities.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> contracts/operations/create_person.schema.json",
+      "estimatedTokens": 6222,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/create_person.schema.json",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> variants/opportunities/browse-opportunities-cli.md",
+      "estimatedTokens": 6143,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "variants/opportunities/browse-opportunities-cli.md",
+        "workflows/opportunities/browse-opportunities.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> contracts/operations/update_interaction.schema.json",
+      "estimatedTokens": 6078,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "contracts/operations/update_interaction.schema.json",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> contracts/operations/get_document.schema.json",
+      "estimatedTokens": 5988,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "contracts/operations/get_document.schema.json",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> contracts/operations/update_document.schema.json",
+      "estimatedTokens": 5898,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "contracts/operations/update_document.schema.json",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> workflows/opportunities/browse-opportunities.md",
+      "estimatedTokens": 5864,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/opportunities/browse-opportunities.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> contracts/operations/create_interaction.schema.json",
+      "estimatedTokens": 5840,
       "files": [
         "README.md",
         "capabilities/interactions.md",
         "contracts/operations/create_interaction.schema.json",
-        "contracts/operations/delete_interaction.schema.json",
-        "contracts/operations/update_interaction.schema.json",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> contracts/operations/get_person.schema.json",
+      "estimatedTokens": 5804,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/get_person.schema.json",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/candidate-profile-context.md",
+      "estimatedTokens": 5766,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/candidate-profile-context.md",
+        "features/documents/managed-documents.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-reprocessing.md -> quality-scenarios/scout/backfill-atomic-start.md",
+      "estimatedTokens": 5702,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/position-reprocessing.md",
+        "features/scout/relevance-configuration.md",
+        "quality-scenarios/scout/backfill-atomic-start.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> contracts/operations/list_documents.schema.json",
+      "estimatedTokens": 5569,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "contracts/operations/list_documents.schema.json",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> workflows/documents/read-documents.md",
+      "estimatedTokens": 5528,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/documents/read-documents.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> contracts/operations/list_tasks.schema.json",
+      "estimatedTokens": 5524,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "contracts/operations/list_tasks.schema.json",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-reprocessing.md",
+      "estimatedTokens": 5456,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/position-reprocessing.md",
+        "features/scout/relevance-configuration.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> contracts/operations/update_task.schema.json",
+      "estimatedTokens": 5357,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "contracts/operations/update_task.schema.json",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md -> contracts/operations/search_gigs_and_people.schema.json",
+      "estimatedTokens": 5306,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "contracts/operations/search_gigs_and_people.schema.json",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> workflows/scout/run-scout.md",
+      "estimatedTokens": 5152,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/scout/run-scout.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> contracts/operations/get_interaction.schema.json",
+      "estimatedTokens": 5059,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "contracts/operations/get_interaction.schema.json",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> workflows/networking/maintain-person.md",
+      "estimatedTokens": 5045,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/networking/people.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "workflows/networking/maintain-person.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> variants/interactions/maintain-interaction-agent-tool.md",
+      "estimatedTokens": 5001,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "features/interactions/interaction-history.md",
         "foundations/changes-revisions-reversal.md",
         "foundations/dates-time-ordering.md",
         "foundations/identity-and-references.md",
@@ -54,116 +653,206 @@
       ]
     },
     {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/maintain-opportunity.md -> variants/opportunities/update-opportunity-agent-tool.md",
-      "estimatedTokens": 8003,
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> contracts/operations/delete_interaction.schema.json",
+      "estimatedTokens": 4992,
       "files": [
         "README.md",
-        "capabilities/opportunities.md",
-        "contracts/operations/update_gig.schema.json",
-        "foundations/agent-consent-and-privacy.md",
+        "capabilities/interactions.md",
+        "contracts/operations/delete_interaction.schema.json",
+        "features/interactions/interaction-history.md",
         "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "variants/opportunities/update-opportunity-agent-tool.md",
-        "workflows/opportunities/maintain-opportunity.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/maintain-opportunity.md -> variants/opportunities/maintain-opportunity-agent-tool.md",
-      "estimatedTokens": 7563,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "contracts/operations/create_gig.schema.json",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "variants/opportunities/maintain-opportunity-agent-tool.md",
-        "workflows/opportunities/maintain-opportunity.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/browse-opportunities.md -> variants/opportunities/browse-opportunities-agent-tool.md",
-      "estimatedTokens": 5635,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "contracts/operations/get_gig.schema.json",
-        "contracts/operations/list_gigs.schema.json",
-        "contracts/operations/search_gigs_and_people.schema.json",
         "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "variants/opportunities/browse-opportunities-agent-tool.md",
-        "workflows/opportunities/browse-opportunities.md"
+        "foundations/identity-and-references.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/gig-scout.md -> workflows/scout/review-and-promote.md",
-      "estimatedTokens": 5086,
-      "files": [
-        "README.md",
-        "capabilities/gig-scout.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "foundations/managed-document-integrity.md",
-        "workflows/scout/review-and-promote.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/maintain-opportunity.md -> variants/opportunities/maintain-opportunity-cli.md",
-      "estimatedTokens": 4845,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "variants/opportunities/maintain-opportunity-cli.md",
-        "workflows/opportunities/maintain-opportunity.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/create-managed-document.md -> variants/documents/create-managed-document-cli.md",
-      "estimatedTokens": 4631,
-      "files": [
-        "README.md",
-        "capabilities/documents-profile.md",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/identity-and-references.md",
-        "foundations/managed-document-integrity.md",
-        "variants/documents/create-managed-document-cli.md",
-        "workflows/documents/create-managed-document.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/maintain-opportunity.md",
-      "estimatedTokens": 4518,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "workflows/opportunities/maintain-opportunity.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/create-managed-document.md",
-      "estimatedTokens": 4310,
-      "files": [
-        "README.md",
-        "capabilities/documents-profile.md",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/identity-and-references.md",
-        "foundations/managed-document-integrity.md",
-        "workflows/documents/create-managed-document.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/tasks.md -> workflows/tasks/maintain-task.md -> variants/tasks/maintain-task-cli.md",
-      "estimatedTokens": 3641,
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> contracts/operations/create_task.schema.json",
+      "estimatedTokens": 4986,
       "files": [
         "README.md",
         "capabilities/tasks.md",
+        "contracts/operations/create_task.schema.json",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/review-promotion.md -> quality-scenarios/scout/promotion-partial-recovery.md",
+      "estimatedTokens": 4923,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/review-promotion.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "quality-scenarios/scout/promotion-partial-recovery.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> workflows/networking/browse-people.md",
+      "estimatedTokens": 4910,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/networking/browse-people.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> workflows/documents/update-managed-document.md",
+      "estimatedTokens": 4898,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "workflows/documents/update-managed-document.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/review-promotion.md -> quality-scenarios/scout/stale-review.md",
+      "estimatedTokens": 4849,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/review-promotion.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "quality-scenarios/scout/stale-review.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> workflows/interactions/browse-interactions.md",
+      "estimatedTokens": 4834,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/interactions/browse-interactions.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/contact-recency.md -> quality-scenarios/networking/latest-contact-timezone.md",
+      "estimatedTokens": 4773,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/interactions/interaction-history.md",
+        "features/networking/contact-recency.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "quality-scenarios/networking/latest-contact-timezone.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> contracts/operations/get_task.schema.json",
+      "estimatedTokens": 4696,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "contracts/operations/get_task.schema.json",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-processing.md -> quality-scenarios/scout/low-confidence-relevance.md",
+      "estimatedTokens": 4669,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/relevance-configuration.md",
+        "quality-scenarios/scout/low-confidence-relevance.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-processing.md -> quality-scenarios/scout/position-queue-restart.md",
+      "estimatedTokens": 4667,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/relevance-configuration.md",
+        "quality-scenarios/scout/position-queue-restart.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> workflows/tasks/browse-tasks.md",
+      "estimatedTokens": 4652,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "foundations/queries-and-pagination.md",
+        "workflows/tasks/browse-tasks.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md -> workflows/interactions/maintain-interaction.md",
+      "estimatedTokens": 4623,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md",
+        "workflows/interactions/maintain-interaction.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/review-promotion.md",
+      "estimatedTokens": 4608,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/review-promotion.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md -> contracts/operations/search_gigs_and_people.schema.json",
+      "estimatedTokens": 4589,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/search_gigs_and_people.schema.json",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> variants/tasks/maintain-task-cli.md",
+      "estimatedTokens": 4532,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "features/tasks/task-tracking.md",
         "foundations/changes-revisions-reversal.md",
         "foundations/dates-time-ordering.md",
         "foundations/identity-and-references.md",
@@ -172,35 +861,133 @@
       ]
     },
     {
-      "route": "README.md -> capabilities/networking.md -> workflows/networking/maintain-person.md",
-      "estimatedTokens": 3620,
+      "route": "README.md -> capabilities/networking.md -> features/networking/contact-recency.md",
+      "estimatedTokens": 4522,
       "files": [
         "README.md",
         "capabilities/networking.md",
-        "foundations/agent-consent-and-privacy.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "workflows/networking/maintain-person.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/interactions.md -> workflows/interactions/maintain-interaction.md",
-      "estimatedTokens": 3577,
-      "files": [
-        "README.md",
-        "capabilities/interactions.md",
+        "features/interactions/interaction-history.md",
+        "features/networking/contact-recency.md",
         "foundations/changes-revisions-reversal.md",
         "foundations/dates-time-ordering.md",
-        "foundations/identity-and-references.md",
-        "workflows/interactions/maintain-interaction.md"
+        "foundations/identity-and-references.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/tasks.md -> workflows/tasks/maintain-task.md",
-      "estimatedTokens": 3369,
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md -> quality-scenarios/documents/stale-document-update.md",
+      "estimatedTokens": 4477,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md",
+        "quality-scenarios/documents/stale-document-update.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/opportunity-relationships.md -> contracts/operations/list_gig_person_relationships.schema.json",
+      "estimatedTokens": 4469,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/list_gig_person_relationships.schema.json",
+        "features/networking/opportunity-relationships.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> quality-scenarios/scout/source-policy-bounds.md",
+      "estimatedTokens": 4436,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "quality-scenarios/scout/source-policy-bounds.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> quality-scenarios/scout/queue-restart-reconciliation.md",
+      "estimatedTokens": 4414,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "quality-scenarios/scout/queue-restart-reconciliation.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> quality-scenarios/scout/run-configuration-binding.md",
+      "estimatedTokens": 4412,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "quality-scenarios/scout/run-configuration-binding.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/position-processing.md",
+      "estimatedTokens": 4408,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/position-processing.md",
+        "features/scout/relevance-configuration.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> quality-scenarios/scout/trusted-empty-availability.md",
+      "estimatedTokens": 4407,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "quality-scenarios/scout/trusted-empty-availability.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md -> quality-scenarios/scout/company-redelivery.md",
+      "estimatedTokens": 4400,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md",
+        "quality-scenarios/scout/company-redelivery.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/opportunity-records.md",
+      "estimatedTokens": 4263,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/opportunity-records.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md -> workflows/tasks/maintain-task.md",
+      "estimatedTokens": 4252,
       "files": [
         "README.md",
         "capabilities/tasks.md",
+        "features/tasks/task-tracking.md",
         "foundations/changes-revisions-reversal.md",
         "foundations/dates-time-ordering.md",
         "foundations/identity-and-references.md",
@@ -208,163 +995,248 @@
       ]
     },
     {
-      "route": "README.md -> capabilities/conversational-agent.md -> workflows/agent/stage-upload.md",
-      "estimatedTokens": 3237,
+      "route": "README.md -> capabilities/documents-profile.md -> features/documents/managed-documents.md",
+      "estimatedTokens": 4231,
+      "files": [
+        "README.md",
+        "capabilities/documents-profile.md",
+        "features/documents/managed-documents.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/discovery-runs.md",
+      "estimatedTokens": 4148,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md",
+        "features/scout/discovery-runs.md",
+        "foundations/queries-and-pagination.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/upload-staging.md -> workflows/agent/stage-upload.md",
+      "estimatedTokens": 4073,
       "files": [
         "README.md",
         "capabilities/conversational-agent.md",
+        "features/agent/upload-staging.md",
         "foundations/agent-consent-and-privacy.md",
         "foundations/managed-document-integrity.md",
         "workflows/agent/stage-upload.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/browse-opportunities.md -> variants/opportunities/browse-opportunities-ui.md",
-      "estimatedTokens": 3159,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "variants/opportunities/browse-opportunities-ui.md",
-        "workflows/opportunities/browse-opportunities.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/browse-opportunities.md -> variants/opportunities/browse-opportunities-cli.md",
-      "estimatedTokens": 3048,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "variants/opportunities/browse-opportunities-cli.md",
-        "workflows/opportunities/browse-opportunities.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/networking.md -> workflows/networking/link-person-opportunity.md",
-      "estimatedTokens": 2911,
-      "files": [
-        "README.md",
-        "capabilities/networking.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/identity-and-references.md",
-        "workflows/networking/link-person-opportunity.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/update-managed-document.md",
-      "estimatedTokens": 2847,
-      "files": [
-        "README.md",
-        "capabilities/documents-profile.md",
-        "foundations/changes-revisions-reversal.md",
-        "foundations/managed-document-integrity.md",
-        "workflows/documents/update-managed-document.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/opportunities.md -> workflows/opportunities/browse-opportunities.md",
-      "estimatedTokens": 2778,
-      "files": [
-        "README.md",
-        "capabilities/opportunities.md",
-        "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/opportunities/browse-opportunities.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/documents-profile.md -> workflows/documents/read-documents.md",
-      "estimatedTokens": 2692,
-      "files": [
-        "README.md",
-        "capabilities/documents-profile.md",
-        "foundations/managed-document-integrity.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/documents/read-documents.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/conversational-agent.md -> workflows/agent/revert-change.md",
-      "estimatedTokens": 2689,
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/change-reversal.md -> workflows/agent/revert-change.md",
+      "estimatedTokens": 3990,
       "files": [
         "README.md",
         "capabilities/conversational-agent.md",
+        "features/agent/change-reversal.md",
         "foundations/agent-consent-and-privacy.md",
         "foundations/changes-revisions-reversal.md",
         "workflows/agent/revert-change.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/conversational-agent.md -> workflows/agent/use-conversation.md",
-      "estimatedTokens": 2327,
-      "files": [
-        "README.md",
-        "capabilities/conversational-agent.md",
-        "foundations/agent-consent-and-privacy.md",
-        "workflows/agent/use-conversation.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/interactions.md -> workflows/interactions/browse-interactions.md",
-      "estimatedTokens": 2290,
-      "files": [
-        "README.md",
-        "capabilities/interactions.md",
-        "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/interactions/browse-interactions.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/tasks.md -> workflows/tasks/browse-tasks.md",
-      "estimatedTokens": 2217,
-      "files": [
-        "README.md",
-        "capabilities/tasks.md",
-        "foundations/dates-time-ordering.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/tasks/browse-tasks.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/gig-scout.md -> workflows/scout/run-scout.md",
-      "estimatedTokens": 2156,
-      "files": [
-        "README.md",
-        "capabilities/gig-scout.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/scout/run-scout.md"
-      ]
-    },
-    {
-      "route": "README.md -> capabilities/networking.md -> workflows/networking/browse-people.md",
-      "estimatedTokens": 2036,
+      "route": "README.md -> capabilities/networking.md -> features/networking/opportunity-relationships.md -> contracts/operations/create_gig_person_relationship.schema.json",
+      "estimatedTokens": 3946,
       "files": [
         "README.md",
         "capabilities/networking.md",
-        "foundations/queries-and-pagination.md",
-        "workflows/networking/browse-people.md"
+        "contracts/operations/create_gig_person_relationship.schema.json",
+        "features/networking/opportunity-relationships.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/gig-scout.md -> workflows/scout/configure-relevance.md",
-      "estimatedTokens": 1372,
+      "route": "README.md -> capabilities/networking.md -> features/networking/opportunity-relationships.md -> contracts/operations/get_gig_person_relationship.schema.json",
+      "estimatedTokens": 3922,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "contracts/operations/get_gig_person_relationship.schema.json",
+        "features/networking/opportunity-relationships.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/change-reversal.md -> contracts/operations/revert_change.schema.json",
+      "estimatedTokens": 3835,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "contracts/operations/revert_change.schema.json",
+        "features/agent/change-reversal.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/opportunity-relationships.md -> workflows/networking/link-person-opportunity.md",
+      "estimatedTokens": 3820,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/networking/opportunity-relationships.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md",
+        "workflows/networking/link-person-opportunity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/interactions.md -> features/interactions/interaction-history.md",
+      "estimatedTokens": 3696,
+      "files": [
+        "README.md",
+        "capabilities/interactions.md",
+        "features/interactions/interaction-history.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/people.md",
+      "estimatedTokens": 3546,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/networking/people.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/tasks.md -> features/tasks/task-tracking.md",
+      "estimatedTokens": 3546,
+      "files": [
+        "README.md",
+        "capabilities/tasks.md",
+        "features/tasks/task-tracking.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/change-reversal.md -> quality-scenarios/agent/reversal-conflict.md",
+      "estimatedTokens": 3449,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/change-reversal.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md",
+        "quality-scenarios/agent/reversal-conflict.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/change-reversal.md",
+      "estimatedTokens": 3221,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/change-reversal.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/changes-revisions-reversal.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/networking.md -> features/networking/opportunity-relationships.md",
+      "estimatedTokens": 3144,
+      "files": [
+        "README.md",
+        "capabilities/networking.md",
+        "features/networking/opportunity-relationships.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/identity-and-references.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/upload-staging.md -> quality-scenarios/agent/staging-capacity.md",
+      "estimatedTokens": 3130,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/upload-staging.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/managed-document-integrity.md",
+        "quality-scenarios/agent/staging-capacity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/opportunities.md -> features/opportunities/posting-availability.md",
+      "estimatedTokens": 3068,
+      "files": [
+        "README.md",
+        "capabilities/opportunities.md",
+        "features/opportunities/posting-availability.md",
+        "foundations/changes-revisions-reversal.md",
+        "foundations/dates-time-ordering.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/upload-staging.md",
+      "estimatedTokens": 2883,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/upload-staging.md",
+        "foundations/agent-consent-and-privacy.md",
+        "foundations/managed-document-integrity.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/relevance-configuration.md -> workflows/scout/configure-relevance.md",
+      "estimatedTokens": 2657,
       "files": [
         "README.md",
         "capabilities/gig-scout.md",
+        "features/scout/relevance-configuration.md",
         "workflows/scout/configure-relevance.md"
       ]
     },
     {
-      "route": "README.md -> capabilities/conversational-agent.md -> workflows/agent/choose-model.md",
-      "estimatedTokens": 1264,
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/company-sources.md",
+      "estimatedTokens": 2220,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/company-sources.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/gig-scout.md -> features/scout/relevance-configuration.md",
+      "estimatedTokens": 1956,
+      "files": [
+        "README.md",
+        "capabilities/gig-scout.md",
+        "features/scout/relevance-configuration.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/model-selection.md -> workflows/agent/choose-model.md",
+      "estimatedTokens": 1871,
       "files": [
         "README.md",
         "capabilities/conversational-agent.md",
+        "features/agent/model-selection.md",
         "workflows/agent/choose-model.md"
+      ]
+    },
+    {
+      "route": "README.md -> capabilities/conversational-agent.md -> features/agent/model-selection.md",
+      "estimatedTokens": 1406,
+      "files": [
+        "README.md",
+        "capabilities/conversational-agent.md",
+        "features/agent/model-selection.md"
       ]
     }
   ]

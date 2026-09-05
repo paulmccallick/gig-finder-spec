@@ -18,12 +18,11 @@ Lets the candidate track dated or undated job-search commitments related to a Gi
 | related entity | One Gig, one Person, or `general`. |
 | completion date | System-maintained calendar date when status becomes `completed`. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Browse tasks | Prioritize and inspect work | [Open](../workflows/tasks/browse-tasks.md) |
-| Maintain a task | Create, edit, complete, reopen, or cancel | [Open](../workflows/tasks/maintain-task.md) |
+| Task tracking | Browse, create, edit, complete, reopen, or cancel commitments | [Open](../features/tasks/task-tracking.md) |
 
 ## Shared foundations
 

@@ -1,6 +1,7 @@
 ---
 id: maintain-task
 capability: tasks
+feature: task-tracking
 title: Create or maintain a task
 summary: Create, edit, complete, reopen, or cancel a job-search task.
 aliases: [add task, complete task, reschedule follow-up]
@@ -52,10 +53,10 @@ Completion date, labels, IDs, and timestamps are derived/immutable. General task
 
 Unknown fields, invalid dates/enums, and missing references fail atomically. Dry-run projects without saving. Reopening a completed task intentionally removes its completion date.
 
-## Known current behavior and limitations
+## Current limitations
 
 There is no supported task deletion. Agent creation generates the Task ID rather than exposing caller choice; CLI requires a caller-supplied ID.
 
-## Related workflows
+## Related specifications
 
 - [Browse tasks](browse-tasks.md)

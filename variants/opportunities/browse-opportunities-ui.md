@@ -1,6 +1,7 @@
 ---
 id: browse-opportunities-ui
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/browse-opportunities.md
 surface: ui
 summary: Read-only board divides active, unavailable, and archived Gigs with client-side controls.
@@ -38,10 +39,10 @@ Initial API failure replaces the dashboard. Description-load failure stays local
 
 Initial load and agent mutation callbacks reload Gigs, People, and Tasks. No background polling occurs.
 
-## Known limitations
+## Current limitations
 
 No editing, availability action, or manual refresh control.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/browse-opportunities.md)

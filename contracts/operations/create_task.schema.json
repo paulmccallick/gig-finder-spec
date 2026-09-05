@@ -1,171 +1,294 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/create_task.schema.json",
-  "title": "create_task",
-  "description": "Wire contract for supported agent-tool operation create_task. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Concise task title."
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "networking_follow_up",
-            "application",
-            "interview_prep",
-            "sourcing",
-            "resume",
-            "administrative",
-            "learning",
-            "other"
-          ],
-          "description": "Task category type."
-        },
-        "priority": {
-          "anyOf": [
-            {
-              "type": "string",
-              "enum": [
-                "high",
-                "medium",
-                "low"
-              ],
-              "description": "Task priority."
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Task priority, or null to use the default priority."
-        },
-        "dueDate": {
-          "anyOf": [
-            {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Due date, or null."
-        },
-        "relatedEntity": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": [
-                "gig",
-                "person",
-                "general"
-              ],
-              "description": "Related entity type."
-            },
-            "id": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "minLength": 1
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Exact Gig or Person ID, or null for general."
-            }
-          },
-          "required": [
-            "type",
-            "id"
-          ],
-          "additionalProperties": false,
-          "description": "Gig, Person, or general relationship."
-        },
-        "notes": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Notes, or null."
-        }
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/create_task.schema.json",
+ "title": "create_task",
+ "description": "Wire contract for supported agent-tool operation create_task. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Concise task title."
+    },
+    "type": {
+     "type": "string",
+     "enum": [
+      "networking_follow_up",
+      "application",
+      "interview_prep",
+      "sourcing",
+      "resume",
+      "administrative",
+      "learning",
+      "other"
+     ],
+     "description": "Task category type."
+    },
+    "priority": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "high",
+        "medium",
+        "low"
+       ],
+       "description": "Task priority."
       },
-      "required": [
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Task priority, or null to use the default priority."
+    },
+    "dueDate": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Due date, or null."
+    },
+    "relatedEntity": {
+     "type": "object",
+     "properties": {
+      "type": {
+       "type": "string",
+       "enum": [
+        "gig",
+        "person",
+        "general"
+       ],
+       "description": "Related entity type."
+      },
+      "id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "minLength": 1
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Exact Gig or Person ID, or null for general."
+      }
+     },
+     "required": [
+      "type",
+      "id"
+     ],
+     "additionalProperties": false,
+     "description": "Gig, Person, or general relationship."
+    },
+    "notes": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Notes, or null."
+    }
+   },
+   "required": [
+    "title",
+    "type",
+    "priority",
+    "dueDate",
+    "relatedEntity",
+    "notes"
+   ],
+   "additionalProperties": false
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "record",
+      "changeId"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
+      },
+      "record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
         "title",
         "type",
+        "status",
         "priority",
         "dueDate",
         "relatedEntity",
-        "notes"
-      ],
-      "additionalProperties": false
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "changeId"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "changeId": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          }
+        "notes",
+        "createdAt",
+        "updatedAt",
+        "completedAt"
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
         },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status",
-            "error",
-            "message"
-          ],
-          "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
+        "title": {
+         "type": "string",
+         "minLength": 1
+        },
+        "type": {
+         "type": "string",
+         "enum": [
+          "networking_follow_up",
+          "application",
+          "interview_prep",
+          "sourcing",
+          "resume",
+          "administrative",
+          "learning",
+          "other"
+         ]
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "open",
+          "in_progress",
+          "completed",
+          "canceled"
+         ]
+        },
+        "priority": {
+         "type": "string",
+         "enum": [
+          "high",
+          "medium",
+          "low"
+         ]
+        },
+        "dueDate": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          {
+           "type": "null"
           }
+         ]
+        },
+        "relatedEntity": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "type",
+          "id",
+          "label"
+         ],
+         "properties": {
+          "type": {
+           "type": "string",
+           "enum": [
+            "gig",
+            "person",
+            "general"
+           ]
+          },
+          "id": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "label": {
+           "type": "string",
+           "minLength": 1
+          }
+         }
+        },
+        "notes": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "createdAt": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "updatedAt": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "completedAt": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
         }
-      ]
+       }
+      },
+      "changeId": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
+      },
+      "error": {
+       "type": "string",
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
+      }
+     }
     }
+   ]
   }
+ }
 }

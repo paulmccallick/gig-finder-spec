@@ -1,11 +1,12 @@
 ---
 id: create-opportunity-agent-tool
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/maintain-opportunity.md
 surface: agent-tool
 summary: Agent creation is a complete-object confirmed operation with runtime-supplied idempotency.
 aliases: [create_gig, add Gig]
-requires: [../../workflows/opportunities/maintain-opportunity.md, ../../contracts/operations/create_gig.schema.json]
+requires: [../../workflows/opportunities/maintain-opportunity.md]
 contract: ../../contracts/operations/create_gig.schema.json
 ---
 
@@ -39,10 +40,10 @@ Strict unknown/missing fields fail before execution; runtime domain refinements 
 
 Successful change output triggers dashboard collection reload.
 
-## Known limitations
+## Current limitations
 
 Availability is not exposed; create input is intentionally verbose.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/maintain-opportunity.md)

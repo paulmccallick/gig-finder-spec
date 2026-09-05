@@ -1,11 +1,12 @@
 ---
 id: maintain-interaction-agent-tool
 capability: interactions
+feature: interaction-history
 workflow: ../../workflows/interactions/maintain-interaction.md
 surface: agent-tool
 summary: Agent uses strict creation/update contracts and confirmation-gated expected-revision deletion.
 aliases: [create_interaction, delete_interaction]
-requires: [../../workflows/interactions/maintain-interaction.md, ../../contracts/operations/create_interaction.schema.json, ../../contracts/operations/update_interaction.schema.json, ../../contracts/operations/delete_interaction.schema.json]
+requires: [../../workflows/interactions/maintain-interaction.md]
 contract: ../../contracts/operations/create_interaction.schema.json
 ---
 
@@ -39,10 +40,10 @@ Strict schema, missing reference, and revision conflicts are stable visible erro
 
 Dashboard collections reload after successful mutation, though Interactions have no dedicated dashboard.
 
-## Known limitations
+## Current limitations
 
 Agent creation does not expose arbitrary structured data.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/interactions/maintain-interaction.md)

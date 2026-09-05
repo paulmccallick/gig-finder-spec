@@ -38,8 +38,7 @@ Supported reads show display name, type, media type, version, and content. Versi
 
 ## Used by
 
-- [Discover and read documents](../workflows/documents/read-documents.md)
-- [Create managed content](../workflows/documents/create-managed-document.md)
-- [Update managed content](../workflows/documents/update-managed-document.md)
-- [Stage an upload](../workflows/agent/stage-upload.md)
-- [Review and promote Scout positions](../workflows/scout/review-and-promote.md)
+- [Managed documents](../features/documents/managed-documents.md)
+- [Candidate Profile context](../features/documents/candidate-profile-context.md)
+- [Upload staging](../features/agent/upload-staging.md)
+- [Position review and promotion](../features/scout/review-promotion.md)

@@ -1,113 +1,158 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/create_gig_person_relationship.schema.json",
-  "title": "create_gig_person_relationship",
-  "description": "Wire contract for supported agent-tool operation create_gig_person_relationship. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
-      "type": "object",
-      "properties": {
-        "gigId": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Exact Gig ID."
-        },
-        "personId": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Exact Person ID."
-        },
-        "relationship": {
-          "type": "string",
-          "enum": [
-            "interviewer",
-            "hiring_manager",
-            "recruiter",
-            "recruiting_coordinator",
-            "employee",
-            "former_peer",
-            "professional_contact",
-            "personal_contact"
-          ],
-          "description": "Relationship role."
-        },
-        "notes": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Notes, or null."
-        }
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/create_gig_person_relationship.schema.json",
+ "title": "create_gig_person_relationship",
+ "description": "Wire contract for supported agent-tool operation create_gig_person_relationship. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "properties": {
+    "gigId": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Exact Gig ID."
+    },
+    "personId": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Exact Person ID."
+    },
+    "relationship": {
+     "type": "string",
+     "enum": [
+      "interviewer",
+      "hiring_manager",
+      "recruiter",
+      "recruiting_coordinator",
+      "employee",
+      "former_peer",
+      "professional_contact",
+      "personal_contact"
+     ],
+     "description": "Relationship role."
+    },
+    "notes": {
+     "anyOf": [
+      {
+       "type": "string"
       },
-      "required": [
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Notes, or null."
+    }
+   },
+   "required": [
+    "gigId",
+    "personId",
+    "relationship",
+    "notes"
+   ],
+   "additionalProperties": false
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "record",
+      "changeId"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
+      },
+      "record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
         "gigId",
         "personId",
         "relationship",
         "notes"
-      ],
-      "additionalProperties": false
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "changeId"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "changeId": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          }
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
         },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status",
-            "error",
-            "message"
-          ],
-          "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
-          }
+        "gigId": {
+         "type": "string",
+         "minLength": 1
+        },
+        "personId": {
+         "type": "string",
+         "minLength": 1
+        },
+        "relationship": {
+         "type": "string",
+         "enum": [
+          "interviewer",
+          "hiring_manager",
+          "recruiter",
+          "recruiting_coordinator",
+          "employee",
+          "former_peer",
+          "professional_contact",
+          "personal_contact"
+         ]
+        },
+        "notes": {
+         "type": [
+          "string",
+          "null"
+         ]
         }
-      ]
+       }
+      },
+      "changeId": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
+      },
+      "error": {
+       "type": "string",
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
+      }
+     }
     }
+   ]
   }
+ }
 }

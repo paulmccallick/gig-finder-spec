@@ -1,6 +1,7 @@
 ---
 id: browse-people
 capability: networking
+feature: people
 title: Browse and inspect people
 summary: Find contacts and inspect identity, relationship, derived contact history, documents, and Gig links.
 aliases: [view network, search people, open contact]
@@ -33,7 +34,7 @@ Exact detail requires a Person ID. The UI loads the full current people collecti
 
 ## Decisions and variants
 
-The dashboard omits `paused` and `do_not_contact` people entirely. It defaults to high priority and groups the remaining actionable people into prospect, outreach, waiting, scheduled, active, and follow-up lanes. “Active tranche” further limits to high/medium priorities and selected active statuses.
+The dashboard omits `paused` and `do_not_contact` people entirely. It defaults to high priority and uses four exact lanes: Ready to Reach (`not_contacted`, `outreach_planned`), In Motion (`outreach_sent`, `awaiting_response`, `follow_up_due`), On Calendar (`conversation_scheduled`), and Active Circle (`active_relationship`). “Active tranche” further limits to high/medium priorities and selected active statuses.
 
 ## State changes
 
@@ -41,7 +42,7 @@ None.
 
 ## Outputs and observable effects
 
-Dashboard metrics count actionable relationships, scheduled conversations, high priorities, and verified profiles. A verified profile is derived from a linked Person `profile` document. Latest-contact fields derive from the latest completed Interaction rather than editable Person fields.
+Dashboard metrics count actionable relationships, scheduled conversations, high priorities, and verified profiles. `verified` is derived from presence of the LinkedIn profile URL; `hasProfile` separately reports a linked Person `profile` document. Latest-contact fields derive from the latest completed Interaction rather than editable Person fields.
 
 ## Safety rules
 
@@ -51,13 +52,13 @@ Search and opening LinkedIn never update contact status. Exact IDs from results 
 
 Read failures follow the same dashboard data-fault behavior as Gig reads. Unsupported legacy relationship values produce consistency errors instead of being silently mapped.
 
-## Known current behavior and limitations
+## Current limitations
 
 - Paused and do-not-contact people cannot be viewed in the dashboard, even with search/filter changes; agent and CLI reads can retrieve them.
 - The dashboard is read-only and has no contact editor.
 - Dashboard search covers name, company, title, why-interesting, tags, and relationship text; agent query covers a smaller documented subset.
 
-## Related workflows
+## Related specifications
 
 - [Maintain a person](maintain-person.md)
 - [Record interactions](../interactions/maintain-interaction.md)

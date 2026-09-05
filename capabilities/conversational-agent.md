@@ -18,14 +18,14 @@ Lets the candidate ask questions over private profile and tracker context and re
 | tool | Strict read or mutation operation listed in the contract catalog. |
 | staged upload | Temporary converted document reference attached to a prompt. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Use a conversation | Ask, resume, switch, or retry agent work | [Open](../workflows/agent/use-conversation.md) |
-| Stage an upload | Attach PDF, DOCX, or Markdown for agent use | [Open](../workflows/agent/stage-upload.md) |
-| Choose a model | Change the agent model | [Open](../workflows/agent/choose-model.md) |
-| Revert a change | Undo an eligible agent-recorded mutation | [Open](../workflows/agent/revert-change.md) |
+| Conversations | Ask, resume, switch, stream, stop, or retry agent work | [Open](../features/agent/conversations.md) |
+| Upload staging | Attach and temporarily convert PDF, DOCX, or Markdown | [Open](../features/agent/upload-staging.md) |
+| Model selection | Persist the global supported model choice | [Open](../features/agent/model-selection.md) |
+| Change reversal | Undo an exact eligible audited mutation safely | [Open](../features/agent/change-reversal.md) |
 
 ## Shared foundations
 

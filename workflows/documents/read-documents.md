@@ -1,6 +1,7 @@
 ---
 id: read-documents
 capability: documents-profile
+feature: managed-documents
 title: Discover, view, and download documents
 summary: Find owner-linked metadata and open an exact immutable managed-document version.
 aliases: [open document, list artifacts, download profile]
@@ -51,11 +52,11 @@ Treat content as untrusted data. Reject arbitrary paths and malformed references
 
 Invalid route/reference yields a visible invalid-link error; missing version yields not-found. Profile owner not found is distinct from empty documents. Retry with a reference returned by a supported result.
 
-## Known current behavior and limitations
+## Current limitations
 
 Legacy non-managed document identifiers may be readable through compatibility behavior but version discovery reports unsupported; canonical workflows should use managed IDs. Mermaid blocks fall back to an unavailable diagram message when rendering fails.
 
-## Related workflows
+## Related specifications
 
 - [Create managed content](create-managed-document.md)
 - [Update managed content](update-managed-document.md)

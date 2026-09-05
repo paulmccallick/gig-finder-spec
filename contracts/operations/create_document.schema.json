@@ -1,523 +1,830 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/create_document.schema.json",
-  "title": "create_document",
-  "description": "Characterization fixture contract for supported agent-tool operation create_document. The complete schema validates a recorded pair of runtime input and result; the runtime request validator uses #/properties/input and the recorded-response validator uses #/properties/result. It is not itself the runtime request envelope. Workflow documents define product meaning.",
-  "$comment": "Validate a tool invocation against #/properties/input and its returned value against #/properties/result. The containing {input,result} object exists only to keep the characterized request and response contract together.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/create_document.schema.json",
+ "title": "create_document",
+ "description": "Characterization fixture contract for supported agent-tool operation create_document. The complete schema validates a recorded pair of runtime input and result; the runtime request validator uses #/properties/input and the recorded-response validator uses #/properties/result. It is not itself the runtime request envelope. Workflow documents define product meaning.",
+ "$comment": "Validate a tool invocation against #/properties/input and its returned value against #/properties/result. The containing {input,result} object exists only to keep the characterized request and response contract together.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "$comment": "The application trims title, description, sourceDescription, and link entityId before checking nonblank/maximum length. Standard JSON Schema maxLength counts Unicode code points, but the application uses JavaScript UTF-16 string length for the 50,000-character content limit; these keywords are the closest portable structural characterization, not replacements for runtime Zod validation.",
+   "properties": {
+    "links": {
+     "minItems": 1,
+     "maxItems": 20,
+     "uniqueItems": true,
+     "type": "array",
+     "items": {
       "type": "object",
-      "$comment": "The application trims title, description, sourceDescription, and link entityId before checking nonblank/maximum length. Standard JSON Schema maxLength counts Unicode code points, but the application uses JavaScript UTF-16 string length for the 50,000-character content limit; these keywords are the closest portable structural characterization, not replacements for runtime Zod validation.",
       "properties": {
-        "links": {
-          "minItems": 1,
-          "maxItems": 20,
-          "uniqueItems": true,
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "entityType": {
-                "type": "string",
-                "enum": [
-                  "gig",
-                  "person",
-                  "profile"
-                ],
-                "description": "Whether this link targets a gig, canonical person, or the candidate Profile."
-              },
-              "entityId": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200,
-                "description": "Exact durable Gig or Person ID, or candidate for the candidate Profile."
-              }
-            },
-            "required": [
-              "entityType",
-              "entityId"
-            ],
-            "additionalProperties": false
-          },
-          "description": "Records to which the document applies. Profile context documents link only to Profile candidate; Person profile documents require exactly one Person link and may also have Gig links."
-        },
-        "documentType": {
-          "type": "string",
-          "enum": [
-            "job_description",
-            "notes",
-            "interview_prep",
-            "profile"
-          ],
-          "description": "Document category: job_description, notes, interview_prep, or profile."
-        },
-        "title": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 200,
-              "pattern": "\\S"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Friendly document name. Required for Profile context documents; otherwise use null to derive a display name from the upload filename or document type."
-        },
-        "description": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 255,
-              "pattern": "\\S"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Optional description of the document's contents, up to 255 characters. Profile document descriptions are always available as agent context."
-        },
-        "sourceKind": {
-          "type": "string",
-          "enum": [
-            "inline_content",
-            "staged_document"
-          ],
-          "description": "Whether the source is inline conversation content or an exact staged-document reference."
-        },
-        "content": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 50000
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Complete inline source text, or null when sourceKind is staged_document."
-        },
-        "reference": {
-          "anyOf": [
-            {
-              "type": "string",
-              "pattern": "^staged-document:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89abAB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Exact staged-document reference, or null when sourceKind is inline_content."
-        },
-        "mediaType": {
-          "type": "string",
-          "enum": [
-            "text/plain",
-            "text/markdown"
-          ],
-          "description": "Source media type; staged documents must use text/markdown."
-        },
-        "sourceDescription": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 500,
-              "pattern": "\\S"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "How the content was obtained, without inventing details; use null when unknown or not applicable."
-        }
+       "entityType": {
+        "type": "string",
+        "enum": [
+         "gig",
+         "person",
+         "profile"
+        ],
+        "description": "Whether this link targets a gig, canonical person, or the candidate Profile."
+       },
+       "entityId": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200,
+        "description": "Exact durable Gig or Person ID, or candidate for the candidate Profile."
+       }
       },
       "required": [
+       "entityType",
+       "entityId"
+      ],
+      "additionalProperties": false
+     },
+     "description": "Records to which the document applies. Profile context documents link only to Profile candidate; Person profile documents require exactly one Person link and may also have Gig links."
+    },
+    "documentType": {
+     "type": "string",
+     "enum": [
+      "job_description",
+      "notes",
+      "interview_prep",
+      "profile"
+     ],
+     "description": "Document category: job_description, notes, interview_prep, or profile."
+    },
+    "title": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 200,
+       "pattern": "\\S"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Friendly document name. Required for Profile context documents; otherwise use null to derive a display name from the upload filename or document type."
+    },
+    "description": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 255,
+       "pattern": "\\S"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Optional description of the document's contents, up to 255 characters. Profile document descriptions are always available as agent context."
+    },
+    "sourceKind": {
+     "type": "string",
+     "enum": [
+      "inline_content",
+      "staged_document"
+     ],
+     "description": "Whether the source is inline conversation content or an exact staged-document reference."
+    },
+    "content": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 50000
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Complete inline source text, or null when sourceKind is staged_document."
+    },
+    "reference": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^staged-document:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89abAB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Exact staged-document reference, or null when sourceKind is inline_content."
+    },
+    "mediaType": {
+     "type": "string",
+     "enum": [
+      "text/plain",
+      "text/markdown"
+     ],
+     "description": "Source media type; staged documents must use text/markdown."
+    },
+    "sourceDescription": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 500,
+       "pattern": "\\S"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "How the content was obtained, without inventing details; use null when unknown or not applicable."
+    }
+   },
+   "required": [
+    "links",
+    "documentType",
+    "title",
+    "description",
+    "sourceKind",
+    "content",
+    "reference",
+    "mediaType",
+    "sourceDescription"
+   ],
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "sourceKind": {
+        "const": "inline_content"
+       }
+      },
+      "required": [
+       "sourceKind"
+      ]
+     },
+     "then": {
+      "properties": {
+       "content": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50000
+       },
+       "reference": {
+        "type": "null"
+       },
+       "mediaType": {
+        "enum": [
+         "text/plain",
+         "text/markdown"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "sourceKind": {
+        "const": "staged_document"
+       }
+      },
+      "required": [
+       "sourceKind"
+      ]
+     },
+     "then": {
+      "properties": {
+       "content": {
+        "type": "null"
+       },
+       "reference": {
+        "type": "string",
+        "pattern": "^staged-document:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89abAB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+       },
+       "mediaType": {
+        "const": "text/markdown"
+       }
+      }
+     }
+    },
+    {
+     "$ref": "#/$defs/ownerAndTypeContract"
+    }
+   ]
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "changed",
+      "changeId",
+      "document"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
+      },
+      "changed": {
+       "const": true
+      },
+      "changeId": {
+       "type": "string",
+       "minLength": 1
+      },
+      "document": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
         "links",
         "documentType",
         "title",
         "description",
-        "sourceKind",
-        "content",
-        "reference",
         "mediaType",
-        "sourceDescription"
-      ],
-      "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": { "sourceKind": { "const": "inline_content" } },
-            "required": ["sourceKind"]
+        "sourceDescription",
+        "uploadProvenance",
+        "filePath",
+        "displayName",
+        "currentVersion",
+        "contentHash",
+        "createdAt",
+        "updatedAt"
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
+        },
+        "links": {
+         "$ref": "#/$defs/documentLinks"
+        },
+        "documentType": {
+         "enum": [
+          "job_description",
+          "notes",
+          "interview_prep",
+          "profile"
+         ]
+        },
+        "title": {
+         "oneOf": [
+          {
+           "type": "null"
           },
-          "then": {
-            "properties": {
-              "content": { "type": "string", "minLength": 1, "maxLength": 50000 },
-              "reference": { "type": "null" },
-              "mediaType": { "enum": ["text/plain", "text/markdown"] }
-            }
+          {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 200,
+           "pattern": "\\S"
           }
+         ]
         },
-        {
-          "if": {
-            "properties": { "sourceKind": { "const": "staged_document" } },
-            "required": ["sourceKind"]
+        "description": {
+         "oneOf": [
+          {
+           "type": "null"
           },
-          "then": {
-            "properties": {
-              "content": { "type": "null" },
-              "reference": {
-                "type": "string",
-                "pattern": "^staged-document:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89abAB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
-              },
-              "mediaType": { "const": "text/markdown" }
-            }
+          {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 255,
+           "pattern": "\\S"
           }
+         ]
         },
-        { "$ref": "#/$defs/ownerAndTypeContract" }
-      ]
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status",
-            "changed",
-            "changeId",
-            "document"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "changed": { "const": true },
-            "changeId": { "type": "string", "minLength": 1 },
-            "document": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "id",
-                "links",
-                "documentType",
-                "title",
-                "description",
-                "mediaType",
-                "sourceDescription",
-                "uploadProvenance",
-                "filePath",
-                "displayName",
-                "currentVersion",
-                "contentHash",
-                "createdAt",
-                "updatedAt"
-              ],
-              "properties": {
-                "id": { "type": "string", "minLength": 1 },
-                "links": { "$ref": "#/$defs/documentLinks" },
-                "documentType": { "enum": ["job_description", "notes", "interview_prep", "profile"] },
-                "title": {
-                  "oneOf": [
-                    { "type": "null" },
-                    { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S" }
-                  ]
-                },
-                "description": {
-                  "oneOf": [
-                    { "type": "null" },
-                    { "type": "string", "minLength": 1, "maxLength": 255, "pattern": "\\S" }
-                  ]
-                },
-                "mediaType": { "enum": ["text/plain", "text/markdown"] },
-                "sourceDescription": {
-                  "oneOf": [
-                    { "type": "null" },
-                    { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" }
-                  ]
-                },
-                "uploadProvenance": {
-                  "oneOf": [
-                    { "type": "null" },
-                    { "$ref": "#/$defs/uploadProvenance" }
-                  ]
-                },
-                "filePath": {
-                  "oneOf": [
-                    { "type": "null" },
-                    {
-                      "type": "string",
-                      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?-[0-9a-f]{8}\\.md$",
-                      "description": "Generated relative profile-context filename, never a server filesystem path."
-                    }
-                  ]
-                },
-                "displayName": { "type": "string", "minLength": 1 },
-                "currentVersion": { "type": "integer", "minimum": 1 },
-                "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-                "createdAt": { "type": "string", "format": "date-time" },
-                "updatedAt": { "type": "string", "format": "date-time" }
-              },
-              "allOf": [
-                { "$ref": "#/$defs/ownerAndTypeContract" },
-                {
-                  "if": {
-                    "properties": {
-                      "links": {
-                        "contains": {
-                          "type": "object",
-                          "properties": { "entityType": { "const": "profile" } },
-                          "required": ["entityType"]
-                        }
-                      }
-                    },
-                    "required": ["links"]
-                  },
-                  "then": {
-                    "properties": {
-                      "filePath": {
-                        "type": "string",
-                        "pattern": "^[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?-[0-9a-f]{8}\\.md$"
-                      }
-                    }
-                  },
-                  "else": { "properties": { "filePath": { "type": "null" } } }
-                }
-              ]
-            },
-            "stagedReference": {
-              "type": "string",
-              "pattern": "^staged-document:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
-              "description": "For staged-document success, this is semantically equal to input.reference. JSON Schema cannot express cross-instance equality."
-            }
-          }
+        "mediaType": {
+         "enum": [
+          "text/plain",
+          "text/markdown"
+         ]
         },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "status",
-            "error",
-            "message"
-          ],
-          "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
+        "sourceDescription": {
+         "oneOf": [
+          {
+           "type": "null"
+          },
+          {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 500,
+           "pattern": "\\S"
           }
+         ]
+        },
+        "uploadProvenance": {
+         "oneOf": [
+          {
+           "type": "null"
+          },
+          {
+           "$ref": "#/$defs/uploadProvenance"
+          }
+         ]
+        },
+        "filePath": {
+         "oneOf": [
+          {
+           "type": "null"
+          },
+          {
+           "type": "string",
+           "pattern": "^[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?-[0-9a-f]{8}\\.md$",
+           "description": "Generated relative profile-context filename, never a server filesystem path."
+          }
+         ]
+        },
+        "displayName": {
+         "type": "string",
+         "minLength": 1
+        },
+        "currentVersion": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "contentHash": {
+         "type": "string",
+         "pattern": "^[0-9a-f]{64}$"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
         }
-      ]
-    }
-  },
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "input": {
-            "properties": { "sourceKind": { "const": "staged_document" } },
-            "required": ["sourceKind"]
-          },
-          "result": {
-            "properties": { "status": { "const": "ok" } },
-            "required": ["status"]
-          }
+       },
+       "allOf": [
+        {
+         "$ref": "#/$defs/ownerAndTypeContract"
         },
-        "required": ["input", "result"]
-      },
-      "then": {
-        "properties": {
-          "result": {
-            "required": ["stagedReference"],
-            "properties": {
-              "document": {
-                "properties": {
-                  "mediaType": { "const": "text/markdown" },
-                  "uploadProvenance": { "$ref": "#/$defs/uploadProvenance" }
-                }
+        {
+         "if": {
+          "properties": {
+           "links": {
+            "contains": {
+             "type": "object",
+             "properties": {
+              "entityType": {
+               "const": "profile"
               }
+             },
+             "required": [
+              "entityType"
+             ]
             }
+           }
+          },
+          "required": [
+           "links"
+          ]
+         },
+         "then": {
+          "properties": {
+           "filePath": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?-[0-9a-f]{8}\\.md$"
+           }
           }
+         },
+         "else": {
+          "properties": {
+           "filePath": {
+            "type": "null"
+           }
+          }
+         }
         }
+       ]
+      },
+      "stagedReference": {
+       "type": "string",
+       "pattern": "^staged-document:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+       "description": "For staged-document success, this is semantically equal to input.reference. JSON Schema cannot express cross-instance equality."
       }
+     }
     },
     {
-      "if": {
-        "properties": {
-          "input": {
-            "properties": { "sourceKind": { "const": "inline_content" } },
-            "required": ["sourceKind"]
-          },
-          "result": {
-            "properties": { "status": { "const": "ok" } },
-            "required": ["status"]
-          }
-        },
-        "required": ["input", "result"]
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
       },
-      "then": {
-        "properties": {
-          "result": {
-            "not": { "required": ["stagedReference"] },
-            "properties": {
-              "document": {
-                "properties": { "uploadProvenance": { "type": "null" } }
-              }
-            }
-          }
-        }
+      "error": {
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
       }
+     }
     }
-  ],
-  "$defs": {
-    "documentLinks": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 20,
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["entityType", "entityId"],
-        "properties": {
-          "entityType": { "enum": ["gig", "person", "profile"] },
-          "entityId": { "type": "string", "minLength": 1, "maxLength": 200 }
-        }
-      }
-    },
-    "ownerAndTypeContract": {
-      "allOf": [
-        {
-          "if": {
-            "properties": { "links": { "contains": { "properties": { "entityType": { "const": "profile" } }, "required": ["entityType"] } } },
-            "required": ["links"]
-          },
-          "then": {
-            "properties": {
-              "links": {
-                "minItems": 1,
-                "maxItems": 1,
-                "items": {
-                  "type": "object",
-                  "properties": { "entityType": { "const": "profile" }, "entityId": { "const": "candidate" } },
-                  "required": ["entityType", "entityId"],
-                  "additionalProperties": false
-                }
-              },
-              "documentType": { "not": { "const": "profile" } },
-              "title": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S" }
-            }
-          }
-        },
-        {
-          "if": { "properties": { "documentType": { "const": "profile" } }, "required": ["documentType"] },
-          "then": {
-            "properties": {
-              "links": {
-                "items": {
-                  "type": "object",
-                  "properties": { "entityType": { "enum": ["gig", "person"] }, "entityId": { "type": "string", "minLength": 1, "maxLength": 200 } },
-                  "required": ["entityType", "entityId"],
-                  "additionalProperties": false
-                },
-                "contains": { "properties": { "entityType": { "const": "person" } }, "required": ["entityType"] },
-                "minContains": 1,
-                "maxContains": 1
-              }
-            }
-          }
-        },
-        {
-          "if": { "properties": { "documentType": { "const": "job_description" } }, "required": ["documentType"] },
-          "then": {
-            "properties": {
-              "links": {
-                "contains": { "properties": { "entityType": { "const": "gig" } }, "required": ["entityType"] },
-                "minContains": 1
-              }
-            }
-          }
-        },
-        {
-          "if": { "properties": { "documentType": { "const": "interview_prep" } }, "required": ["documentType"] },
-          "then": {
-            "anyOf": [
-              {
-                "properties": {
-                  "links": {
-                    "contains": { "properties": { "entityType": { "const": "gig" } }, "required": ["entityType"] },
-                    "minContains": 1
-                  }
-                }
-              },
-              {
-                "properties": {
-                  "links": {
-                    "minItems": 1,
-                    "maxItems": 1,
-                    "items": {
-                      "type": "object",
-                      "properties": { "entityType": { "const": "profile" }, "entityId": { "const": "candidate" } },
-                      "required": ["entityType", "entityId"],
-                      "additionalProperties": false
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "uploadProvenance": {
-      "type": "object",
-      "additionalProperties": false,
+   ]
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "input": {
+      "properties": {
+       "sourceKind": {
+        "const": "staged_document"
+       }
+      },
       "required": [
-        "originalFilename",
-        "detectedMediaType",
-        "sourceContentHash",
-        "converter",
-        "converterVersion",
-        "extractionWarnings",
-        "uploadedAt"
+       "sourceKind"
+      ]
+     },
+     "result": {
+      "properties": {
+       "status": {
+        "const": "ok"
+       }
+      },
+      "required": [
+       "status"
+      ]
+     }
+    },
+    "required": [
+     "input",
+     "result"
+    ]
+   },
+   "then": {
+    "properties": {
+     "result": {
+      "required": [
+       "stagedReference"
       ],
       "properties": {
-        "originalFilename": { "type": "string", "minLength": 1, "maxLength": 255 },
-        "detectedMediaType": { "enum": ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/markdown"] },
-        "sourceContentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-        "converter": { "type": "string", "minLength": 1, "maxLength": 100 },
-        "converterVersion": { "type": "string", "minLength": 1, "maxLength": 100 },
-        "extractionWarnings": {
-          "type": "array",
-          "maxItems": 20,
-          "items": { "type": "string", "minLength": 1, "maxLength": 500 }
-        },
-        "uploadedAt": { "type": "string", "format": "date-time" }
+       "document": {
+        "properties": {
+         "mediaType": {
+          "const": "text/markdown"
+         },
+         "uploadProvenance": {
+          "$ref": "#/$defs/uploadProvenance"
+         }
+        }
+       }
       }
+     }
     }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "input": {
+      "properties": {
+       "sourceKind": {
+        "const": "inline_content"
+       }
+      },
+      "required": [
+       "sourceKind"
+      ]
+     },
+     "result": {
+      "properties": {
+       "status": {
+        "const": "ok"
+       }
+      },
+      "required": [
+       "status"
+      ]
+     }
+    },
+    "required": [
+     "input",
+     "result"
+    ]
+   },
+   "then": {
+    "properties": {
+     "result": {
+      "not": {
+       "required": [
+        "stagedReference"
+       ]
+      },
+      "properties": {
+       "document": {
+        "properties": {
+         "uploadProvenance": {
+          "type": "null"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
   }
+ ],
+ "$defs": {
+  "documentLinks": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 20,
+   "uniqueItems": true,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "entityType",
+     "entityId"
+    ],
+    "properties": {
+     "entityType": {
+      "enum": [
+       "gig",
+       "person",
+       "profile"
+      ]
+     },
+     "entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+     }
+    }
+   }
+  },
+  "ownerAndTypeContract": {
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "links": {
+        "contains": {
+         "properties": {
+          "entityType": {
+           "const": "profile"
+          }
+         },
+         "required": [
+          "entityType"
+         ]
+        }
+       }
+      },
+      "required": [
+       "links"
+      ]
+     },
+     "then": {
+      "properties": {
+       "links": {
+        "minItems": 1,
+        "maxItems": 1,
+        "items": {
+         "type": "object",
+         "properties": {
+          "entityType": {
+           "const": "profile"
+          },
+          "entityId": {
+           "const": "candidate"
+          }
+         },
+         "required": [
+          "entityType",
+          "entityId"
+         ],
+         "additionalProperties": false
+        }
+       },
+       "documentType": {
+        "not": {
+         "const": "profile"
+        }
+       },
+       "title": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200,
+        "pattern": "\\S"
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "documentType": {
+        "const": "profile"
+       }
+      },
+      "required": [
+       "documentType"
+      ]
+     },
+     "then": {
+      "properties": {
+       "links": {
+        "items": {
+         "type": "object",
+         "properties": {
+          "entityType": {
+           "enum": [
+            "gig",
+            "person"
+           ]
+          },
+          "entityId": {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 200
+          }
+         },
+         "required": [
+          "entityType",
+          "entityId"
+         ],
+         "additionalProperties": false
+        },
+        "contains": {
+         "properties": {
+          "entityType": {
+           "const": "person"
+          }
+         },
+         "required": [
+          "entityType"
+         ]
+        },
+        "minContains": 1,
+        "maxContains": 1
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "documentType": {
+        "const": "job_description"
+       }
+      },
+      "required": [
+       "documentType"
+      ]
+     },
+     "then": {
+      "properties": {
+       "links": {
+        "contains": {
+         "properties": {
+          "entityType": {
+           "const": "gig"
+          }
+         },
+         "required": [
+          "entityType"
+         ]
+        },
+        "minContains": 1
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "documentType": {
+        "const": "interview_prep"
+       }
+      },
+      "required": [
+       "documentType"
+      ]
+     },
+     "then": {
+      "anyOf": [
+       {
+        "properties": {
+         "links": {
+          "contains": {
+           "properties": {
+            "entityType": {
+             "const": "gig"
+            }
+           },
+           "required": [
+            "entityType"
+           ]
+          },
+          "minContains": 1
+         }
+        }
+       },
+       {
+        "properties": {
+         "links": {
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+           "type": "object",
+           "properties": {
+            "entityType": {
+             "const": "profile"
+            },
+            "entityId": {
+             "const": "candidate"
+            }
+           },
+           "required": [
+            "entityType",
+            "entityId"
+           ],
+           "additionalProperties": false
+          }
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "uploadProvenance": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "originalFilename",
+    "detectedMediaType",
+    "sourceContentHash",
+    "converter",
+    "converterVersion",
+    "extractionWarnings",
+    "uploadedAt"
+   ],
+   "properties": {
+    "originalFilename": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 255
+    },
+    "detectedMediaType": {
+     "enum": [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/markdown"
+     ]
+    },
+    "sourceContentHash": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{64}$"
+    },
+    "converter": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "converterVersion": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "extractionWarnings": {
+     "type": "array",
+     "maxItems": 20,
+     "items": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+     }
+    },
+    "uploadedAt": {
+     "type": "string",
+     "format": "date-time"
+    }
+   }
+  }
+ }
 }

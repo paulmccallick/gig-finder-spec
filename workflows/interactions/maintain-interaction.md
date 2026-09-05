@@ -1,6 +1,7 @@
 ---
 id: maintain-interaction
 capability: interactions
+feature: interaction-history
 title: Record or correct an interaction
 summary: Create, update, supersede, or soft-delete a contact event with revision safety.
 aliases: [log meeting, record message, correct contact]
@@ -46,17 +47,17 @@ The resulting full Interaction is returned. People/Gig reads include affected In
 
 ## Safety rules
 
-Never allow an Interaction to supersede itself or form a cycle. Structured data is accepted by CLI core contract but agent creation fixes it to an empty object and agent updates do not expose arbitrary internal bookkeeping. Deletion must not cascade-delete People or Gigs.
+Never allow an Interaction to supersede itself or form a cycle. Structured data is accepted by the CLI core contract; agent creation fixes it to an empty object and agent update cannot mutate it. Agent creation also fixes `originChangeId` to null. Agent update currently exposes exact `originChangeId` as a set/clear nullable string even though it is bookkeeping provenance; the value is not resolved against the change ledger. Deletion must not cascade-delete People or Gigs.
 
 ## Failure, retry, and recovery
 
 Missing references, stale deletion revision, malformed timestamps, or cyclic correction fail atomically. Re-read before retrying a stale delete. Eligible audited changes may be reverted.
 
-## Known current behavior and limitations
+## Current limitations
 
-No dashboard editor exists. Agent update schema can set/clear exposed fields but `structuredData` and `originChangeId` are not intended user-facing inputs even though the underlying Interaction schema includes them.
+No dashboard editor exists. `originChangeId` has no dashboard meaning or target-existence validation, but the current strict agent update contract nevertheless supports setting or clearing it. `structuredData` remains CLI-only.
 
-## Related workflows
+## Related specifications
 
 - [Browse interaction history](browse-interactions.md)
 - [Browse people](../networking/browse-people.md)

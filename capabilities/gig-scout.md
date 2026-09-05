@@ -8,7 +8,7 @@ aliases: [Scout, sourcing scan, discovered position]
 
 ## Purpose and boundary
 
-Lets the candidate scan configured company career sources, process descriptions, screen relevance and candidate match, review discovered positions, and promote chosen positions into canonical Gigs. Company-source configuration/import is operational input, not a dashboard workflow or public API.
+Lets the candidate scan versioned official company sources, process authoritative descriptions, screen relevance and candidate match, review cross-run positions, and promote chosen positions into canonical Gigs. Operator backfill and company import have durable product effects but are not current candidate-facing UI/tool/CLI/public workflows.
 
 ## Vocabulary
 
@@ -18,14 +18,19 @@ Lets the candidate scan configured company career sources, process descriptions,
 | position | Durable discovered posting observation and its processing/review state. |
 | pursue | Review decision that promotes to a new or exact existing Gig. |
 | relevance criteria | Versioned instructions and threshold used by Scout screening. |
+| processing work | Durable semantic stage for observation binding, description, relevance, or candidate match. |
+| backfill | Operator reprocessing bound to legacy run or exact position set. |
 
-## Workflows
+## Features
 
-| Workflow | Use when | Document |
+| Feature | Use when | Document |
 |---|---|---|
-| Run Scout | Start and inspect a scan | [Open](../workflows/scout/run-scout.md) |
-| Configure relevance | Save screening criteria and threshold | [Open](../workflows/scout/configure-relevance.md) |
-| Review and promote | Decide, defer, resolve identity, or retry promotion | [Open](../workflows/scout/review-and-promote.md) |
+| Company and official sources | Understand versioned companies, source contracts, and import behavior | [Open](../features/scout/company-sources.md) |
+| Relevance configuration | Save criteria/threshold and roll the version into eligible processing | [Open](../features/scout/relevance-configuration.md) |
+| Discovery runs and company work | Start/inspect scans, trust source outcomes, and aggregate/reconcile results | [Open](../features/scout/discovery-runs.md) |
+| Position processing | Acquire descriptions, screen relevance, score match, and project review state | [Open](../features/scout/position-processing.md) |
+| Review and promotion | Decide, defer, resolve identity, promote, or retry exact intent | [Open](../features/scout/review-promotion.md) |
+| Position reprocessing | Understand durable legacy/explicit backfill and workflow protection | [Open](../features/scout/position-reprocessing.md) |
 
 ## Shared foundations
 

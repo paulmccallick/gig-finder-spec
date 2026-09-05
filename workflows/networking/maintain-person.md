@@ -1,6 +1,7 @@
 ---
 id: maintain-person
 capability: networking
+feature: people
 title: Create or maintain a person
 summary: Create one canonical contact or update explicit identity and relationship fields.
 aliases: [add contact, update person, change relationship status]
@@ -26,18 +27,18 @@ Resolve likely duplicates first. Agent creation requires explicit confirmation; 
 
 ## Workflow
 
-1. Search by known company/person names and inspect candidates.
-2. Supply the intended fields. Name must be nonblank; URLs and calendar dates validate; enum values use the capability vocabulary.
+1. Search by known company/person names and inspect candidates. Creation also rejects an exact existing LinkedIn profile URL or a case-insensitive trimmed name/company match.
+2. Supply the intended fields. Name must be nonblank; LinkedIn URL must be HTTPS under the LinkedIn profile path; calendar dates and enum values validate.
 3. Agent updates express ordered set/clear operations; CLI supplies a strict JSON patch.
 4. Persist one audited change and return the composed Person.
 
 ## Decisions and variants
 
-Defaults for omitted create fields are evidence-backed but surface-dependent: core creation supplies neutral relationship/status/priority defaults, while agent creation requires all contract fields. Nested relationship fields merge on update; notes and tags replace as arrays. Nullable identity and relationship fields may be cleared.
+Core/CLI creation defaults relationship type to `professional_contact`, strength to `unknown`, introducer/relationship notes to null, priority to `unranked`, status to `not_contacted`, why-interesting to null, and notes/tags to empty arrays; agent creation requires all contract fields. Relationship type is any nonblank string. Strength is `strong`, `warm`, `limited`, or `unknown`; priority is `high`, `medium`, `low`, or `unranked`; status is `not_contacted`, `outreach_planned`, `outreach_sent`, `awaiting_response`, `conversation_scheduled`, `active_relationship`, `follow_up_due`, `paused`, or `do_not_contact`. Nested relationship fields merge on update; notes and tags replace as arrays. Nullable identity and relationship fields may be cleared.
 
 ## State changes
 
-Creates or advances the Person revision. Derived last-contact fields and profile status do not accept direct mutation; they change only through completed Interactions or profile documents.
+Creates or advances the Person revision. Derived last-contact fields do not accept direct mutation and change only through completed Interactions. Profile status is also immutable as a direct field but follows whether `linkedInProfileUrl` is present; linked Person-profile documents instead change `hasProfile`.
 
 ## Outputs and observable effects
 
@@ -51,11 +52,11 @@ Do not create a duplicate merely because names vary. Do not directly set derived
 
 Strict schemas reject unknown/immutable keys. Duplicate change identity with mismatched payload fails. Dry-run leaves no change. Resolve and reload after not-found or consistency failures.
 
-## Known current behavior and limitations
+## Current limitations
 
-There is no supported delete-Person operation and no dashboard editor. The uniqueness of a real-world person is not enforced by name, company, or LinkedIn URL; duplicate avoidance is an actor/agent resolution obligation.
+There is no supported delete-Person operation and no dashboard editor. Deterministic duplicate checks cannot identify a real person whose normalized name/company and LinkedIn URL both differ from the stored record.
 
-## Related workflows
+## Related specifications
 
 - [Browse people](browse-people.md)
 - [Link person and opportunity](link-person-opportunity.md)

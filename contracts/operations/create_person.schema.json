@@ -1,237 +1,530 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/create_person.schema.json",
-  "title": "create_person",
-  "description": "Wire contract for supported agent-tool operation create_person. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Person name."
-        },
-        "company": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Company, or null."
-        },
-        "title": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Title, or null."
-        },
-        "linkedInProfileUrl": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "LinkedIn profile URL, or null when it is not known."
-        },
-        "connectedOn": {
-          "anyOf": [
-            {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Connection date, or null."
-        },
-        "relationship": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "minLength": 1,
-              "description": "How the candidate knows this person."
-            },
-            "strength": {
-              "type": "string",
-              "enum": [
-                "strong",
-                "warm",
-                "limited",
-                "unknown"
-              ],
-              "description": "Relationship strength."
-            },
-            "introducedBy": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Introducer, or null."
-            },
-            "notes": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Relationship notes, or null."
-            }
-          },
-          "required": [
-            "type",
-            "strength",
-            "introducedBy",
-            "notes"
-          ],
-          "additionalProperties": false,
-          "description": "Relationship details."
-        },
-        "priority": {
-          "type": "string",
-          "enum": [
-            "high",
-            "medium",
-            "low",
-            "unranked"
-          ],
-          "description": "Relationship priority."
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "not_contacted",
-            "outreach_planned",
-            "outreach_sent",
-            "awaiting_response",
-            "conversation_scheduled",
-            "active_relationship",
-            "follow_up_due",
-            "paused",
-            "do_not_contact"
-          ],
-          "description": "Relationship workflow status."
-        },
-        "whyInteresting": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Why this person matters, or null."
-        },
-        "notes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Replacement notes list."
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": "Replacement tags list."
-        }
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/create_person.schema.json",
+ "title": "create_person",
+ "description": "Wire contract for supported agent-tool operation create_person. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Person name."
+    },
+    "company": {
+     "anyOf": [
+      {
+       "type": "string"
       },
-      "required": [
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Company, or null."
+    },
+    "title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Title, or null."
+    },
+    "linkedInProfileUrl": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "LinkedIn profile URL, or null when it is not known."
+    },
+    "connectedOn": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Connection date, or null."
+    },
+    "relationship": {
+     "type": "object",
+     "properties": {
+      "type": {
+       "type": "string",
+       "minLength": 1,
+       "description": "How the candidate knows this person."
+      },
+      "strength": {
+       "type": "string",
+       "enum": [
+        "strong",
+        "warm",
+        "limited",
+        "unknown"
+       ],
+       "description": "Relationship strength."
+      },
+      "introducedBy": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Introducer, or null."
+      },
+      "notes": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Relationship notes, or null."
+      }
+     },
+     "required": [
+      "type",
+      "strength",
+      "introducedBy",
+      "notes"
+     ],
+     "additionalProperties": false,
+     "description": "Relationship details."
+    },
+    "priority": {
+     "type": "string",
+     "enum": [
+      "high",
+      "medium",
+      "low",
+      "unranked"
+     ],
+     "description": "Relationship priority."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_contacted",
+      "outreach_planned",
+      "outreach_sent",
+      "awaiting_response",
+      "conversation_scheduled",
+      "active_relationship",
+      "follow_up_due",
+      "paused",
+      "do_not_contact"
+     ],
+     "description": "Relationship workflow status."
+    },
+    "whyInteresting": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "description": "Why this person matters, or null."
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Replacement notes list."
+    },
+    "tags": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     },
+     "description": "Replacement tags list."
+    }
+   },
+   "required": [
+    "name",
+    "company",
+    "title",
+    "linkedInProfileUrl",
+    "connectedOn",
+    "relationship",
+    "priority",
+    "status",
+    "whyInteresting",
+    "notes",
+    "tags"
+   ],
+   "additionalProperties": false
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "record",
+      "changeId"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
+      },
+      "record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
         "name",
         "company",
         "title",
         "linkedInProfileUrl",
+        "profileStatus",
         "connectedOn",
         "relationship",
         "priority",
         "status",
+        "lastContacted",
+        "lastContactMethod",
+        "lastContactSummary",
         "whyInteresting",
         "notes",
-        "tags"
-      ],
-      "additionalProperties": false
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "changeId"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "changeId": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          }
+        "tags",
+        "createdAt",
+        "updatedAt",
+        "hasProfile",
+        "documents",
+        "interactions"
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
         },
-        {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "company": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "title": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "linkedInProfileUrl": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "profileStatus": {
+         "type": "string",
+         "enum": [
+          "missing",
+          "verified"
+         ]
+        },
+        "connectedOn": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "relationship": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "type",
+          "strength",
+          "introducedBy",
+          "notes"
+         ],
+         "properties": {
+          "type": {
+           "type": "string",
+           "minLength": 1
+          },
+          "strength": {
+           "type": "string",
+           "enum": [
+            "strong",
+            "warm",
+            "limited",
+            "unknown"
+           ]
+          },
+          "introducedBy": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "notes": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         }
+        },
+        "priority": {
+         "type": "string",
+         "enum": [
+          "high",
+          "medium",
+          "low",
+          "unranked"
+         ]
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "not_contacted",
+          "outreach_planned",
+          "outreach_sent",
+          "awaiting_response",
+          "conversation_scheduled",
+          "active_relationship",
+          "follow_up_due",
+          "paused",
+          "do_not_contact"
+         ]
+        },
+        "lastContacted": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "lastContactMethod": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "lastContactSummary": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "whyInteresting": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "notes": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "tags": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "createdAt": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "updatedAt": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "hasProfile": {
+         "type": "boolean"
+        },
+        "documents": {
+         "type": "array",
+         "items": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "status",
-            "error",
-            "message"
+           "id",
+           "type",
+           "title",
+           "displayName",
+           "currentVersion"
           ],
           "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
+           "id": {
+            "type": "string",
+            "minLength": 1
+           },
+           "type": {
+            "type": "string",
+            "enum": [
+             "job_description",
+             "notes",
+             "interview_prep",
+             "profile"
+            ]
+           },
+           "title": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "displayName": {
+            "type": "string",
+            "minLength": 1
+           },
+           "currentVersion": {
+            "type": "integer",
+            "minimum": 1
+           }
           }
+         }
+        },
+        "interactions": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "id",
+           "subject",
+           "kind",
+           "channel",
+           "status",
+           "startsAt"
+          ],
+          "properties": {
+           "id": {
+            "type": "string",
+            "minLength": 1
+           },
+           "subject": {
+            "type": "string",
+            "minLength": 1
+           },
+           "kind": {
+            "type": "string",
+            "enum": [
+             "message",
+             "call",
+             "meeting",
+             "interview",
+             "conversation",
+             "other"
+            ]
+           },
+           "channel": {
+            "type": "string",
+            "enum": [
+             "email",
+             "linkedin",
+             "sms",
+             "chat",
+             "phone",
+             "video",
+             "in_person",
+             "other"
+            ]
+           },
+           "status": {
+            "type": "string",
+            "enum": [
+             "planned",
+             "confirmed",
+             "completed",
+             "canceled",
+             "no_show"
+            ]
+           },
+           "startsAt": {
+            "type": "string",
+            "format": "date-time"
+           }
+          }
+         }
         }
-      ]
+       }
+      },
+      "changeId": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
+      },
+      "error": {
+       "type": "string",
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
+      }
+     }
     }
+   ]
   }
+ }
 }

@@ -1,11 +1,12 @@
 ---
 id: browse-opportunities-agent-tool
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/browse-opportunities.md
 surface: agent-tool
 summary: Strict paginated tools support structured filtering and exact detail.
 aliases: [list_gigs, get_gig]
-requires: [../../workflows/opportunities/browse-opportunities.md, ../../contracts/operations/search_gigs_and_people.schema.json, ../../contracts/operations/list_gigs.schema.json, ../../contracts/operations/get_gig.schema.json]
+requires: [../../workflows/opportunities/browse-opportunities.md]
 contract: ../../contracts/operations/list_gigs.schema.json
 ---
 
@@ -25,7 +26,7 @@ Search names when resolving identity, list/filter, then use the returned exact I
 
 ## Outputs or presentation
 
-Read/query service results preserve `ok`, `not_found`, and `consistency_error` meanings. Tool execution failures use stable error categories.
+`list_gigs` and `get_gig` preserve status-bearing `ok`, `not_found`, and `consistency_error` service results. `search_gigs_and_people` instead returns the exact raw object `{ gigs, people, truncated }`, with no status wrapper; each match carries its characterized identity/display fields. Tool execution failures use stable error categories outside those success shapes.
 
 ## Confirmation and authorization
 
@@ -39,10 +40,10 @@ Invalid strict input is rejected before execution; stored inconsistency is not c
 
 Each operation reads current durable state.
 
-## Known limitations
+## Current limitations
 
 No snapshot spans multiple pages.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/browse-opportunities.md)

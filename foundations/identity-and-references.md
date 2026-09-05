@@ -39,10 +39,10 @@ Supported detail reads return exact IDs; database inspection shows enforced fore
 
 ## Used by
 
-- [Create or maintain an opportunity](../workflows/opportunities/maintain-opportunity.md)
-- [Create or maintain a person](../workflows/networking/maintain-person.md)
-- [Link people and opportunities](../workflows/networking/link-person-opportunity.md)
-- [Create or maintain a task](../workflows/tasks/maintain-task.md)
-- [Record or correct an interaction](../workflows/interactions/maintain-interaction.md)
-- [Create managed content](../workflows/documents/create-managed-document.md)
-- [Review and promote Scout positions](../workflows/scout/review-and-promote.md)
+- [Opportunity records](../features/opportunities/opportunity-records.md)
+- [People](../features/networking/people.md)
+- [Person–opportunity relationships](../features/networking/opportunity-relationships.md)
+- [Task tracking](../features/tasks/task-tracking.md)
+- [Interaction history](../features/interactions/interaction-history.md)
+- [Managed documents](../features/documents/managed-documents.md)
+- [Position review and promotion](../features/scout/review-promotion.md)

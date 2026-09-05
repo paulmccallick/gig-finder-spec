@@ -1,6 +1,7 @@
 ---
 id: maintain-opportunity-cli
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/maintain-opportunity.md
 surface: cli
 summary: CLI accepts strict JSON patches, caller-owned IDs, dry runs, and a touch shorthand.
@@ -38,10 +39,10 @@ Bad JSON, unknown flags/fields, or missing values return nonzero with a message.
 
 Writes current configured local database; dashboard sees it only after reload.
 
-## Known limitations
+## Current limitations
 
 Patch files are recommended but not mandatory for sensitive/long text.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/maintain-opportunity.md)

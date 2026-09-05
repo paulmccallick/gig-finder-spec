@@ -1,6 +1,7 @@
 ---
 id: link-person-opportunity
 capability: networking
+feature: opportunity-relationships
 title: Link a person to an opportunity
 summary: Record one typed role connecting an exact Person and Gig.
 aliases: [add recruiter to gig, gig contact, opportunity relationship]
@@ -33,7 +34,7 @@ Exact existing Gig and Person IDs and a relationship value: `interviewer`, `hiri
 
 ## Decisions and variants
 
-The same Person/Gig pair is not presented as a general update workflow; separate relationship records are identified independently. Unsupported persisted relationship values surface as consistency errors.
+The same Person/Gig pair may have distinct role records, but the same active `(Gig, Person, role)` triple is rejected. Records are identified independently and have no general update workflow. Unsupported persisted relationship values surface as consistency errors.
 
 ## State changes
 
@@ -49,13 +50,13 @@ Both references must exist. Do not infer role from a person's title. Do not crea
 
 ## Failure, retry, and recovery
 
-Missing parents, invalid role, or conflicting replay fail atomically. Re-resolve exact parents before retry.
+Missing parents, invalid role, duplicate active triple, or conflicting replay fail atomically. Re-resolve exact parents and list current roles before retry.
 
-## Known current behavior and limitations
+## Current limitations
 
 No supported relationship update/delete operation exists. The CLI accepts creation but its help text does not advertise the `gig-people add` command.
 
-## Related workflows
+## Related specifications
 
 - [Browse people](browse-people.md)
 - [Browse opportunities](../opportunities/browse-opportunities.md)

@@ -2,66 +2,74 @@
 
 ## Corpus and evidence boundary
 
-This is the complete current-behavior corpus in this standalone local repository. Evidence was limited to application source under `src/`, SQL/schema/migrations, source configuration, and tests. Existing README/product/architecture/ADR/plan/PRD prose was not consulted or cited. Internal HTTP routes were treated only as implementation evidence for supported UI behavior, never as public access points.
+This standalone local repository characterizes current GigFinder behavior. Evidence was limited to application source, schemas/migrations, source configuration, and tests. PRDs, product documentation, plans, ADRs, architecture documents, issues, pull requests, and network sources were not consulted. Internal HTTP/service boundaries are evidence for behavior, not public access points.
 
-## Capability and workflow coverage
+## Canonical structure and functional coverage
 
-| Capability | Covered workflows |
+The corpus uses `README → capability → feature → optional detail`. It contains 7 capability routers, 19 mandatory functional feature specs, 19 actor workflows, 4 justified Operational Models, 15 concrete Quality Scenarios, 10 meaningful access-point variants, 6 shared foundations, and 27 strict agent-tool operation contracts.
+
+| Capability | Functional features characterized |
 |---|---|
-| Opportunities | Browse/filter/detail; create; update; CLI touch; availability and Scout ownership boundary |
-| Networking | Browse/detail; create/update Person; typed Person-to-Gig relationship creation |
-| Tasks | Browse/prioritize; create/update/complete/reopen/cancel |
-| Interactions | Browse/filter/detail; create/update/supersede/soft-delete; derived Person contact fields |
-| Documents and profile | Owner discovery; exact/current version reads; UI view/download; inline/staged creation; editable version update; Profile context |
-| Conversational agent | New/resumed conversations; streaming/persistence/budgeting; strict tools; upload staging; global model choice; eligible change reversal |
-| Gig Scout | Versioned relevance criteria; full scan/history/results; position review/defer/irrelevant/pursue; posting identity resolution; promotion retry/reconciliation |
+| Opportunities | Complete Gig records and pipeline invariants; externally observed posting availability |
+| Networking | People/defaults/status lanes; typed Gig–Person relationships; derived contact recency |
+| Tasks | Task classification, relationship binding, completion/reopen/cancel lifecycle |
+| Interactions | Interaction/participant lifecycle, supersession, correction, deletion, and derived contact effects |
+| Documents and profile | Managed ownership/versioning/provenance; metadata-only candidate-Profile context discovery |
+| Conversational agent | Conversation streaming/persistence/budgeting; upload staging; exact global model selection; audited reversal |
+| Gig Scout | Company/source configuration; relevance configuration; discovery run/company work; position processing; review/promotion; legacy/explicit reprocessing |
 
-The corpus contains 7 capability routers, 19 workflow specifications, 6 shared foundations, 10 meaningful access-point variants, and 27 strict agent-tool operation contract files. The contract catalog is optional discovery; routed bundles load only the operation needed.
+All functional features are present even when behavior has no UI. The company/source configuration and reprocessing features explicitly describe their private configuration/operational boundaries rather than inventing public access.
+
+## Operational and quality coverage
+
+Operational Models exist only for Scout features that meet the structural entry criteria:
+
+- Discovery runs: full-run and independently queued company work, source trust, aggregation, redelivery/reconciliation, durable evidence, and configured/hard bounds.
+- Position processing: deterministic staged work identities, complete state vocabularies, dependency binding, failure projection, later-event revival, queue recovery, and observability.
+- Position reprocessing: immutable explicit-item bindings, atomic start, exact aggregation including all-superseded, replay fingerprints, and concurrency.
+- Review and promotion: evidence/revision binding, candidate ordering/fingerprint, separately committed Gig/document/position effects, failed and completed retry semantics, and restore/reverse/note behavior.
+
+The 15 Quality Scenarios comprise 10 Scout constraints and 5 cross-capability constraints. They cover redelivery, restart reconciliation, run binding, source bounds, trusted versus suspicious empty results, confidence thresholds, queue restart, atomic backfill start, stale review, promotion recovery, interrupted conversation persistence, reversal conflicts, staging capacity, stale document updates, and latest-contact timezone ordering. Every scenario uses one classification and the six concrete SEI fields with an objectively testable response measure; ISO 25010 appears only in authoring rules as a checklist prohibition.
+
+## Scout depth
+
+Scout specifies both asynchronous work levels: a full discovery run dispatches durable per-company work whose sources run sequentially, while independent deterministic position work advances observation through Gig reconciliation, description acquisition, relevance screening, and candidate match. Full-run completion does not wait for position processing. All run, company, source, validation, outbox, position, work, description, relevance, promotion, and backfill status vocabularies are enumerated with exact aggregation/transition rules.
+
+Configuration binding covers immutable company/source versions, source-order-sensitive import fingerprints, exact run snapshots, default search terms/title variants/locations, complete candidate-profile and screening identities, semantic position-work identities, and order-normalized explicit-backfill fingerprints. Trust rules distinguish verified results, verified empty, suspicious empty, partial, and failed observations; only a fully trusted company result can mutate availability, using exact stored URL/requisition comparisons. Bounds, retries, attempt counts, backoff, reconciliation sweeps, extracted-description limits, promotion-document limits, and durable diagnostic/evidence records are explicit.
+
+Review/promotion specifies current evidence and revision guards, deterministic candidate ordering and fingerprints, explicit duplicate resolution, posting-owned field preservation, Gig-before-document partial commits, exact document selection, identical-content provenance-preserving no-op, deterministic failed retry, the currently unexposed completed refresh path, and exact restore/reverse/note limitations. It records the implemented relevance-save defect that moves every unlinked described position—including user decisions and legacy `rejected`—back to processing.
 
 ## Evidence gaps and bounded uncertainty
 
-- Application source declares exact strict Zod input schemas for agent tools but not corresponding strict output schemas. Each contract therefore preserves the exact generated input and source-observed result status family; nested result record payloads are governed by workflow/entity prose rather than an invented strict output contract.
-- JSON Schema generation cannot preserve every Zod refinement. Workflows explicitly state cross-field, calendar, URL, clear/set, ownership, and identity rules that still run at execution. In particular, standard JSON Schema counts Unicode code points while the application's 50,000-character document limit uses JavaScript UTF-16 code units; runtime validation is authoritative. The hand-characterized `create_document` contract adds evidenced source-pairing, ownership, result-metadata, and provenance constraints.
-- There is no genuine public API in current evidence. UI-owned internal routes are intentionally absent as public access points.
-- Current code is local/single-user and supplies trusted actors at supported entry points; it contains no externally meaningful multi-user role/permission model to specify.
-- The supported CLI boundary is `bin/gig-finder`. Operational scripts and private Scout company import/backfill routes were not promoted into end-user CLI/public workflows.
-- Source configuration can change deployment limits and source coverage. The spec records source-defined defaults and observable configured behavior, not the set of real companies or credentials.
+- Strict agent inputs are application-enforced Zod schemas. The application does not apply an equivalent output validator, so result contracts are source-observed characterizations assembled from return construction, domain types, and tests; they do not claim a separate runtime output-validation gate.
+- JSON Schema cannot encode every runtime refinement. Workflows retain the authoritative cross-field, calendar, URL, uniqueness, clear/set, ownership, and identity rules. The 50,000-character managed-document runtime limit uses JavaScript UTF-16 string length, while standard JSON Schema `maxLength` counts Unicode code points.
+- No genuine public API or external multi-user authorization/role model is evidenced. Current supported state is local/single-user; private configuration/service operations are not relabeled as public APIs.
+- Local evidence defines source adapters, defaults, and bounds but cannot establish which real-company credentials or external pages are currently available. Network validation was unavailable and was unnecessary for this source-only corpus.
 
 ## Recorded current limitations and defects
 
-- Dashboard Opportunities, Networking, and Tasks are read-only; People paused/do-not-contact are excluded from the Networking board; there is no Interaction board.
-- The dashboard/Scout choose the first Gig job description lexicographically by document ID when several exist.
-- General agent Gig update cannot establish a null `nextAction` or `payRange` through leaf operations, while whole-object paths are clear-only; agent creation or CLI whole-object update is required.
-- Core-record same-value updates still advance revision/history; only managed-document identical-content update has explicit no-op behavior.
-- Gig-Person Relationships have create/read only; no supported update/delete. The CLI accepts `gig-people add` but omits it from printed usage.
-- There are no supported deletes for Gigs, People, Tasks, or managed documents.
-- Uploaded-source managed documents are immutable. Staged uploads are process-local, one-at-a-time in the UI, expire (15-minute default), and do not survive restart.
-- Staged-document references are random process-global bearer-like values with no conversation/session/tenant ownership check. Any request that obtains an exact unexpired reference can resolve it. A consumed-reference replay validates the strict tool input but returns the original result before rechecking otherwise schema-valid ownership/business fields.
-- Conversation selection uses a character-based token estimate and recent complete turns; identifier sanitization covers known patterns, not arbitrary sensitive-data detection.
-- Gig Scout uses polling, offers only four active review views, and keeps restore/reverse/separate-note service operations outside current UI support.
-- Scout promotion spans separate Gig/document/Scout-state mutations. A Gig can commit before document/state completion fails; durable retry reconciles the same intent.
+- Opportunities, Networking, and Tasks dashboards are read-only; People in `paused`/`do_not_contact` are omitted from the Networking dashboard; no Interaction dashboard exists.
+- General agent Gig update cannot establish a null `nextAction` or `payRange` through leaf operations because whole-object paths are clear-only. Gig/Person creation and same-value core updates advance history; general Gig and Person creates are not reversible.
+- Gig–Person relationships have create/read only. Gigs, People, Tasks, and managed documents have no supported delete. Managed-document metadata/ownership cannot be edited or relinked.
+- Uploaded-source documents are immutable. Staged uploads are process-local, expire, do not survive restart, and use bearer-like references without conversation/session ownership. Consumed-reference replay returns the original result before rechecking later business fields.
+- Candidate-Profile document bodies are not automatically assembled into agent context; only an untrusted metadata catalog is injected, and exact content is fetched through `get_document` when relevant.
+- Conversation selection uses a character-based estimate and recent complete turns. Identifier redaction recognizes known patterns rather than arbitrary sensitive data.
+- Scout source execution and review use polling. Relevance configuration currently resets every eligible unlinked described position to processing, including user-owned states. Processing may retain a pre-failure projection while durable work is failed until a later observation/configuration/backfill revives it.
+- Scout promotion can commit a Gig before document/final-state failure. The lexicographically first job description is authoritative; differing uploaded content can make retry fail indefinitely. The service supports completed-promotion refresh, but current UI cannot open promoted positions and exposes retry only for failed promotion.
+- Host-default locale case folding and locale comparison affect duplicate/candidate identity and ordering; exact canonical-URL spelling is not normalized.
 
 ## Link, format, and context validation
 
-`bun scripts/validate-corpus.ts` checks all Markdown link targets, JSON parsing, local JSON-Schema pointer resolution, strict characterization-envelope/input markers, operation count, and file-class budgets. Latest result (excluding its own generated report): 75 files, 45 Markdown files, 167 internal links, 27 operation contracts, and no failures. Results are recorded in `validation/corpus-validation.json`.
+`bun scripts/validate-corpus.ts` validates front matter, required and prohibited artifact structure, capability/feature ownership, reverse routing, relative Markdown targets, JSON parsing and local pointers, strict operation inputs, contract ownership/count, scenario concreteness, Operational Model element/section agreement, and per-artifact budgets. Latest result: 121 files excluding generated validation reports, 84 corpus Markdown files excluding templates, 216 internal links, 27 operation contracts, and zero failures. The generated record is `validation/corpus-validation.json`.
 
-`bun scripts/measure-context.ts` records every root → capability → workflow → required dependency → variant route in `validation/context-budgets.json`. Measurement uses characters/4 rounded up, matching GigFinder's own conversation-budget heuristic (not provider tokenization). Latest measured results:
-
-- Root router: 414 estimated tokens (limit 1,000).
-- Largest capability router: 442 (limit 1,500).
-- Workflow range: 435–2,129 (hard limit 5,000).
-- 29 routed workflow/variant bundles measured; all are at or below 10,000 estimated tokens. The maximum is 9,441.
+`bun scripts/measure-context.ts` measured every root-to-feature route plus every routed workflow, model, scenario, variant, and strict operation contract one at a time, including transitive `requires`. It uses JavaScript UTF-16 string code units divided by four and rounded up, matching GigFinder's conservative conversation heuristic rather than provider tokenization. Latest result: 95 routes, all at or below the 10,000 typical-route budget; maximum 9,219 estimated tokens. The complete route/file breakdown is `validation/context-budgets.json`.
 
 ## Fresh-reader tests
 
-Three fresh lower-cost reader runs were restricted to routed bundles and prohibited from opening application source or sibling specs:
+Two initial source-blind readers independently audited Scout and the cross-capability corpus. Their failures drove corrections to company/source schema/defaults, run/profile binding, query-side resurfacing, relevance overwrite behavior, processing revival, document no-op provenance, availability identity, backfill aggregation/fingerprints, review maintenance/retry, reversal eligibility, Profile context assembly, model IDs, record vocabularies/defaults, dashboard mappings, search output, and Interaction provenance exposure.
 
-1. Opportunity create/update agent route: correctly reconstructed confirmation, duplicate resolution, strict complete creation, set/clear updates, preservation, validation, audit, and derivable tests. Its ambiguity report led to explicit final-object validation, parent-null nested behavior, same-value update, URL acceptance, error mapping, and non-null agent change-result rules.
-2. Scout review/promotion route: correctly reconstructed review states, exact reviewed evidence, resolution, field preservation, document versioning, and retry. Its ambiguity report led to explicit state eligibility/transitions, timestamp behavior, posting normalization/fingerprint inputs, posting-owned fields, provenance, multi-document selection, and multi-transaction failure recovery.
-3. Agent upload/document-create route: correctly reconstructed temporary staging, conversion, consent, ownership, immutable uploaded sources, and replay safety. Its ambiguity reports led to surface-scoped confirmation, exact converter/staging limits and expiry/capacity, read-versus-consume behavior, provenance details, inline editability, note ownership, validation order, relative-file-path semantics, and machine-checkable creation input/result constraints. Its security and Unicode findings were verified as current implementation limitations and recorded rather than silently normalized.
-
-Final opportunity, upload/document, and Scout re-reads reported no unresolved material spec defect. The Scout re-read specifically verified lexicographic job-description selection, uploaded-document immutability failure, deterministic retry identity, Gig-before-document partial commits, processing failure state, and retry reconciliation.
+Final source-blind re-reads are recorded in the completion commit/report. Readers were forbidden from consulting application source, product/architecture material, plans, ADRs, PRDs, or the network and made no edits.
 
 ## Repository isolation
 
-This repository has its own `.git` directory and no remote. No application source, tests, existing documentation, issues, branches, pull requests, or user-owned files were changed by this work.
+This is an independent Git repository on `main`, with its own `.git` directory and no remote. Corpus authoring changed no application source, tests, schemas, migrations, documentation, branches, issues, pull requests, or other user-owned files.

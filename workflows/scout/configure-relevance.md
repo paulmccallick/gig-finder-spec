@@ -1,6 +1,7 @@
 ---
 id: configure-relevance
 capability: gig-scout
+feature: relevance-configuration
 title: Configure Scout relevance screening
 summary: Save versioned technology-role relevance criteria and a confidence threshold.
 aliases: [Scout criteria, relevance settings, screening threshold]
@@ -29,7 +30,7 @@ Scout position service is available; criteria and confidence threshold pass curr
 1. Load the current criteria, threshold, and version.
 2. Edit criteria and threshold.
 3. Save a new configuration version.
-4. Future queued processing binds its configuration snapshot/version; existing durable evaluation history remains.
+4. Every eligible unpromoted position with a usable description is scheduled against the new configuration identity; existing durable evaluation history remains.
 
 ## Decisions and variants
 
@@ -37,7 +38,7 @@ Relevance screening decides narrow technology-role relevance only. Candidate mat
 
 ## State changes
 
-Adds/activates a relevance configuration version; does not rescore existing positions by itself.
+Adds and activates an immutable relevance configuration version. It schedules every described unlinked position for replacement screening, supersedes obsolete pending/failed candidate-match work, and unconditionally returns each affected position to processing with a revision increment. That includes user irrelevant/deferred and legacy rejected states.
 
 ## Outputs and observable effects
 
@@ -45,16 +46,18 @@ The UI reports the saved version or a failure message.
 
 ## Safety rules
 
-Do not reinterpret relevance as candidate fit. Durable processing must retain its bound configuration even if settings later change.
+Do not reinterpret relevance as candidate fit. Each scheduled evaluation retains its exact configuration binding even if settings later change. Treat the current overwrite of user-owned/legacy projections as implemented behavior to surface and test, not as preservation.
 
 ## Failure, retry, and recovery
 
 Invalid or unavailable settings fail without activation. Correct and save again.
 
-## Known current behavior and limitations
+## Current limitations
 
-The UI copy labels the criteria specifically for technology-role relevance. There is no general public API contract for this setting.
+The UI copy labels the criteria specifically for technology-role relevance. There is no general public API contract for this setting. Saving can erase the current projection of an active user decision while retaining its history.
 
-## Related workflows
+## Related specifications
 
+- [Relevance configuration feature](../../features/scout/relevance-configuration.md)
+- [Position-processing operational model](../../operational-models/scout/position-processing.md)
 - [Run Scout](run-scout.md)

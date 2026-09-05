@@ -1,6 +1,7 @@
 ---
 id: browse-opportunities-cli
 capability: opportunities
+feature: opportunity-records
 workflow: ../../workflows/opportunities/browse-opportunities.md
 surface: cli
 summary: CLI emits machine-readable full-list or exact-record JSON without filters.
@@ -38,10 +39,10 @@ Usage/unknown ID writes an error and returns nonzero.
 
 Reads the configured local database at invocation.
 
-## Known limitations
+## Current limitations
 
 No CLI Gig filters or pagination.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/opportunities/browse-opportunities.md)

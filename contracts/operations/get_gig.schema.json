@@ -1,99 +1,501 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gigfinder.local/spec/contracts/operations/get_gig.schema.json",
-  "title": "get_gig",
-  "description": "Wire contract for supported agent-tool operation get_gig. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "input",
-    "result"
-  ],
-  "properties": {
-    "input": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Exact durable record ID returned by the corresponding list tool."
-        }
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://gigfinder.local/spec/contracts/operations/get_gig.schema.json",
+ "title": "get_gig",
+ "description": "Wire contract for supported agent-tool operation get_gig. Input is mechanically derived from the strict application schema; workflow documents define product meaning.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "input",
+  "result"
+ ],
+ "properties": {
+  "input": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "minLength": 1,
+     "description": "Exact durable record ID returned by the corresponding list tool."
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "additionalProperties": false
+  },
+  "result": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "record"
+     ],
+     "properties": {
+      "status": {
+       "const": "ok"
       },
-      "required": [
-        "id"
-      ],
-      "additionalProperties": false
-    },
-    "result": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "record"
-          ],
-          "properties": {
-            "status": {
-              "const": "ok"
-            },
-            "record": {
-              "type": "object"
-            }
-          }
+      "record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id",
+        "company",
+        "title",
+        "externalJobId",
+        "stage",
+        "outcome",
+        "statusSummary",
+        "lastActivity",
+        "nextAction",
+        "fit",
+        "payRange",
+        "sourceUrl",
+        "tags",
+        "availability",
+        "availabilityUpdatedAt",
+        "location",
+        "workArrangement",
+        "postedDate",
+        "businessUnitTeam",
+        "recruiterSource",
+        "bonus",
+        "equity",
+        "otherCompensation",
+        "documents",
+        "interactions"
+       ],
+       "properties": {
+        "id": {
+         "type": "string",
+         "minLength": 1
         },
-        {
-          "type": "object",
-          "required": [
-            "status",
-            "id"
-          ],
-          "properties": {
-            "status": {
-              "enum": [
-                "not_found",
-                "unsupported",
-                "consistency_error"
-              ]
-            },
-            "id": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string"
-            }
-          }
+        "company": {
+         "type": "string",
+         "minLength": 1
         },
-        {
+        "title": {
+         "type": "string",
+         "minLength": 1
+        },
+        "externalJobId": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "stage": {
+         "type": "string",
+         "enum": [
+          "identified",
+          "applied",
+          "recruiter_contact",
+          "screening",
+          "technical_interview",
+          "final_round",
+          "offer",
+          "monitoring",
+          "closed"
+         ]
+        },
+        "outcome": {
+         "type": "string",
+         "enum": [
+          "pending",
+          "accepted",
+          "rejected",
+          "withdrawn",
+          "not_pursuing",
+          "role_pulled",
+          "no_response",
+          "position_filled",
+          "on_hold",
+          "stale_or_unverified"
+         ]
+        },
+        "statusSummary": {
+         "type": "string",
+         "minLength": 1
+        },
+        "lastActivity": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "nextAction": {
+         "anyOf": [
+          {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "description",
+            "due"
+           ],
+           "properties": {
+            "description": {
+             "type": "string",
+             "minLength": 1
+            },
+            "due": {
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "fit": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "rating",
+          "summary"
+         ],
+         "properties": {
+          "rating": {
+           "type": "string",
+           "enum": [
+            "strong",
+            "good",
+            "stretch",
+            "long_shot",
+            "weak",
+            "poor",
+            "support",
+            "tbd",
+            "not_applicable"
+           ]
+          },
+          "summary": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         }
+        },
+        "payRange": {
+         "anyOf": [
+          {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "currency",
+            "minimum",
+            "maximum",
+            "period",
+            "notes"
+           ],
+           "properties": {
+            "currency": {
+             "const": "USD"
+            },
+            "minimum": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "maximum": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "period": {
+             "type": "string",
+             "enum": [
+              "hour",
+              "year"
+             ]
+            },
+            "notes": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           }
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "sourceUrl": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "tags": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "availability": {
+         "type": "string",
+         "enum": [
+          "unknown",
+          "available",
+          "unavailable"
+         ]
+        },
+        "availabilityUpdatedAt": {
+         "anyOf": [
+          {
+           "type": "string",
+           "format": "date-time"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "location": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "workArrangement": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "postedDate": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "businessUnitTeam": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "recruiterSource": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "bonus": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "equity": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "otherCompensation": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "documents": {
+         "type": "array",
+         "items": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "status",
-            "error",
-            "message"
+           "id",
+           "type",
+           "title",
+           "displayName",
+           "currentVersion"
           ],
           "properties": {
-            "status": {
-              "const": "error"
-            },
-            "error": {
-              "enum": [
-                "duplicate_change",
-                "duplicate",
-                "not_found",
-                "consistency_error",
-                "not_revertible",
-                "revision_conflict",
-                "validation_failed",
-                "unsupported",
-                "tool_failed"
-              ]
-            },
-            "message": {
-              "type": "string"
-            }
+           "id": {
+            "type": "string",
+            "minLength": 1
+           },
+           "type": {
+            "type": "string",
+            "enum": [
+             "job_description",
+             "notes",
+             "interview_prep",
+             "profile"
+            ]
+           },
+           "title": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "displayName": {
+            "type": "string",
+            "minLength": 1
+           },
+           "currentVersion": {
+            "type": "integer",
+            "minimum": 1
+           }
           }
+         }
+        },
+        "interactions": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "id",
+           "subject",
+           "kind",
+           "channel",
+           "status",
+           "startsAt"
+          ],
+          "properties": {
+           "id": {
+            "type": "string",
+            "minLength": 1
+           },
+           "subject": {
+            "type": "string",
+            "minLength": 1
+           },
+           "kind": {
+            "type": "string",
+            "enum": [
+             "message",
+             "call",
+             "meeting",
+             "interview",
+             "conversation",
+             "other"
+            ]
+           },
+           "channel": {
+            "type": "string",
+            "enum": [
+             "email",
+             "linkedin",
+             "sms",
+             "chat",
+             "phone",
+             "video",
+             "in_person",
+             "other"
+            ]
+           },
+           "status": {
+            "type": "string",
+            "enum": [
+             "planned",
+             "confirmed",
+             "completed",
+             "canceled",
+             "no_show"
+            ]
+           },
+           "startsAt": {
+            "type": "string",
+            "format": "date-time"
+           }
+          }
+         }
         }
-      ]
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "id"
+     ],
+     "properties": {
+      "status": {
+       "const": "not_found"
+      },
+      "id": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "id",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "consistency_error"
+      },
+      "id": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "status",
+      "error",
+      "message"
+     ],
+     "properties": {
+      "status": {
+       "const": "error"
+      },
+      "error": {
+       "type": "string",
+       "enum": [
+        "duplicate_change",
+        "duplicate",
+        "not_found",
+        "consistency_error",
+        "not_revertible",
+        "revision_conflict",
+        "validation_failed",
+        "unsupported",
+        "tool_failed"
+       ]
+      },
+      "message": {
+       "type": "string"
+      }
+     }
     }
+   ]
   }
+ }
 }

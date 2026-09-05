@@ -1,6 +1,7 @@
 ---
 id: update-managed-document
 capability: documents-profile
+feature: managed-documents
 title: Update managed content
 summary: Replace editable content at an expected current version while retaining immutable history.
 aliases: [edit document, add document version, replace notes]
@@ -52,10 +53,10 @@ Do not patch fragments: input is the complete replacement. Never update converte
 
 Missing/invalid ID, stale version, oversized/empty content, or immutable upload fails without changes. Re-read and intentionally rebase before retrying a stale edit.
 
-## Known current behavior and limitations
+## Current limitations
 
 There is no dashboard editor and no supported document deletion. Agent history compacts document tool outputs, so it may rehydrate an exact previously read version rather than carry full bodies indefinitely.
 
-## Related workflows
+## Related specifications
 
 - [Read documents](read-documents.md)

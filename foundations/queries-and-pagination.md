@@ -24,7 +24,7 @@ Omitted filters do not narrow results. Agent text queries are trimmed and case-i
 ## Prohibited behavior
 
 - Do not treat an empty page beyond the end as evidence that no records exist globally.
-- Do not mutate product data while listing, filtering, or reading.
+- Do not mutate product data while listing, filtering, or reading unless the owning feature explicitly declares a due-time transition on read. Scout position listing is the current exception: it first records system restoration of due deferred positions and increments their revisions.
 
 ## Failure and retry implications
 
@@ -32,13 +32,13 @@ Invalid ranges or unsupported values fail visibly. Continue pagination with the 
 
 ## Observable consequences
 
-Agent result pages expose counts and offsets. UI filtering changes only presentation and does not alter stored records.
+Agent result pages expose counts and offsets. UI filtering ordinarily changes only presentation. Scout position listing additionally makes each due `deferred` position durably `needs_user_review` before producing the page.
 
 ## Used by
 
-- [Browse opportunities](../workflows/opportunities/browse-opportunities.md)
-- [Browse people](../workflows/networking/browse-people.md)
-- [Browse tasks](../workflows/tasks/browse-tasks.md)
-- [Browse interactions](../workflows/interactions/browse-interactions.md)
-- [Discover and read documents](../workflows/documents/read-documents.md)
-- [Inspect Scout runs](../workflows/scout/run-scout.md)
+- [Opportunity records](../features/opportunities/opportunity-records.md)
+- [People](../features/networking/people.md)
+- [Task tracking](../features/tasks/task-tracking.md)
+- [Interaction history](../features/interactions/interaction-history.md)
+- [Managed documents](../features/documents/managed-documents.md)
+- [Discovery runs](../features/scout/discovery-runs.md)

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "{{stable operation schema URI}}",
+  "title": "{{Supported strict agent-tool operation}}",
+  "description": "Characterization-fixture contract. Validate the runtime invocation against #/properties/input and a recorded response against #/properties/result; the tool never receives the containing object. Feature meaning is defined in {{relative feature document}}.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input", "result"],
+  "properties": {
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["{{requiredField}}"],
+      "properties": {
+        "{{requiredField}}": {
+          "type": "string",
+          "minLength": 1,
+          "description": "{{Exact accepted meaning and constraints}}"
+        }
+      }
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "{{outputField}}"],
+          "properties": {
+            "status": { "const": "ok" },
+            "{{outputField}}": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "error", "message"],
+          "properties": {
+            "status": { "const": "error" },
+            "error": { "type": "string", "enum": ["{{observedFailureCode}}"] },
+            "message": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

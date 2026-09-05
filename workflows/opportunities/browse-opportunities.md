@@ -1,6 +1,7 @@
 ---
 id: browse-opportunities
 capability: opportunities
+feature: opportunity-records
 title: Browse and inspect opportunities
 summary: Find current Gigs and inspect the complete record and linked description.
 aliases: [view pipeline, search gigs, open opportunity]
@@ -39,7 +40,8 @@ The application has a readable data store. An exact detail read requires a durab
 |---|---|
 | Stage is not `closed`, outcome is `pending`, availability is not `unavailable` | Dashboard Active view. |
 | Availability is `unavailable` while otherwise active | Dashboard Unavailable view, independent of stage/outcome. |
-| Stage is `closed` with non-pending outcome | Dashboard Archive, grouped by outcome families. |
+| Stage is `closed` with outcome `rejected`, `not_pursuing`, `role_pulled`, or `no_response` | Dashboard Archive in the like-named group. |
+| Stage is `closed` with `accepted`, `withdrawn`, `position_filled`, `on_hold`, `stale_or_unverified`, or any other persisted outcome | Dashboard Archive in `other`. |
 | Next-action due date is before Pacific today on an active Gig | Displayed as overdue. |
 
 ## State changes
@@ -58,13 +60,13 @@ Browsing never marks a posting available/unavailable, advances stage, or updates
 
 Dashboard load failure replaces the workspace with a data-fault view. A missing exact ID returns not-found/fails the CLI. Invalid persisted structure may yield a consistency error. Retry after correcting availability of the data store; do not infer missing fields.
 
-## Known current behavior and limitations
+## Current limitations
 
 - The dashboard is explicitly read-only; all Gig changes occur through agent tools, CLI, or Scout promotion.
 - The drawer selects the first job-description summary by document ID, not by recency across multiple descriptions.
 - Dashboard search covers company, title, and status-oriented fields; agent search also covers next action. UI and agent filter sets are intentionally different.
 
-## Related workflows
+## Related specifications
 
 - [Maintain an opportunity](maintain-opportunity.md)
 - [Read documents](../documents/read-documents.md)

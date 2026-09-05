@@ -1,11 +1,12 @@
 ---
 id: create-managed-document-agent-tool
 capability: documents-profile
+feature: managed-documents
 workflow: ../../workflows/documents/create-managed-document.md
 surface: agent-tool
 summary: Agent can preserve inline text or consume one opaque staged upload after confirmation.
 aliases: [create_document, save upload]
-requires: [../../workflows/documents/create-managed-document.md, ../../contracts/operations/create_document.schema.json]
+requires: [../../workflows/documents/create-managed-document.md]
 contract: ../../contracts/operations/create_document.schema.json
 ---
 
@@ -39,10 +40,10 @@ Expired/missing staged reference and dangling Gig/Person owners map to not-found
 
 Strict tool-input validation occurs before execution. Consumption is replay-safe and a retained response clears the UI attachment. During execution, a consumed-reference replay returns the original result before repeating ownership, target-existence, or managed-document business validation of the otherwise schema-valid new payload.
 
-## Known limitations
+## Current limitations
 
 No arbitrary path access and no binary managed content. The returned `filePath`, when present for candidate Profile context, is a generated relative managed filename rather than a server path. A consumed reference does not detect a changed schema-valid replay payload. Staged references are not bound to the conversation/session that uploaded them.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/documents/create-managed-document.md)

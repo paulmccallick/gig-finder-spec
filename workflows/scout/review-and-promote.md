@@ -1,6 +1,7 @@
 ---
 id: review-and-promote
 capability: gig-scout
+feature: review-promotion
 title: Review and promote Scout positions
 summary: Inspect processed positions, decide relevance/timing, and safely create or update the intended canonical Gig.
 aliases: [review position, pursue Scout result, promote posting]
@@ -47,13 +48,13 @@ For `pursue`, `irrelevant`, or `defer`, the position must be exactly `needs_user
 
 ## State changes
 
-Each decision advances the position revision by one: irrelevant/defer enter their named state and pursue enters `processing`; successful completion enters `promoted` and links the Gig. Decisions retain a client-generated change ID, the four reviewed values, optional note, resolution choice, promotion work, and result. Gig/document change IDs derive from that decision ID; completed-retry identity is deterministic over position, linked Gig, observation, and description. Successful promotion sets the single `sourceUrl` field (shown as Apply) to the required current canonical URL and creates/versions the authoritative job description. Scout result persistence alone never mutates Gig availability.
+Each new user decision advances the position revision by one: irrelevant/defer enter their named state and pursue enters `processing`; successful promotion completion enters `promoted` and links the Gig without another revision increment. Stale/invalid release advances revision again and clears the current decision. Decisions retain a client-generated change ID, the four reviewed values, optional note, resolution choice, promotion work, and result. Gig/document change IDs derive from that decision ID; completed-retry identity is deterministic over position, linked Gig, observation, and description. Successful promotion sets the single `sourceUrl` field (shown as Apply) to the required current canonical URL and creates/versions the authoritative job description. Scout result persistence alone never mutates Gig availability.
 
 Exact Scout document provenance is: official URL; offset timestamp retrieved-at; 64-lowercase-hex SHA-256 hashes for source and extracted content; nonblank source key; positive configuration version; nonblank extraction strategy; and nonblank converter version. Source description is nonblank and accompanies provenance.
 
 ## Outputs and observable effects
 
-The ledger state/count changes after refresh. Successful promotion reports created/updated. Resolution candidates show company/title/stage/outcome/location/source and stored job-description link when present. Promotion selects the first Gig job description by lexicographic document ID: create version 1 if absent, create no version for identical content, or append a Scout-provenance version otherwise. Other job descriptions remain untouched. Scout-acquired documents have null upload provenance and are not subject to uploaded-source immutability. Retry may repair an incomplete description or source link without duplicating completed work.
+The ledger state/count changes after refresh. Successful promotion reports created/updated. Resolution candidates show company/title/stage/outcome/location/source and stored job-description link when present. Promotion selects the first Gig job description by lexicographic document ID: create version 1 if absent, create no version for identical content, or append a Scout-provenance version otherwise. An identical-content no-op accepts and retains the existing document's source description, source provenance, and upload provenance; exact reviewed provenance is required only for a version created by this promotion. Other job descriptions remain untouched. Scout-created/versioned documents have null upload provenance and are not subject to uploaded-source immutability. Retry may repair an incomplete description or source link without duplicating completed work.
 
 ## Safety rules
 
@@ -63,15 +64,16 @@ For an existing Gig, posting-owned fields are `title` and `sourceUrl` always, pl
 
 ## Failure, retry, and recovery
 
-HTTP conflict means reviewed state was revised or no longer needs review: reload details and re-decide. Invalid/stale resolution stays in the drawer; stale/invalid resolution releases a begun attempt to `needs_user_review`. Promotion uses separate durable steps: the Gig can commit before document creation/versioning or Scout completion fails. Empty/over-50,000-character Markdown, invalid provenance, or other document validation marks promotion failed in `processing`; retry repeats the exact intent and continues failing until newly processed/reviewed evidence yields a new decision. If the lexicographically first existing job description has upload provenance and differing content, its immutability makes promotion fail; Scout does not skip it or create a second description, and retry continues to fail while it remains the selected differing document. Otherwise retry verifies committed posting-owned Gig fields, repairs/verifies the exact document, and completes without duplicating a Gig.
+HTTP conflict means reviewed state was revised or no longer needs review: reload details and re-decide. Invalid/stale resolution stays in the drawer; stale/invalid resolution releases a begun attempt to `needs_user_review`, clears its current decision, and advances revision. Promotion uses separate durable steps: the Gig can commit before document creation/versioning or Scout completion fails. Empty/over-50,000-character Markdown, invalid new-version provenance, or other document validation marks promotion failed in `processing`; retry repeats the exact intent and continues failing until newly processed/reviewed evidence yields a new decision. If the lexicographically first existing job description has upload provenance and differing content, its immutability makes promotion fail; Scout does not skip it or create a second description, and retry continues to fail while it remains the selected differing document. Identical content succeeds as a no-op even on an uploaded document. Otherwise retry verifies committed posting-owned Gig fields, repairs/verifies the exact document, and completes without duplicating a Gig.
 
-## Known current behavior and limitations
+## Current limitations
 
 - Only the four listed position-state views are offered; completed/irrelevant history is not a general ledger view.
 - The description may be unavailable when acquisition failed; such positions cannot satisfy the full pursue preconditions until processing/backfill succeeds.
-- Separate restore/reverse/note service operations exist in source but are not exposed by current dashboard controls; the current textarea saves a note on the submitted decision, not through the separate note operation.
+- Separate restore/reverse/note service operations exist but are not exposed by current dashboard controls. Direct restore requires current agent-origin irrelevance; reverse requires a same-position user-origin decision; both require exact current revision and advance it. Reverse leaves linked promotion effects intact. A separate trimmed 1–2,000-character note optionally links a decision and changes no state/revision. The current textarea instead saves a note on the submitted decision.
+- The service supports completed-promotion refresh from latest complete official evidence with a deterministic retry identity and no new decision/revision. Current detail hides promoted positions and the UI only offers retry for `failed`, so no supported dashboard route invokes that path.
 
-## Related workflows
+## Related specifications
 
 - [Run Scout](run-scout.md)
 - [Browse opportunities](../opportunities/browse-opportunities.md)

@@ -1,6 +1,6 @@
 # GigFinder Canonical Specification
 
-This corpus describes GigFinder's current supported behavior from application code, database schemas/migrations, and tests. Start with the capability matching the actor's intent, then load only its workflow and the links in that workflow's `requires` list; follow `related` links only when the adjacent workflow is actually in scope.
+This corpus describes GigFinder's current supported behavior from application code, database schemas/migrations, and tests. Start with the capability matching the actor's intent, choose its feature, then load only the feature and explicit dependencies. Load a workflow, Operational Model, Quality Scenario, surface variant, or strict tool contract only when the feature routes the task there. [Authoring rules](AUTHORING.md) define the canonical format.
 
 ## Capabilities
 

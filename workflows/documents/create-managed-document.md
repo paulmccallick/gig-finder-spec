@@ -1,6 +1,7 @@
 ---
 id: create-managed-document
 capability: documents-profile
+feature: managed-documents
 title: Create managed content
 summary: Save exact inline or staged text with valid ownership, provenance, and first version.
 aliases: [save document, add job description, add profile context]
@@ -52,11 +53,11 @@ Do not attach to guessed owners or mix candidate Profile ownership with other li
 
 Missing owner/reference and dangling Gig or Person IDs map to `not_found`. Invalid source pairing, duplicate links, invalid owner/type combinations, or other domain validation maps to `validation_failed`; unexpected failures map to `tool_failed`. Conversion fails before this tool is invoked. Except for the consumed-reference behavior below, failure creates no document. After uncertain staged delivery, replaying the same consumed reference returns its consumption result.
 
-## Known current behavior and limitations
+## Current limitations
 
 The CLI reads arbitrary user-selected local content files because direct CLI invocation is the supported boundary; the agent tool cannot browse paths. Inline-created documents have null upload provenance and can later use the update workflow; staged uploaded-source documents cannot. Standard JSON Schema `maxLength` counts Unicode code points, while runtime Zod/JavaScript enforces the 50,000 content limit in UTF-16 code units; runtime validation is authoritative for astral Unicode and for post-trim text lengths. A consumed staged reference is checked after strict input-schema validation but before ownership, target-existence, and other managed-document business validation: reusing that reference returns the original saved result even if otherwise schema-valid links, type, title, or other submitted fields now differ or would fail those later checks. This is a current idempotency limitation, not permission to mutate the saved document; use a new upload/reference for a genuinely different creation. There is no dashboard creation form.
 
-## Related workflows
+## Related specifications
 
 - [Stage an upload](../agent/stage-upload.md)
 - [Read documents](read-documents.md)

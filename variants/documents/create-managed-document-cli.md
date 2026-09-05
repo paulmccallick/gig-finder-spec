@@ -1,6 +1,7 @@
 ---
 id: create-managed-document-cli
 capability: documents-profile
+feature: managed-documents
 workflow: ../../workflows/documents/create-managed-document.md
 surface: cli
 summary: CLI reads exact local file content and accepts owner flags without a confirmation prompt.
@@ -38,10 +39,10 @@ Unreadable path, invalid flags, owners, or content fail nonzero.
 
 The file is read once at invocation; later filesystem edits do not change managed content.
 
-## Known limitations
+## Current limitations
 
 CLI-created file content does not automatically gain upload-converter provenance.
 
-## Shared workflow
+## Shared specification
 
 [Canonical behavior](../../workflows/documents/create-managed-document.md)
