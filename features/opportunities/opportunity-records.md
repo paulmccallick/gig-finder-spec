@@ -16,6 +16,20 @@ test_suites: [src/core/test, src/web/e2e/gig-board.e2e.ts, src/agent/test, src/c
 
 # Opportunity records
 
+## Product role
+
+Owns the candidate's canonical record of one job opportunity so every pipeline, planning, relationship, and agent behavior shares the same identity and candidate-managed state. This is the opportunity system of record, not merely the dashboard row used to present it.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Opportunity identity | Creates and resolves one durable Gig by exact ID with company, role, source, and posting identity. |
+| Pipeline assessment | Maintains exact status, fit rating, outcome, interest, and activity semantics. |
+| Candidate planning | Maintains next action, compensation, location, notes, tags, and related candidate-owned detail. |
+| Search and retrieval | Lists, filters, groups, searches, and reads current records using stable vocabularies and defaults. |
+| Audited mutation | Applies validated create/update changes with revisions and downstream change history. |
+
 ## Purpose and boundary
 
 A Gig is the canonical durable record for one job opportunity. It owns company/title identity; optional requisition and posting details; pipeline stage and outcome; status/activity; one optional next action; fit; compensation; source URL; and tags. People, relationships, tasks, interactions, documents, posting availability, and Scout acquisition are linked features rather than embedded substitutes.

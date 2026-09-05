@@ -16,6 +16,19 @@ test_suites: [src/core/test/services.test.ts, src/core/scout/engine/test/runs.te
 
 # Posting availability
 
+## Product role
+
+Owns the externally observed availability of a posting without taking ownership of the candidate's pipeline decision. It lets Scout report whether the source still presents the role while preserving candidate-managed status and outcome as a separate responsibility.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Availability observation | Records open, unavailable, or unknown source evidence for an exact posting identity. |
+| Trusted reconciliation | Changes availability only from a complete trusted company observation using exact stored identifiers. |
+| Candidate-state isolation | Never converts source disappearance into a pipeline status or outcome change. |
+| Availability presentation | Exposes current observed availability and its evidence alongside the Gig. |
+
 ## Purpose and boundary
 
 Posting availability records whether the most recent authoritative Scout scan observed a tracked role as available or unavailable. It is independent of pipeline stage/outcome and never closes, reopens, or otherwise decides the candidate's pursuit state.

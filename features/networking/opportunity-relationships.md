@@ -16,6 +16,19 @@ test_suites: [src/core/test/read-services.test.ts, src/agent/test/gig-finder-too
 
 # Person–opportunity relationships
 
+## Product role
+
+Owns the durable statement that one exact Person plays a typed role for one exact opportunity. It supplies opportunity-specific networking context without duplicating the Person or folding relationship ownership into either record.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Typed relationship creation | Links one existing Person and Gig with one supported role and optional context. |
+| Pair uniqueness | Prevents duplicate records for the same Person, Gig, and role identity. |
+| Relationship retrieval | Lists and reads typed links from the relevant opportunity or person context. |
+| Audit participation | Records creation as an eligible reversible change with an exact inverse. |
+
 ## Purpose and boundary
 
 This feature gives a known Person one explicit role relative to a known Gig without rewriting either parent. It does not infer a role from title/employer and does not replace Interactions or Person-wide relationship context.

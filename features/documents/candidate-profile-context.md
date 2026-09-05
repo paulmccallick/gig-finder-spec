@@ -16,6 +16,19 @@ test_suites: [src/core/test/services.test.ts, src/agent/test]
 
 # Candidate Profile context
 
+## Product role
+
+Owns private discovery of durable candidate-background documents for conversation use. It lets the agent know which Profile documents exist and fetch relevant content deliberately, without automatically injecting document bodies or redefining managed-document ownership.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Singleton ownership | Defines `profile:candidate` as the exact owner for candidate-background documents. |
+| Metadata catalog | Injects ordered untrusted metadata for every current candidate-Profile document into each live request. |
+| Exact content selection | Requires the agent to read a relevant body by exact catalog ID and optional version. |
+| Context isolation | Excludes unrelated Gig/Person documents and never treats private document data as instructions. |
+
 ## Purpose and boundary
 
 Candidate Profile context is the singleton collection of named managed documents whose metadata catalog is made available to the conversational agent as private candidate-background discovery. Document bodies are not supplied automatically; the agent reads a relevant body by exact catalog ID. It is distinct from a Person `profile` document, which describes one contact and derives that Person's separate `hasProfile` flag rather than LinkedIn-based profile status.

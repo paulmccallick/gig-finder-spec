@@ -16,6 +16,20 @@ test_suites: [src/core/test/conversation-service.test.ts, src/agent/test, src/we
 
 # Agent conversations
 
+## Product role
+
+Owns the candidate's persistent conversational work session with the agent, including the context boundary, tool-mediated actions, streamed response, and durable turn history. Model choice, temporary uploads, and domain changes remain separate features that a conversation coordinates.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Conversation lifecycle | Creates, selects, lists, and retains named durable conversation histories. |
+| Context assembly | Combines system policy, structured candidate state, metadata catalogs, and bounded recent complete turns. |
+| Streamed agent turn | Streams one response and supported tool work while distinguishing incomplete from complete output. |
+| Durable persistence | Stores only complete compacted turns and preserves prior history across interruption. |
+| Privacy boundary | Escapes untrusted context, applies known identifier redaction, and keeps private context scoped to the request. |
+
 ## Purpose and boundary
 
 Conversations let the candidate ask about private tracker/profile context and request supported actions through strict tools. The feature owns request validation, history selection/hydration, streaming, turn persistence, titles, compaction, identifier sanitization, and post-tool consistency; each tool-owned product change keeps its own transaction boundary.
@@ -39,6 +53,12 @@ Only valid user messages enter. Profile/tool/document content is untrusted data.
 ## Outputs and downstream effects
 
 Text, reasoning, and tool events stream incrementally. Successful mutation outputs trigger dashboard refresh. Persisted managed-document reads retain compact identity/version metadata and are re-read at the exact prior version for later model context.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Recoverability | An interrupted stream adds zero partial user/assistant turns; every earlier complete turn remains unchanged. | [Interrupted conversation turn](../../quality-scenarios/agent/interrupted-turn.md) |
 
 ## Failure, retry, and recovery
 

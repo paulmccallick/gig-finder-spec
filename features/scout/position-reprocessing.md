@@ -16,6 +16,19 @@ test_suites: [src/data/test/scout-run-store.test.ts, src/web/test/request-handle
 
 # Position backfill and reprocessing
 
+## Product role
+
+Owns durable explicit/legacy batches that reacquire evidence and replay screening with mode-specific user-state preservation.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Explicit | Atomically validates/binds 1–1,000 unique IDs and preserves user projection/revision. |
+| Legacy | Uses legacy eligibility without that preservation guarantee. |
+| Lifecycle | Fingerprints, reacquires, refreshes/verifies a promoted linked description, and aggregates items including all-superseded. |
+| Recovery | Prevents conflicts and replays/resumes exact work. |
+
 ## Purpose and boundary
 
 Backfill repairs legacy or explicitly selected positions by reacquiring authoritative descriptions and replaying relevance/match processing under exact durable bindings. It is operator-facing recovery machinery with product-visible evidence/outcomes, not a current candidate UI workflow.
@@ -39,6 +52,16 @@ Preview must resolve every requested position, observation, active configuration
 ## Outputs and downstream effects
 
 Preview reports accepted/rejected plans and stable reasons. Durable per-item outcomes distinguish corrected/unchanged descriptions and workflow result. Promoted positions update the exact linked managed job description before item completion.
+
+## Operational Model
+
+[Operations](../../operational-models/scout/position-reprocessing.md) specifies bindings, states, aggregation, replay, and concurrency.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Safety | Invalid start creates zero records; valid start atomically commits all unique items. | [Atomic backfill start](../../quality-scenarios/scout/backfill-atomic-start.md) |
 
 ## Failure, retry, and recovery
 

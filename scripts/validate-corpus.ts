@@ -25,7 +25,7 @@ if (!existsSync(join(root, "AUTHORING.md"))) failures.push("missing AUTHORING.md
 
 const requiredHeadings: Record<string, string[]> = {
   capabilities: ["Purpose and boundary", "Vocabulary", "Features", "Shared foundations"],
-  features: ["Purpose and boundary", "Access points", "Configuration and defaults", "Durable state and lifecycle", "Validation and invariants", "Outputs and downstream effects", "Failure, retry, and recovery", "Current limitations", "Detailed specifications"],
+  features: ["Product role", "Feature set", "Purpose and boundary", "Access points", "Configuration and defaults", "Durable state and lifecycle", "Validation and invariants", "Outputs and downstream effects", "Failure, retry, and recovery", "Current limitations", "Detailed specifications"],
   foundations: ["Scope", "Canonical rule", "Required behavior", "Prohibited behavior", "Failure and retry implications", "Observable consequences", "Used by"],
   workflows: ["Intent", "Access points", "Preconditions", "Workflow", "Decisions and variants", "State changes", "Outputs and observable effects", "Safety rules", "Failure, retry, and recovery", "Current limitations", "Related specifications"],
   variants: ["Exposure", "Inputs and validation", "Interaction sequence", "Outputs or presentation", "Confirmation and authorization", "Surface-specific failures", "Refresh and consistency", "Current limitations", "Shared specification"],
@@ -85,6 +85,37 @@ for (const path of features) {
   else if (!localTargets(capability).includes(path)) failures.push(`${rel(capability)} does not route to feature ${rel(path)}`);
   for (const key of ["requires", "workflows", "operational_models", "quality_scenarios", "variants", "contracts"]) {
     for (const item of list(path, key)) if (!existsSync(resolve(dirname(path), item))) failures.push(`${rel(path)} ${key} has unresolved target ${item}`);
+  }
+  const source = readFileSync(path, "utf8");
+  const productRole = source.match(/## Product role\n\n([\s\S]*?)(?=\n## )/)?.[1]?.trim() ?? "";
+  const featureSet = source.match(/## Feature set\n\n([\s\S]*?)(?=\n## )/)?.[1]?.trim() ?? "";
+  if (productRole.length < 80) failures.push(`${rel(path)} does not state a concrete Product role`);
+  if (!/^\|.+\|$/m.test(featureSet) || !featureSet.includes("|---")) failures.push(`${rel(path)} Feature set lacks a behavior table`);
+  const featureRows = featureSet.split("\n").filter(line => /^\|.+\|$/.test(line) && !line.includes("|---") && !line.includes("Constituent behavior"));
+  if (!featureRows.length) failures.push(`${rel(path)} Feature set has no constituent behavior`);
+  const operationalModels = list(path, "operational_models");
+  const qualityScenarios = list(path, "quality_scenarios");
+  const hasOperationalSection = source.includes("## Operational Model\n");
+  const hasNfrSection = source.includes("## Nonfunctional Requirements\n");
+  if (hasOperationalSection !== (operationalModels.length > 0)) failures.push(`${rel(path)} Operational model section does not match operational_models`);
+  if (hasNfrSection !== (qualityScenarios.length > 0)) failures.push(`${rel(path)} Nonfunctional requirements section does not match quality_scenarios`);
+  if (hasOperationalSection) {
+    const section = source.match(/## Operational Model\n([\s\S]*?)(?=\n## )/)?.[1] ?? "";
+    for (const item of operationalModels) if (!section.includes(item)) failures.push(`${rel(path)} Operational model section omits ${item}`);
+  }
+  if (hasNfrSection) {
+    const section = source.match(/## Nonfunctional Requirements\n([\s\S]*?)(?=\n## )/)?.[1] ?? "";
+    if (!/^\|.+\|$/m.test(section) || !section.includes("|---")) failures.push(`${rel(path)} Nonfunctional requirements lacks a constraint table`);
+    for (const item of qualityScenarios) if (!section.includes(item)) failures.push(`${rel(path)} Nonfunctional requirements omits ${item}`);
+    const nfrRows = section.split("\n").filter(line => /^\|.+\|$/.test(line) && !line.includes("|---") && !line.includes("Classification"));
+    if (nfrRows.length !== qualityScenarios.length) failures.push(`${rel(path)} must have exactly one Nonfunctional Requirements row per quality scenario`);
+    const allowedNfrClassifications = new Set(["Correctness", "Safety", "Recoverability", "Performance", "Trust"]);
+    for (const row of nfrRows) {
+      const cells = row.split("|").slice(1, -1).map(cell => cell.trim());
+      if (!allowedNfrClassifications.has(cells[0] ?? "")) failures.push(`${rel(path)} has invalid Nonfunctional Requirements classification`);
+      if (/\b(?:should|aspir(?:e|ation|ational)?|desired target)\b/i.test(cells[1] ?? "")) failures.push(`${rel(path)} has aspirational Nonfunctional Requirements prose`);
+      if (!/(?:\d|exact|at most|at least|zero|never|every|unchanged|without|within|bound|deterministic|\bno\b)/i.test(cells[1] ?? "")) failures.push(`${rel(path)} Nonfunctional Requirements constraint is not objectively testable`);
+    }
   }
 }
 const ownerListKey: Record<string, string> = {

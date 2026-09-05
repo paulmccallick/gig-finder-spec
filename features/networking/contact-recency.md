@@ -16,6 +16,19 @@ test_suites: [src/core/test/services.test.ts, src/data/test/store.test.ts, src/w
 
 # Interaction-derived contact recency
 
+## Product role
+
+Owns the single current answer to when and how the candidate last completed contact with each Person. It is a derived networking feature because People, dashboards, and prioritization depend on this projection even though Interactions own the underlying events.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Eligible-event selection | Considers current, completed, nondeleted Interactions that include the Person. |
+| Latest-contact ordering | Chooses the latest contact deterministically across dates, times, time zones, and ties. |
+| Person projection | Exposes derived last-contact date, channel, and related summary without direct mutation. |
+| History reaction | Recomputes the projection after Interaction create, correction, supersession, or deletion. |
+
 ## Purpose and boundary
 
 Contact recency projects the newest completed Interaction onto Person reads as last-contact date, method, and summary. It is derived rather than separately editable Person state, so corrections/deletion immediately change the projection without reconciling duplicate stored fields.
@@ -39,6 +52,12 @@ Every projected value comes from one qualifying Interaction involving that exact
 ## Outputs and downstream effects
 
 Networking cards/detail and metrics show contact coverage and latest touchpoint consistently across Person read surfaces. The projection does not change Person revision/history.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Correctness | Latest-contact ordering uses the exact interpreted instant and deterministic tie behavior across time-zone inputs. | [Latest-contact time-zone ordering](../../quality-scenarios/networking/latest-contact-timezone.md) |
 
 ## Failure, retry, and recovery
 

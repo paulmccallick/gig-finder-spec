@@ -16,6 +16,20 @@ test_suites: [src/core/test, src/data/test/store.test.ts, src/agent/test, src/cl
 
 # Interaction history
 
+## Product role
+
+Owns the durable history of planned and completed contact events and their participants. It provides the event truth from which networking recency is derived, while People own contacts and Tasks own future commitments.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Event capture | Records interaction type, timing, status, notes, structured data, and optional Gig context. |
+| Participant binding | Links exact People to an event with stable participant roles. |
+| Correction and supersession | Updates, supersedes, or soft-deletes events while preserving audit history. |
+| History retrieval | Lists and reads current interaction state with deterministic filtering and ordering. |
+| Contact projection input | Drives each participant's derived latest completed contact without direct Person mutation. |
+
 ## Purpose and boundary
 
 An Interaction records one message, call, meeting, interview, conversation, or other contact event involving one or more People and optionally one Gig. It provides immutable/correctable history and derives latest completed contact; it is not a Task or Person status.

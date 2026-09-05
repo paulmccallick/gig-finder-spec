@@ -16,6 +16,20 @@ test_suites: [src/web/test/document-upload-handler.test.ts, src/web/test/documen
 
 # Agent upload staging
 
+## Product role
+
+Owns the temporary bridge from a candidate-selected file to agent-readable Markdown and an optional durable managed document. It isolates conversion, capacity, expiry, and one-time reference semantics from both conversation history and durable document ownership.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| File acceptance | Validates one supported PDF, DOCX, or Markdown upload against size and capacity bounds. |
+| Bounded conversion | Produces temporary Markdown, source hash, converter metadata, and extraction warnings. |
+| Temporary reference | Issues an expiring process-local reference for agent inspection or later save. |
+| Explicit durable save | Consumes the reference once to create a managed document with upload provenance. |
+| Replay and cleanup | Returns the original consume result on replay and removes expired staging state. |
+
 ## Purpose and boundary
 
 Upload staging converts one PDF, DOCX, or Markdown file to temporary Markdown and exposes an opaque reference to agent tools. It creates no managed document until confirmed managed-document creation succeeds.
@@ -39,6 +53,12 @@ Extension, declared type, and file signature must agree with a supported type; M
 ## Outputs and downstream effects
 
 The UI receives a friendly filename, detected type, character count, warnings, expiry, and opaque reference. Saved uploaded-source documents inherit provenance and become immutable.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Performance | Admission never exceeds the implemented per-file, item-count, and aggregate staging-capacity bounds. | [Staging capacity](../../quality-scenarios/agent/staging-capacity.md) |
 
 ## Failure, retry, and recovery
 

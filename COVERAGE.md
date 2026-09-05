@@ -6,7 +6,7 @@ This standalone local repository characterizes current GigFinder behavior. Evide
 
 ## Canonical structure and functional coverage
 
-The corpus uses `README → capability → feature → optional detail`. It contains 7 capability routers, 19 mandatory functional feature specs, 19 actor workflows, 4 justified Operational Models, 15 concrete Quality Scenarios, 10 meaningful access-point variants, 6 shared foundations, and 27 strict agent-tool operation contracts.
+The corpus uses `README → capability → feature → optional detail`. Each of the 19 mandatory feature specs now states its distinct Product role and an exhaustive constituent Feature set before its behavioral contract. The corpus also contains 7 capability routers, 19 actor workflows, 4 justified Operational Models, 15 concrete Quality Scenarios, 10 meaningful access-point variants, 6 shared foundations, and 27 strict agent-tool operation contracts.
 
 | Capability | Functional features characterized |
 |---|---|
@@ -29,7 +29,7 @@ Operational Models exist only for Scout features that meet the structural entry 
 - Position reprocessing: immutable explicit-item bindings, atomic start, exact aggregation including all-superseded, replay fingerprints, and concurrency.
 - Review and promotion: evidence/revision binding, candidate ordering/fingerprint, separately committed Gig/document/position effects, failed and completed retry semantics, and restore/reverse/note behavior.
 
-The 15 Quality Scenarios comprise 10 Scout constraints and 5 cross-capability constraints. They cover redelivery, restart reconciliation, run binding, source bounds, trusted versus suspicious empty results, confidence thresholds, queue restart, atomic backfill start, stale review, promotion recovery, interrupted conversation persistence, reversal conflicts, staging capacity, stale document updates, and latest-contact timezone ordering. Every scenario uses one classification and the six concrete SEI fields with an objectively testable response measure; ISO 25010 appears only in authoring rules as a checklist prohibition.
+The 15 Quality Scenarios comprise 10 Scout constraints and 5 cross-capability constraints. They cover redelivery, restart reconciliation, run binding, source bounds, trusted versus suspicious empty results, confidence thresholds, queue restart, atomic backfill start, stale review, promotion recovery, interrupted conversation persistence, reversal conflicts, staging capacity, stale document updates, and latest-contact timezone ordering. The 9 owning features expose these as constrained Nonfunctional Requirements tables; features without a qualifying scenario have no such section. Every scenario uses one classification and the six concrete SEI fields with an objectively testable response measure; ISO 25010 appears only in authoring rules as a checklist prohibition.
 
 ## Scout depth
 
@@ -60,15 +60,15 @@ Review/promotion specifies current evidence and revision guards, deterministic c
 
 ## Link, format, and context validation
 
-`bun scripts/validate-corpus.ts` validates front matter, required and prohibited artifact structure, capability/feature ownership, reverse routing, relative Markdown targets, JSON parsing and local pointers, strict operation inputs, contract ownership/count, scenario concreteness, Operational Model element/section agreement, and per-artifact budgets. Latest result: 121 files excluding generated validation reports, 84 corpus Markdown files excluding templates, 216 internal links, 27 operation contracts, and zero failures. The generated record is `validation/corpus-validation.json`.
+`bun scripts/validate-corpus.ts` validates front matter, mandatory Product role/Feature set structure, optional Operational Model/Nonfunctional Requirements eligibility and linkage, capability/feature ownership, reverse routing, relative Markdown targets, JSON parsing and local pointers, strict operation inputs/results, contract ownership/count, scenario concreteness, Operational Model element/section agreement, and per-artifact budgets. Latest result: 121 files excluding generated validation reports, 84 corpus Markdown files excluding templates, 235 internal links, 27 operation contracts, and zero failures. The generated record is `validation/corpus-validation.json`.
 
-`bun scripts/measure-context.ts` measured every root-to-feature route plus every routed workflow, model, scenario, variant, and strict operation contract one at a time, including transitive `requires`. It uses JavaScript UTF-16 string code units divided by four and rounded up, matching GigFinder's conservative conversation heuristic rather than provider tokenization. Latest result: 95 routes, all at or below the 10,000 typical-route budget; maximum 9,219 estimated tokens. The complete route/file breakdown is `validation/context-budgets.json`.
+`bun scripts/measure-context.ts` measured every root-to-feature route plus every routed workflow, model, scenario, variant, and strict operation contract one at a time, including transitive `requires`. It uses JavaScript UTF-16 string code units divided by four and rounded up, matching GigFinder's conservative conversation heuristic rather than provider tokenization. Latest result: 95 routes, all at or below the 10,000 typical-route budget; maximum 9,977 estimated tokens. The complete route/file breakdown is `validation/context-budgets.json`.
 
 ## Fresh-reader tests
 
-Two initial source-blind readers independently audited Scout and the cross-capability corpus. Their failures drove corrections to company/source schema/defaults, run/profile binding, query-side resurfacing, relevance overwrite behavior, processing revival, document no-op provenance, availability identity, backfill aggregation/fingerprints, review maintenance/retry, reversal eligibility, Profile context assembly, model IDs, record vocabularies/defaults, dashboard mappings, search output, and Interaction provenance exposure.
+Source-blind readers independently audited Scout and the cross-capability corpus. Their failures drove corrections to company/source schema/defaults, run/profile binding, query-side resurfacing, relevance overwrite behavior, processing revival, document no-op provenance, availability identity, backfill aggregation/fingerprints, review maintenance/retry, reversal eligibility, Profile context assembly, model IDs, record vocabularies/defaults, dashboard mappings, search output, and Interaction provenance exposure.
 
-Final source-blind re-reads are recorded in the completion commit/report. Readers were forbidden from consulting application source, product/architecture material, plans, ADRs, PRDs, or the network and made no edits.
+The final cross-capability read passed all 13 non-Scout features, 27 operation result shapes, routing, links, and independently recomputed context budgets. The last Scout semantic read found no remaining ambiguity and confirmed the outbox, completion-independence, and raw-versus-unique backfill corrections; its sole authoring-rule finding was corrected by distinguishing feature-table routing from supplemental foundation navigation. A final source-blind Product Role Test passed all 19 features after identifying and correcting omitted reprocessing admission/document-refresh behaviors and one low-confidence-screening constraint contradiction. Readers were forbidden from consulting application source, product/architecture material, plans, ADRs, PRDs, or the network and made no edits.
 
 ## Repository isolation
 

@@ -16,6 +16,20 @@ test_suites: [src/data/test/store-regressions.test.ts, src/agent/test/gig-finder
 
 # Audited change reversal
 
+## Product role
+
+Owns the candidate's ability to undo one exact eligible audited change without silently overwriting later work. It centralizes reversal eligibility, inverse meaning, concurrency guards, and the new audit trail across domain features.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Eligibility classification | Distinguishes reversible snapshot/create/delete families from excluded changes and effects. |
+| Guarded inverse | Applies the exact create, update, delete, restore, relationship, participant, task, or interaction inverse. |
+| Conflict protection | Rejects stale, superseded, already-reverted, or structurally unsafe reversal attempts. |
+| Reversal audit | Records the successful inverse as a new change linked to the reverted change. |
+| Safe failure | Leaves current state untouched when the target is absent, ineligible, or no longer reversible. |
+
 ## Purpose and boundary
 
 Change reversal restores recorded prior state for one exact reversible change while preserving audit history. It creates a new change rather than deleting history and does not provide arbitrary record rollback.
@@ -39,6 +53,12 @@ The exact change ID must exist and contain at least one reversal snapshot. Gener
 ## Outputs and downstream effects
 
 The inverse is exact by snapshot operation: create soft-deletes the created record; delete restores the prior full record; update restores the prior full record; and an update whose snapshot was deleted (the inverse of restoration) soft-deletes again. Interaction participant links are included, so participant membership and the Interaction change atomically. Success returns the new change ID, target change ID, and every affected entity/ID; the new revert has its own snapshots and can itself be eligible for immediate reversal.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Safety | A reversal whose revision or structural guard no longer matches changes zero target fields and creates no reversal audit. | [Reversal conflict](../../quality-scenarios/agent/reversal-conflict.md) |
 
 ## Failure, retry, and recovery
 

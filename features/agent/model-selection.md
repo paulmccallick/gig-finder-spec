@@ -16,6 +16,19 @@ test_suites: [src/core/test/application-settings.test.ts, src/web/test/client/da
 
 # Agent model selection
 
+## Product role
+
+Owns the one global model identity used for subsequent GigFinder conversations. It provides a stable supported choice and deterministic default/override precedence without becoming part of an individual conversation's history or content.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Supported catalog | Exposes the exact Sol, Terra, and Luna identifiers accepted by the application. |
+| Global persistence | Saves one supported identifier as the candidate-wide selection. |
+| Runtime resolution | Resolves deployment override, persisted choice, and Sol default in exact precedence order. |
+| Selection validation | Rejects unknown identifiers without changing the prior effective model. |
+
 ## Purpose and boundary
 
 Model selection chooses which compiled supported model subsequent agent runtimes request. It does not alter existing conversations or guarantee provider availability.

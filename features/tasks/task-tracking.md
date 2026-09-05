@@ -16,6 +16,20 @@ test_suites: [src/core/test/tasks.test.ts, src/agent/test, src/cli/test]
 
 # Task tracking
 
+## Product role
+
+Owns the candidate's actionable job-search commitments and their lifecycle, independent of the opportunity or person that may provide context. It is the planning record used by list, completion, reopening, cancellation, and reversal behaviors rather than a dashboard-only checklist.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Commitment capture | Creates dated or undated work with exact description and default open/medium state. |
+| Classification and binding | Assigns priority and optionally binds the task to an existing Gig or Person. |
+| Lifecycle control | Moves tasks through open, completed, and cancelled states with supported reopening. |
+| Task retrieval | Lists and filters current commitments with deterministic ordering and pagination. |
+| Audited maintenance | Applies validated updates and eligible create/update reversal semantics. |
+
 ## Purpose and boundary
 
 A Task is one commitment related to an exact Gig, exact Person, or the general job search. It is distinct from the single next action embedded in a Gig.

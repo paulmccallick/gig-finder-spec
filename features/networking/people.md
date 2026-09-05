@@ -16,6 +16,20 @@ test_suites: [src/core/test/people.test.ts, src/core/test/read-services.test.ts,
 
 # People
 
+## Product role
+
+Owns the canonical contact and the candidate's durable relationship posture toward that person. It provides the stable person identity used by outreach, opportunities, interactions, documents, and tasks rather than representing any one contact workflow.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Contact identity | Creates and resolves a Person with deterministic duplicate checks and exact identifiers. |
+| Relationship context | Maintains type, strength, introducer, notes, employer, title, and why-interesting context. |
+| Outreach control | Maintains priority and the complete outreach-status vocabulary used by queries and dashboard lanes. |
+| Profile projection | Derives LinkedIn-based profile status and separately reports linked profile-document presence. |
+| Audited maintenance | Applies validated updates with revision history while protecting derived and immutable fields. |
+
 ## Purpose and boundary
 
 A Person is the canonical durable contact record. It owns identity, employer/title, relationship type/strength/introducer/notes, priority, outreach status, why-interesting, notes/tags, and connection date. Opportunity roles are separate relationship records; contact events are Interactions; profile status and last-contact fields are derived.

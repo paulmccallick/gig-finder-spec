@@ -16,6 +16,21 @@ test_suites: [src/core/scout/engine/test/scout-position-service.test.ts, src/dat
 
 # Position review and promotion
 
+## Product role
+
+Owns the candidate's decision over a reviewable Scout position and the guarded conversion of accepted evidence into the canonical opportunity/document system. It preserves user decision authority while coordinating promotion's separately committed durable effects and later maintenance actions.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Review queue | Lists current reviewable positions with deterministic candidate ordering and complete evidence. |
+| Evidence-bound decision | Accepts pursue, irrelevant, or defer only against the current position revision and evidence fingerprint. |
+| Duplicate resolution | Requires one explicit existing-Gig or create-new choice from the deterministic candidate set. |
+| Opportunity promotion | Creates or refreshes the selected Gig, selects/versions the job description, and records promotion state. |
+| Partial-failure recovery | Preserves committed Gig/document effects and retries deterministically from durable promotion evidence. |
+| Decision maintenance | Supports exact restore, reverse, note, and service-only completed refresh rules. |
+
 ## Purpose and boundary
 
 This feature presents current processed positions for human decision, preserves exact evidence/revision binding, resolves likely existing Gigs explicitly, and coordinates promotion across position, Gig, and managed-document state. It does not auto-pursue based on model scores.
@@ -39,6 +54,17 @@ Only exactly `needs_user_review`, unlinked positions accept the primary review s
 ## Outputs and downstream effects
 
 Resolution can require candidates or report stale/invalid choice. Success reports created/updated, changes counts/workspace membership, and creates/updates exactly the lexicographically first Gig job description (or creates one if absent). Identical content is a document no-op that preserves existing metadata/provenance. For created/versioned effects, promotion provenance binds official URL, retrieval instant, hashes, source/configuration/extraction/converter identities.
+
+## Operational Model
+
+[Review/promotion operations](../../operational-models/scout/review-promotion.md) specifies evidence/revision binding, decision and promotion status models, ordered candidate identity, separately committed effects, retry/replay, and concurrency guards.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Safety | A stale revision or evidence fingerprint changes zero review, Gig, document, or promotion state. | [Stale review](../../quality-scenarios/scout/stale-review.md) |
+| Recoverability | Retry after a partial promotion resumes from durable evidence and creates no duplicate Gig or document version. | [Promotion partial recovery](../../quality-scenarios/scout/promotion-partial-recovery.md) |
 
 ## Failure, retry, and recovery
 

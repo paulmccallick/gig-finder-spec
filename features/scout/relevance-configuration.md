@@ -16,6 +16,18 @@ test_suites: [src/core/scout/engine/test/scout-position-service.test.ts, src/age
 
 # Relevance configuration
 
+## Product role
+
+Owns versioned relevance criteria/threshold used before matching and the positions a new identity reschedules.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Identity | Validates and saves immutable criteria/threshold. |
+| Selection | Selects later processing identity without rewriting evidence. |
+| Reset | Reschedules all unlinked described states, including user/legacy decisions. |
+
 ## Purpose and boundary
 
 Relevance configuration defines the narrow technology-role exclusion criteria and confidence threshold used before candidate-fit scoring. It does not express candidate desirability, ranking, or a pursue recommendation.

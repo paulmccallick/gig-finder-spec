@@ -30,6 +30,8 @@ A cross-capability workflow belongs to the capability where the actor initiates 
 
 Every feature spec states:
 
+- its **Product role**: the distinct product responsibility it owns, the actor or downstream product behavior it serves, and why it is not merely a workflow step or implementation component;
+- a mandatory **Feature set**: a compact, exhaustive list of the constituent implemented behaviors owned by the feature;
 - its boundary and user-recognizable outcome;
 - supported access points, including “none” when behavior is configuration/internal processing only;
 - configuration/defaults that materially affect behavior;
@@ -40,6 +42,18 @@ Every feature spec states:
 - links to only the needed workflows, foundations, variants, contracts, Operational Models, and Quality Scenarios.
 
 Use decision/state tables only when they clarify several branches. Keep implementation references out of normative content.
+
+### Product Role Test
+
+Before accepting a feature boundary, give its `Product role` and `Feature set` to a source-blind reader. The reader must be able to state (1) the stable product responsibility, (2) the actor or downstream product behavior that depends on it, (3) the complete set of owned behaviors, and (4) why moving any listed behavior to another feature would change ownership rather than merely presentation. If the reader can describe only a screen, workflow step, service, queue, table, or code component, the candidate is not yet a product feature. Merge it into its owning feature or rewrite the boundary until the four answers are unambiguous.
+
+`Feature set` entries name product behaviors, not access points or implementation units. Together they must cover the feature's configuration, lifecycle, durable state, validation, and downstream effects described below; they do not replace those details.
+
+### Optional feature sections
+
+Add `Operational Model` only when the feature links one or more qualifying Operational Models. It identifies the linked model and the product-operational complexity it owns; it does not duplicate the model.
+
+Add `Nonfunctional Requirements` only when the feature links one or more qualifying Quality Scenarios. Each row states a concrete implemented constraint, its quality classification, and the linked scenario that supplies all six SEI fields and objective measure. Do not add generic availability, performance, security, usability, or reliability prose. A feature with no qualifying scenario has no Nonfunctional Requirements section.
 
 ## Operational Model entry and structure
 
@@ -95,5 +109,5 @@ Before committing:
 2. Confirm every capability routes to features and every workflow/variant/model/scenario names an existing owning feature.
 3. Confirm every feature has a functional spec and every optional artifact is linked from it.
 4. Measure every root-to-feature and root-to-feature-to-detail route.
-5. Ask a fresh reader to reconstruct behavior, prohibited effects, states, failure/recovery, and derivable tests from routed bundles; treat ambiguity as a specification defect.
+5. Ask a fresh reader to apply the Product Role Test and reconstruct behavior, prohibited effects, states, failure/recovery, and derivable tests from routed bundles; treat ambiguity as a specification defect.
 6. Commit only this standalone repository and restore recursive read-only permissions.

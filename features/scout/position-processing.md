@@ -16,6 +16,19 @@ test_suites: [src/core/scout/engine/test, src/data/test/scout-run-store.test.ts,
 
 # Position description and screening pipeline
 
+## Product role
+
+Owns durable transformation from observed position to authoritative description, screening evidence, and review-ready state.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Description | Creates/revives work and records authoritative text/provenance/failures. |
+| Screening | Applies bound relevance, threshold, and candidate profile. |
+| Projection | Writes result/revision to review state. |
+| Recovery | Reconciles dispatch and defined revival. |
+
 ## Purpose and boundary
 
 This feature turns an accepted discovery observation into durable authoritative description evidence, a narrow relevance decision, a separate candidate-match score, and a reviewable cross-run position. It does not resolve existing-Gig duplicates or choose whether the candidate should pursue.
@@ -39,6 +52,17 @@ Authoritative detail is HTTPS, no-redirect, at most 1 MB, content-type checked, 
 ## Outputs and downstream effects
 
 Durable evidence includes content-addressed artifacts/hashes, description acquisitions, processing/outbox rows, failures, criteria/rubric/profile/model identities, relevance evidence/ambiguities/confidence, candidate score/explanation, token counts, and latency. Current projections power review filters/detail; all evidence remains available for stale-review checks and reprocessing.
+
+## Operational Model
+
+[Operations](../../operational-models/scout/position-processing.md) specifies identities/states, binding, recovery, evidence, and limits.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Correctness | Below-threshold exclusion schedules exactly one match and does not project irrelevant. | [Low-confidence relevance](../../quality-scenarios/scout/low-confidence-relevance.md) |
+| Recoverability | Restart restores dispatch without a second work identity. | [Position queue restart](../../quality-scenarios/scout/position-queue-restart.md) |
 
 ## Failure, retry, and recovery
 

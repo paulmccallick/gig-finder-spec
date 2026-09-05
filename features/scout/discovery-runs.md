@@ -16,6 +16,22 @@ test_suites: [src/core/scout/engine/test, src/data/test/scout-run-store.test.ts,
 
 # Discovery runs and company work
 
+## Product role
+
+Owns one durable attempt to discover current positions across the configured company set and the independently retryable company/source evidence that proves its result. It turns configuration into trusted observations, position handoffs, availability reconciliation, and a derived run outcome.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Full-run initiation | Snapshots the active company/source and candidate/search configuration into one bounded durable run. |
+| Company work dispatch | Creates independently queued per-company work with deterministic identity and redelivery semantics. |
+| Ordered source execution | Executes a company's configured sources sequentially and preserves validation/evidence for each observation. |
+| Trust classification | Distinguishes verified results, verified empty, suspicious empty, partial, and failed company outcomes. |
+| Position handoff | Reconciles exact observed position identities and durably hands them to independent processing work. |
+| Availability reconciliation | Marks stored postings unavailable only after a complete trusted company observation. |
+| Run aggregation | Derives terminal full-run status from company outcomes without waiting for downstream position processing. |
+
 ## Purpose and boundary
 
 A full discovery run snapshots search/configuration inputs, executes independently durable work for every active configured company, validates official-source results, persists historical observations/diagnostics, and aggregates a stable run outcome. Accepted observations feed position processing. Only trusted complete company results reconcile tracked-Gig posting availability.
@@ -39,6 +55,20 @@ Source traversal is sequential within one company. Normalized positions require 
 ## Outputs and downstream effects
 
 History retains run/company/source statuses, counts, exact search/configuration bindings, attempts, diagnostics, filter decisions, and paginated observations. Rediscovery updates cross-run current position/last-seen while retaining first-seen and every observation. Accepted observations schedule position processing. A trusted complete result audits available/unavailable changes for exact identifiable Gigs.
+
+## Operational Model
+
+[Discovery-run operations](../../operational-models/scout/discovery-runs.md) specifies the coordinated full-run/company levels, immutable configuration binding, complete status models, derived completion, redelivery/reconciliation, source trust, durable evidence, ordering, and bounds.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Correctness | Every company item in a run uses the exact configuration/profile/search snapshot captured when the run began. | [Run configuration binding](../../quality-scenarios/scout/run-configuration-binding.md) |
+| Trust | A verified empty observation may reconcile availability; suspicious or partial empty evidence changes zero prior availability records. | [Trusted empty availability](../../quality-scenarios/scout/trusted-empty-availability.md) |
+| Recoverability | Redelivery of the same company work creates no second work identity or duplicate position observation. | [Company redelivery](../../quality-scenarios/scout/company-redelivery.md) |
+| Performance | Source execution stays within every configured and hard query/result/page bound. | [Source policy bounds](../../quality-scenarios/scout/source-policy-bounds.md) |
+| Recoverability | Restart reconciliation recreates missing deterministic queue delivery without duplicating durable work. | [Queue restart reconciliation](../../quality-scenarios/scout/queue-restart-reconciliation.md) |
 
 ## Failure, retry, and recovery
 

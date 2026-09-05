@@ -16,6 +16,20 @@ test_suites: [src/core/test/services.test.ts, src/data/test/document-store.test.
 
 # Managed documents
 
+## Product role
+
+Owns durable candidate and Scout text artifacts, their exact ownership, provenance, and immutable content history. It gives other capabilities a trustworthy document record without making temporary uploads, source discovery, or agent context assembly part of document ownership.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Registration and ownership | Creates one typed document linked to validated Gig, Person, or candidate-Profile owners. |
+| Immutable version history | Preserves complete numbered versions, hashes, timestamps, and exact historical reads. |
+| Safe replacement | Appends a new version only at the expected current version and treats identical content as a no-op. |
+| Provenance integrity | Distinguishes inline, upload, and Scout sources and enforces source-specific mutability. |
+| Discovery and delivery | Lists metadata and returns or downloads the exact requested current or historical content. |
+
 ## Purpose and boundary
 
 A managed document preserves exact plain/Markdown text, type, owners, provenance, and immutable versions. It may belong to Gigs, People, or singleton candidate Profile context. Temporary uploaded content belongs to agent upload staging until explicitly saved; Scout-authored job descriptions use the same durable document/version model with different provenance.
@@ -39,6 +53,12 @@ At least one unique owner link is required and Gig/Person IDs must resolve. Job 
 ## Outputs and downstream effects
 
 Lists return metadata, sorted by display name; exact reads return current or requested version and content. Owner details expose summaries. Candidate Profile documents feed a metadata-only agent catalog; their bodies enter context only after an exact `get_document` read. Gig job descriptions feed dashboard/Scout resolution; Person profile documents derive `hasProfile` but do not determine LinkedIn-based profile status.
+
+## Nonfunctional Requirements
+
+| Classification | Implemented constraint | Scenario |
+|---|---|---|
+| Correctness | A stale expected version creates no document version or change; an intentional reread/rebase can then succeed once. | [Stale document update](../../quality-scenarios/documents/stale-document-update.md) |
 
 ## Failure, retry, and recovery
 

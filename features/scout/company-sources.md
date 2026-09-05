@@ -16,6 +16,18 @@ test_suites: [src/data/test/scout-company-import.test.ts, src/web/test/request-h
 
 # Company and official-source configuration
 
+## Product role
+
+Owns versioned companies and ordered official-source policy consumed by discovery and description work, not source execution.
+
+## Feature set
+
+| Constituent behavior | Implemented outcome |
+|---|---|
+| Import | Validates companies, defaults, and ordered source policy/bounds. |
+| Version | Preserves identities and one current version without rebinding work. |
+| Authority | Supplies discovery, trust, and description policy. |
+
 ## Purpose and boundary
 
 This feature defines which companies Scout scans and how each official career source is listed, paginated, normalized, location-enriched, and used for authoritative detail descriptions. It is operational configuration with durable product effects even though no current end-user UI, agent tool, supported root CLI, or public API manages it.
