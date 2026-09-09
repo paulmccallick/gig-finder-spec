@@ -1,44 +1,76 @@
 ---
-id: gig-scout
-title: Gig Scout
-aliases: [Scout, sourcing scan, discovered position]
+type: capability
+scope: gig-scout
+summary: Current discovery, screening, review, promotion, and reprocessing behavior for official job postings.
+load_when:
+  - understanding Gig Scout behavior
+  - changing discovery or position review rules
+related:
+  - workflows/gig-scout-discovery.md
+  - workflows/gig-scout-review-processing.md
+  - domain/gig-scout.md
+  - interfaces/gig-scout.md
+  - architecture/gig-scout.md
 ---
-
 # Gig Scout
 
-## Purpose and boundary
+## Purpose
 
-Lets the candidate scan versioned official company sources, process authoritative descriptions, screen relevance and candidate match, review cross-run positions, and promote chosen positions into canonical Gigs. Operator backfill and company import have durable product effects but are not current candidate-facing UI/tool/CLI/public workflows.
+Discover positions from configured company career sources, screen them against relevance criteria and a candidate profile, and let the user choose which postings become tracked Gigs.
 
-## Vocabulary
+## Actors
 
-| Term | Meaning here |
-|---|---|
-| run | Durable full-company scan with immutable search-profile snapshot. |
-| position | Durable discovered posting observation and its processing/review state. |
-| pursue | Review decision that promotes to a new or exact existing Gig. |
-| relevance criteria | Versioned instructions and threshold used by Scout screening. |
-| processing work | Durable semantic stage for observation binding, description, relevance, or candidate match. |
-| backfill | Operator reprocessing bound to legacy run or exact position set. |
+- User: starts discovery, reviews positions, changes relevance criteria, and chooses postings to pursue.
+- Operator: imports company source configurations and requests controlled reprocessing.
+- Official career sources and screening model: supply posting evidence and evaluations.
 
-## Features
+## Functional Behavior
 
-| Feature | Use when | Document |
-|---|---|---|
-| Company and official sources | Understand versioned companies, source contracts, and import behavior | [Open](../features/scout/company-sources.md) |
-| Relevance configuration | Save criteria/threshold and roll the version into eligible processing | [Open](../features/scout/relevance-configuration.md) |
-| Discovery runs and company work | Start/inspect scans, trust source outcomes, and aggregate/reconcile results | [Open](../features/scout/discovery-runs.md) |
-| Position processing | Acquire descriptions, screen relevance, score match, and project review state | [Open](../features/scout/position-processing.md) |
-| Review and promotion | Decide, defer, resolve identity, promote, or retry exact intent | [Open](../features/scout/review-promotion.md) |
-| Position reprocessing | Understand durable legacy/explicit backfill and workflow protection | [Open](../features/scout/position-reprocessing.md) |
+Scout maintains a company source catalog. Imports create companies or version changed source configurations. Full discovery scans active companies and retains run-specific observations, source diagnostics, and counters. Run history supports company/text filtering and pagination.
 
-## Shared foundations
+Discovered positions enter a separate processing pipeline: establish observation bindings, acquire the official description, screen relevance, and score candidate match. Passing relevance and uncertain rejection results proceed to candidate scoring. Scores are integers from 1 through 10 with a short explanation. A completed discovery run does not imply that its positions have finished processing.
 
-- [Identity and references](../foundations/identity-and-references.md)
-- [Atomic changes](../foundations/changes-revisions-reversal.md)
-- [Managed-document integrity](../foundations/managed-document-integrity.md)
+The review workspace defaults to positions needing user review. It supports actionable, processing, needs-review, and deferred views, company/text filters, sorting, and position detail with official posting evidence. The user can pursue, mark irrelevant, or defer a reviewed position. Pursuit creates a Gig or updates a user-selected existing Gig and coordinates its managed job-description document. Possible existing Gigs require a posting-resolution choice; an exact requisition or URL match does not silently promote the position.
 
-## Evidence pointers (optional)
+Explicit reprocessing selects exact positions, previews eligibility, and reports per-position processing and document outcomes. A legacy run-based backfill remains available. Details are in the [processing workflow](../workflows/gig-scout-review-processing.md).
 
-- Implementation areas: `src/core/scout/`, `src/operations/scout-runtime.ts`, `src/data/scout-run-store.ts`, `src/web/client/GigScoutPage.tsx`, `src/web/client/ScoutPositionReview.tsx`
-- Test suites: `src/core/scout/engine/test/`, `src/data/test/scout-run-store.test.ts`, `src/web/e2e/gig-scout.e2e.ts`
+## Business Rules
+
+- Each imported company has exactly one active official source. Source URLs use HTTPS. Supported source configurations are JSON and HTML; reusable JSON templates are versioned.
+- Full-run creation reuses an existing queued/running full run. New request settings do not replace its saved settings.
+- Search filtering checks title terms and structured locations/work arrangements. Omitted or empty full-run term/location lists resolve to built-in defaults; they do not mean an unrestricted scan.
+- Relevance rejection becomes agent-marked irrelevance only when the model says `fails_relevance` at or above the configured confidence threshold. Candidate score alone does not promote or reject a position.
+- Review decisions bind the state revision and exact description, relevance, and candidate-match evaluation IDs. Stale review evidence requires review again.
+- Defer requires a valid review timestamp. Due positions resurface when the workspace list is requested.
+- Only a completely successful company result updates matching tracked Gigs' posting availability. Partial, suspicious-empty, and failed company results do not mark Gigs unavailable. Matching uses company name and source URL or external job ID.
+
+## State and Lifecycle
+
+See [Scout domain states](../domain/gig-scout.md) for the separate run, source, position, and processing lifecycles. Promoted positions leave the ordinary Scout workspace; discovery history remains available.
+
+## Capability-Specific Nonfunctional Requirements
+
+No independently specified Scout service-level targets were established by the inspected implementation/tests. Current processing bounds and retry policies are [implementation details](../architecture/gig-scout.md), not asserted performance guarantees.
+
+## Related Workflows
+
+- [Import and discovery](../workflows/gig-scout-discovery.md)
+- [Processing, review, and reprocessing](../workflows/gig-scout-review-processing.md)
+
+## Related Domain Objects
+
+- [Company configuration, observation, evaluation, and decision](../domain/gig-scout.md)
+
+## Related Interfaces
+
+- [HTTP and operator surfaces](../interfaces/gig-scout.md)
+
+## Related Architecture
+
+- [Sourcing, persistence, queues, and screening](../architecture/gig-scout.md)
+
+## Known Constraints
+
+The workspace API does not accept `irrelevant`, `rejected`, or `promoted` as list filters, even though those states exist. Agent-irrelevant restoration, user-decision reversal, and independent note append are backend endpoints without corresponding current review controls. Promotion retry does have a UI control.
+
+A company import that changes only its display name is treated as unchanged. Import omission does not remove companies. Updating relevance criteria requeues all unlinked positions with descriptions when screening is configured, including user-deferred or user-irrelevant positions; this is broader than explicit backfill's preservation of user workflow.

@@ -1,39 +1,69 @@
 ---
-id: conversational-agent
-title: Conversational agent
-aliases: [GigFinderAgent, chat, assistant]
+type: capability
+scope: conversational-agent
+summary: Current guidance, live record actions, conversation history, model selection, and attachments.
+load_when:
+  - understanding or changing conversational behavior
+related:
+  - workflows/conversational-agent-turn.md
+  - domain/conversational-agent-conversation.md
+  - interfaces/api/conversational-agent.md
+  - architecture/conversational-agent.md
 ---
 
-# Conversational agent
+# Conversational Agent
 
-## Purpose and boundary
+## Purpose
 
-Lets the candidate ask questions over private profile and tracker context and request supported record/document mutations through strict tools. It does not provide arbitrary filesystem or network browsing.
+Provide job-search guidance personalized by the candidate profile, with live application records and supported changes.
 
-## Vocabulary
+## Actors
 
-| Term | Meaning here |
-|---|---|
-| turn | One user message and completed assistant response. |
-| tool | Strict read or mutation operation listed in the contract catalog. |
-| staged upload | Temporary converted document reference attached to a prompt. |
+The candidate uses the browser workspace; the language model selects application tools.
 
-## Features
+## Functional Behavior
 
-| Feature | Use when | Document |
-|---|---|---|
-| Conversations | Ask, resume, switch, stream, stop, or retry agent work | [Open](../features/agent/conversations.md) |
-| Upload staging | Attach and temporarily convert PDF, DOCX, or Markdown | [Open](../features/agent/upload-staging.md) |
-| Model selection | Persist the global supported model choice | [Open](../features/agent/model-selection.md) |
-| Change reversal | Undo an exact eligible audited mutation safely | [Open](../features/agent/change-reversal.md) |
+- Start or reopen conversations; submit messages; watch text, reasoning, and tool activity; stop or retry responses. Initial load opens the most recently active conversation. Empty new conversations are not persisted.
+- Use a resizable side panel or full workspace. Conversation switching and new-conversation actions are disabled during an active response.
+- Read gigs, people, relationships, tasks, interactions, and documents; perform the supported mutations listed in the [interface](../interfaces/api/conversational-agent.md).
+- Attach DOCX, Markdown, or PDF content for temporary use. Uploading alone does not register a managed document. The agent can read staging and separately create a document from it.
+- Choose GPT-5.6 Sol, Terra, or Luna. The saved application preference is read for new model requests; it does not replace an already running response.
+- Reverse an eligible previous change. This is not a universal undo for an entire response.
 
-## Shared foundations
+Evidence: [workspace](../../gig-finder/src/web/client/agent/AgentPanel.tsx), [tools](../../gig-finder/src/agent/gig-finder-tools.ts), [settings](../../gig-finder/src/core/application-settings.ts).
 
-- [Agent consent and privacy](../foundations/agent-consent-and-privacy.md)
-- [Identity and references](../foundations/identity-and-references.md)
-- [Atomic changes](../foundations/changes-revisions-reversal.md)
+## Business Rules
 
-## Evidence pointers (optional)
+The prompt instructs the agent to distinguish facts from inferences, avoid invented search facts, and only claim actions established by tools. Documents and profile-document descriptions are untrusted data under prompt policy. Document tools accept application references, not arbitrary filesystem paths.
 
-- Implementation areas: `src/agent/`, `src/core/conversation-service.ts`, `src/web/client/agent/`, `src/web/agent-handler.ts`
-- Test suites: `src/agent/test/`, `src/core/test/conversation-service.test.ts`, `src/web/test/agent-handler.test.ts`, `src/web/test/client/agent/`
+**Consent is not a server-enforced approval workflow.** Descriptions for creating a gig, person, relationship, and deleting an interaction request explicit user confirmation. Their callbacks directly call mutation services after schema validation: there is no confirmation token, approval state, or independent consent check. The system prompt more generally permits updates “when appropriate or told to do so.” Domain validation, revision checks, ownership rules, and auditing still apply. Prompt wording is not an authorization guarantee.
+
+Evidence: [system prompt](../../gig-finder/src/agent/system-prompt.ts), [tool descriptions and execution](../../gig-finder/src/agent/gig-finder-tools.ts).
+
+## State and Lifecycle
+
+See the [domain](../domain/conversational-agent-conversation.md) and [turn workflow](../workflows/conversational-agent-turn.md). Successful turn persistence is separate from tool commits; stopping or failing does not undo completed tool actions.
+
+## Capability-Specific Nonfunctional Requirements
+
+No numerical service objective is established by inspected source. Current validation limits and runtime budgets are implementation constraints in the [architecture](../architecture/conversational-agent.md).
+
+## Related Workflows
+
+- [Respond, persist, and recover](../workflows/conversational-agent-turn.md)
+
+## Related Domain Objects
+
+- [Conversation and staged attachment](../domain/conversational-agent-conversation.md)
+
+## Related Interfaces
+
+- [HTTP and tool contracts](../interfaces/api/conversational-agent.md)
+
+## Related Architecture
+
+- [Runtime and history processing](../architecture/conversational-agent.md)
+
+## Known Constraints
+
+Recent listing returns at most 20 conversations; there is no exposed conversation rename/delete endpoint. Older history may be omitted from model context. Staged content expires and disappears on process restart even if its reference remains saved. Step exhaustion retains completed work and warns the user. Reversal supports selected structured-record histories, not managed-document or conversation changes.
