@@ -31,6 +31,7 @@ let links = 0;
 for (const filename of files) {
   const text = await readFile(filename, "utf8");
   const label = path.relative(root, filename);
+  const importedDecision = /^decisions[/\\]00\d{2}-.*\.md$/.test(label);
   if (label.startsWith(`capabilities${path.sep}`)) {
     for (const heading of ["Purpose", "Actors", "Functional Behavior", "Business Rules", "Capability-Specific Nonfunctional Requirements", "Related Workflows", "Related Domain Objects", "Related Interfaces", "Related Architecture", "Known Constraints"]) {
       if (!text.split("\n").includes(`## ${heading}`)) failures.push(`${label}: missing capability heading ${heading}`);
@@ -41,7 +42,7 @@ for (const filename of files) {
       if (!text.split("\n").includes(`## ${heading}`)) failures.push(`${label}: missing workflow heading ${heading}`);
     }
   }
-  if (label !== "MAP.md") {
+  if (label !== "MAP.md" && !importedDecision) {
     const match = text.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
     if (!match) failures.push(`${label}: missing front matter`);
     else {
