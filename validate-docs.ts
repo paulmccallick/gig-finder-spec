@@ -1,5 +1,6 @@
 import path from "node:path";
 import { readdir, readFile } from "node:fs/promises";
+import { checkRepositoryReference, extractRepositoryReferences } from "./repository-ref";
 
 const root = import.meta.dir;
 const excluded = new Set([".git", "AGENTS.md", "llm-facing-application-documentation.md"]);
@@ -57,6 +58,14 @@ for (const filename of files) {
           if (!await Bun.file(path.resolve(root, target)).exists()) failures.push(`${label}: missing related ${target}`);
         }
       } catch (error) { failures.push(`${label}: YAML ${String(error)}`); }
+    }
+  }
+  for (const target of extractRepositoryReferences(text)) {
+    links++;
+    try {
+      await checkRepositoryReference(target);
+    } catch (error) {
+      failures.push(`${label}: broken repository reference ${target}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   for (const match of text.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {

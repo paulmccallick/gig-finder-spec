@@ -146,3 +146,18 @@ export async function checkRepositoryReference(
   }
   return resolved;
 }
+
+export function extractRepositoryReferences(markdown: string) {
+  return [...markdown.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)]
+    .map(match => match[1]!.replace(/^<|>$/g, ""))
+    .filter(target => /^(?:app|spec)::/.test(target));
+}
+
+export async function checkMarkdownRepositoryReferences(
+  markdown: string,
+  options: RepositoryEnvironment = {},
+) {
+  return await Promise.all(
+    extractRepositoryReferences(markdown).map(reference => checkRepositoryReference(reference, options)),
+  );
+}

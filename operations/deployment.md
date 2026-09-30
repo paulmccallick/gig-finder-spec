@@ -36,6 +36,6 @@ Deployment maintenance deliberately excludes the runtime artifact mount. State i
 
 ## Evidence
 
-[Package scripts](../../gig-finder/package.json), [Dockerfile](../../gig-finder/Dockerfile), [CI](../../gig-finder/.github/workflows/ci.yml), [bootstrap](../../gig-finder/bin/bootstrap-production.sh), [deployment](../../gig-finder/bin/deploy-local.sh), [context resolver](../../gig-finder/src/data/context.ts), [web configuration](../../gig-finder/src/web/app.ts).
+[Package scripts](app::package.json), [Dockerfile](app::Dockerfile), [CI](app::.github/workflows/ci.yml), [bootstrap](app::bin/bootstrap-production.sh), [deployment](app::bin/deploy-local.sh), [context resolver](app::src/data/context.ts), [web configuration](app::src/web/app.ts).
 
 See [observability](observability.md), [recovery](recovery.md), and [decision provenance](../decisions/README.md).

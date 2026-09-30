@@ -45,4 +45,4 @@ See [persistence](persistence.md) for transaction scope. A conversation is not o
 
 ## Source Evidence
 
-[Application](../../gig-finder/src/core/application.ts), [local composition](../../gig-finder/src/data/local-application.ts), [web composition](../../gig-finder/src/web/app.ts), [server](../../gig-finder/src/web/server.ts), [router](../../gig-finder/src/web/request-handler.ts), [CLI](../../gig-finder/src/cli/app.ts), [tools](../../gig-finder/src/agent/gig-finder-tools.ts), [dependency rules](../../gig-finder/.dependency-cruiser.cjs), [package scripts](../../gig-finder/package.json).
+[Application](app::src/core/application.ts), [local composition](app::src/data/local-application.ts), [web composition](app::src/web/app.ts), [server](app::src/web/server.ts), [router](app::src/web/request-handler.ts), [CLI](app::src/cli/app.ts), [tools](app::src/agent/gig-finder-tools.ts), [dependency rules](app::.dependency-cruiser.cjs), [package scripts](app::package.json).

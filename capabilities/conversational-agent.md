@@ -30,7 +30,7 @@ The candidate uses the browser workspace; the language model selects application
 - Choose GPT-5.6 Sol, Terra, or Luna. The saved application preference is read for new model requests; it does not replace an already running response.
 - Reverse an eligible previous change. This is not a universal undo for an entire response.
 
-Evidence: [workspace](../../gig-finder/src/web/client/agent/AgentPanel.tsx), [tools](../../gig-finder/src/agent/gig-finder-tools.ts), [settings](../../gig-finder/src/core/application-settings.ts).
+Evidence: [workspace](app::src/web/client/agent/AgentPanel.tsx), [tools](app::src/agent/gig-finder-tools.ts), [settings](app::src/core/application-settings.ts).
 
 ## Business Rules
 
@@ -38,7 +38,7 @@ The prompt instructs the agent to distinguish facts from inferences, avoid inven
 
 **Consent is not a server-enforced approval workflow.** Descriptions for creating a gig, person, relationship, and deleting an interaction request explicit user confirmation. Their callbacks directly call mutation services after schema validation: there is no confirmation token, approval state, or independent consent check. The system prompt more generally permits updates “when appropriate or told to do so.” Domain validation, revision checks, ownership rules, and auditing still apply. Prompt wording is not an authorization guarantee.
 
-Evidence: [system prompt](../../gig-finder/src/agent/system-prompt.ts), [tool descriptions and execution](../../gig-finder/src/agent/gig-finder-tools.ts).
+Evidence: [system prompt](app::src/agent/system-prompt.ts), [tool descriptions and execution](app::src/agent/gig-finder-tools.ts).
 
 ## State and Lifecycle
 

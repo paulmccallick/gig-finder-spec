@@ -40,4 +40,4 @@ Model calls use the Codex-provider adapter and runtime credentials. Scout connec
 
 ## Source Evidence
 
-[Router](../../gig-finder/src/web/request-handler.ts), [errors](../../gig-finder/src/web/error-response.ts), [CLI dispatcher](../../gig-finder/src/cli/cli.ts), [tool registration](../../gig-finder/src/agent/gig-finder-tools.ts), [provider adapter](../../gig-finder/src/agent/codex-provider.ts), [Scout sourcing](../../gig-finder/src/core/scout/sourcing/source-plan.ts).
+[Router](app::src/web/request-handler.ts), [errors](app::src/web/error-response.ts), [CLI dispatcher](app::src/cli/cli.ts), [tool registration](app::src/agent/gig-finder-tools.ts), [provider adapter](app::src/agent/codex-provider.ts), [Scout sourcing](app::src/core/scout/sourcing/source-plan.ts).

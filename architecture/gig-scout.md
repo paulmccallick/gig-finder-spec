@@ -68,11 +68,11 @@ No architectural rationale or service-level targets are inferred from these mech
 
 ## Source Evidence and Verification Anchors
 
-- [Composition](../../gig-finder/src/data/local-application.ts), [web runtime composition](../../gig-finder/src/web/app.ts)
-- [Run coordination](../../gig-finder/src/core/scout/engine/runs.ts), [SQLite Scout repository](../../gig-finder/src/data/scout-run-store.ts), [schema](../../gig-finder/src/data/schema.ts)
-- [Company import](../../gig-finder/src/core/scout/engine/company-import.ts), [scan engine](../../gig-finder/src/core/scout/engine/scan-company.ts), [adapter registry](../../gig-finder/src/core/scout/sourcing/adapters/registry.ts), [matching](../../gig-finder/src/core/scout/sourcing/matching.ts)
-- [Policy/source contracts](../../gig-finder/src/core/scout/sourcing/contracts.ts), [HTTP port](../../gig-finder/src/core/scout/sourcing/ports.ts), [detail acquisition](../../gig-finder/src/core/scout/sourcing/detail-descriptions.ts), [template catalog](../../gig-finder/src/operations/scout-template-catalog.ts)
-- [Company runtime](../../gig-finder/src/operations/scout-runtime.ts), [position runtime](../../gig-finder/src/operations/scout-position-runtime.ts), [processor](../../gig-finder/src/core/scout/engine/screening.ts), [model adapter](../../gig-finder/src/agent/scout-position-screening.ts)
-- [Promotion service](../../gig-finder/src/core/scout/engine/scout-position-service.ts)
-- [Repository tests](../../gig-finder/src/data/test/scout-run-store.test.ts): singleton/snapshots, replay, exact reviewed intent, explicit selection eligibility/idempotency, complete pipeline, immutable screening snapshot, and document crash reconciliation.
-- [Run-service tests](../../gig-finder/src/core/scout/engine/test/runs.test.ts), [promotion-service tests](../../gig-finder/src/core/scout/engine/test/scout-position-service.test.ts), [screening tests](../../gig-finder/src/core/scout/engine/test/screening.test.ts), [runtime integration tests](../../gig-finder/src/operations/test/scout-runtime.integration.test.ts)
+- [Composition](app::src/data/local-application.ts), [web runtime composition](app::src/web/app.ts)
+- [Run coordination](app::src/core/scout/engine/runs.ts), [SQLite Scout repository](app::src/data/scout-run-store.ts), [schema](app::src/data/schema.ts)
+- [Company import](app::src/core/scout/engine/company-import.ts), [scan engine](app::src/core/scout/engine/scan-company.ts), [adapter registry](app::src/core/scout/sourcing/adapters/registry.ts), [matching](app::src/core/scout/sourcing/matching.ts)
+- [Policy/source contracts](app::src/core/scout/sourcing/contracts.ts), [HTTP port](app::src/core/scout/sourcing/ports.ts), [detail acquisition](app::src/core/scout/sourcing/detail-descriptions.ts), [template catalog](app::src/operations/scout-template-catalog.ts)
+- [Company runtime](app::src/operations/scout-runtime.ts), [position runtime](app::src/operations/scout-position-runtime.ts), [processor](app::src/core/scout/engine/screening.ts), [model adapter](app::src/agent/scout-position-screening.ts)
+- [Promotion service](app::src/core/scout/engine/scout-position-service.ts)
+- [Repository tests](app::src/data/test/scout-run-store.test.ts): singleton/snapshots, replay, exact reviewed intent, explicit selection eligibility/idempotency, complete pipeline, immutable screening snapshot, and document crash reconciliation.
+- [Run-service tests](app::src/core/scout/engine/test/runs.test.ts), [promotion-service tests](app::src/core/scout/engine/test/scout-position-service.test.ts), [screening tests](app::src/core/scout/engine/test/screening.test.ts), [runtime integration tests](app::src/operations/test/scout-runtime.integration.test.ts)

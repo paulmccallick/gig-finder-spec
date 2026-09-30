@@ -58,7 +58,7 @@ The web request handler has no dedicated `/api/interactions` CRUD route and the 
 
 ## Source Evidence
 
-- [Domain and input schemas](../../gig-finder/src/core/interactions.ts), [service](../../gig-finder/src/core/interaction-service.ts), [pagination](../../gig-finder/src/core/queries.ts)
-- [Agent tool schemas/implementations](../../gig-finder/src/agent/gig-finder-tools.ts), [set/clear operation schemas](../../gig-finder/src/agent/update-tool-schemas.ts)
-- [CLI parser](../../gig-finder/src/cli/cli.ts), [CLI service adapters](../../gig-finder/src/cli/db-store.ts), [CLI integration test](../../gig-finder/src/cli/test/cli.test.ts)
-- [Web route boundary](../../gig-finder/src/web/request-handler.ts), [networking display](../../gig-finder/src/web/client/NetworkingBoard.tsx)
+- [Domain and input schemas](app::src/core/interactions.ts), [service](app::src/core/interaction-service.ts), [pagination](app::src/core/queries.ts)
+- [Agent tool schemas/implementations](app::src/agent/gig-finder-tools.ts), [set/clear operation schemas](app::src/agent/update-tool-schemas.ts)
+- [CLI parser](app::src/cli/cli.ts), [CLI service adapters](app::src/cli/db-store.ts), [CLI integration test](app::src/cli/test/cli.test.ts)
+- [Web route boundary](app::src/web/request-handler.ts), [networking display](app::src/web/client/NetworkingBoard.tsx)

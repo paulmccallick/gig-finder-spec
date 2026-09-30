@@ -3,6 +3,8 @@ import path from "node:path";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import {
   checkRepositoryReference,
+  checkMarkdownRepositoryReferences,
+  extractRepositoryReferences,
   parseRepositoryReference,
   registerRepository,
   resolveRepositoryReference,
@@ -119,6 +121,34 @@ describe("local repository resolution", () => {
     );
     await expect(checkRepositoryReference("app::README.md#symbol=MissingThing", environment)).rejects.toThrow(
       "Symbol 'MissingThing' was not found",
+    );
+  });
+});
+
+describe("Markdown repository references", () => {
+  test("extracts only app and spec link targets", () => {
+    const markdown = [
+      "[service](app::src/core/services.ts)",
+      "[map](<spec::MAP.md#symbol=Documentation Map>)",
+      "[local](../domain/model.md)",
+      "[web](https://example.com/reference)",
+      "[other](custom::value)",
+    ].join("\n");
+
+    expect(extractRepositoryReferences(markdown)).toEqual([
+      "app::src/core/services.ts",
+      "spec::MAP.md#symbol=Documentation Map",
+    ]);
+  });
+
+  test("checks every extracted target against local registrations", async () => {
+    const appRoot = await createRepository("markdown-application", "app");
+    await writeFile(path.join(appRoot, "README.md"), "# Application\n");
+    await registerRepository("app", appRoot, environment);
+
+    await expect(checkMarkdownRepositoryReferences("[app](app::README.md)", environment)).resolves.toHaveLength(1);
+    await expect(checkMarkdownRepositoryReferences("[missing](app::missing.md)", environment)).rejects.toThrow(
+      "Referenced file does not exist",
     );
   });
 });

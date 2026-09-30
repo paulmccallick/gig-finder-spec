@@ -50,10 +50,10 @@ No performance targets or architectural rationale are inferred from these implem
 
 ## Source Evidence and Verification Anchors
 
-- [People and GigPeople services](../../gig-finder/src/core/services.ts), [deep merge behavior](../../gig-finder/src/core/deep-patch.ts), [change execution](../../gig-finder/src/core/changes.ts)
-- [People and role schema](../../gig-finder/src/data/schema.ts), [active triple uniqueness migration](../../gig-finder/src/data/migrations/0020_active_gig_people.sql), [revisioned repository](../../gig-finder/src/data/store.ts)
-- [Agent full relationship paging](../../gig-finder/src/agent/gig-finder-tools.ts), [CLI adapters](../../gig-finder/src/cli/db-store.ts), [board](../../gig-finder/src/web/client/NetworkingBoard.tsx)
-- [Service tests](../../gig-finder/src/core/test/services.test.ts): neutral person defaults, role duplicate/reference validation, contact projection, shared input behavior.
-- [Read-service tests](../../gig-finder/src/core/test/read-services.test.ts): person/relationship filters and consistency behavior.
+- [People and GigPeople services](app::src/core/services.ts), [deep merge behavior](app::src/core/deep-patch.ts), [change execution](app::src/core/changes.ts)
+- [People and role schema](app::src/data/schema.ts), [active triple uniqueness migration](app::src/data/migrations/0020_active_gig_people.sql), [revisioned repository](app::src/data/store.ts)
+- [Agent full relationship paging](app::src/agent/gig-finder-tools.ts), [CLI adapters](app::src/cli/db-store.ts), [board](app::src/web/client/NetworkingBoard.tsx)
+- [Service tests](app::src/core/test/services.test.ts): neutral person defaults, role duplicate/reference validation, contact projection, shared input behavior.
+- [Read-service tests](app::src/core/test/read-services.test.ts): person/relationship filters and consistency behavior.
 
 Source and existing tests were inspected; no additional broad test execution was needed for this documentation-only addition.

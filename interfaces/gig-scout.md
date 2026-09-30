@@ -61,8 +61,8 @@ The source harness is `bun run scout:source --config <private.json> --output <ig
 
 ## Source Evidence
 
-- [HTTP routing, input parsing, response/error mapping](../../gig-finder/src/web/request-handler.ts)
-- [Run service validation](../../gig-finder/src/core/scout/engine/runs.ts) and [position-service validation](../../gig-finder/src/core/scout/engine/scout-position-service.ts)
-- [Company import schema](../../gig-finder/src/core/scout/engine/company-import.ts), [source contracts](../../gig-finder/src/core/scout/sourcing/contracts.ts), [HTTP port](../../gig-finder/src/core/scout/sourcing/ports.ts)
-- [Run-history UI](../../gig-finder/src/web/client/GigScoutPage.tsx), [review UI](../../gig-finder/src/web/client/ScoutPositionReview.tsx), [workspace route](../../gig-finder/src/web/client/App.tsx)
-- [Source harness entrypoint](../../gig-finder/scripts/scout-source.ts), [package scripts](../../gig-finder/package.json), [agent tool registry](../../gig-finder/src/agent/gig-finder-tools.ts)
+- [HTTP routing, input parsing, response/error mapping](app::src/web/request-handler.ts)
+- [Run service validation](app::src/core/scout/engine/runs.ts) and [position-service validation](app::src/core/scout/engine/scout-position-service.ts)
+- [Company import schema](app::src/core/scout/engine/company-import.ts), [source contracts](app::src/core/scout/sourcing/contracts.ts), [HTTP port](app::src/core/scout/sourcing/ports.ts)
+- [Run-history UI](app::src/web/client/GigScoutPage.tsx), [review UI](app::src/web/client/ScoutPositionReview.tsx), [workspace route](app::src/web/client/App.tsx)
+- [Source harness entrypoint](app::scripts/scout-source.ts), [package scripts](app::package.json), [agent tool registry](app::src/agent/gig-finder-tools.ts)

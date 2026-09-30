@@ -35,6 +35,6 @@ Backup acceptance requires intrinsic SQLite integrity and no foreign-key violati
 
 ## Evidence
 
-[Maintenance entry point](../../gig-finder/src/operations/maintenance.ts), [backup/restore implementation](../../gig-finder/src/data/maintenance.ts), [artifact validation](../../gig-finder/src/data/runtime-artifacts.ts), [deployment rollback](../../gig-finder/bin/deploy-local.sh), [maintenance tests](../../gig-finder/src/data/test/maintenance-entrypoint.test.ts).
+[Maintenance entry point](app::src/operations/maintenance.ts), [backup/restore implementation](app::src/data/maintenance.ts), [artifact validation](app::src/data/runtime-artifacts.ts), [deployment rollback](app::bin/deploy-local.sh), [maintenance tests](app::src/data/test/maintenance-entrypoint.test.ts).
 
 See [reliability](../requirements/reliability.md), [persistence](../architecture/persistence.md), and [Scout](../capabilities/gig-scout.md).

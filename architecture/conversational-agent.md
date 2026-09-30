@@ -19,7 +19,7 @@ related:
 
 The runtime requires read, mutation, and tool-extension capabilities together, or none. Production composition supplies all three. Without them the prompt states the lack of live data. There is no separate consent arbiter.
 
-Evidence: [composition](../../gig-finder/src/web/app.ts), [adapter](../../gig-finder/src/web/agent-handler.ts), [service](../../gig-finder/src/core/conversation-service.ts), [runtime](../../gig-finder/src/agent/ai-sdk-conversation-runtime.ts).
+Evidence: [composition](app::src/web/app.ts), [adapter](app::src/web/agent-handler.ts), [service](app::src/core/conversation-service.ts), [runtime](app::src/agent/ai-sdk-conversation-runtime.ts).
 
 ## Context and Current Limits
 
@@ -40,7 +40,7 @@ These are implementation defaults, not service objectives.
 
 Recognized internal identifiers are sanitized in assistant text/reasoning and titles. User text only has staged references hidden. Structured parts retain references. Streaming sanitization buffers the last six whitespace-delimited tokens to reduce split-identifier exposure; this is pattern-based display filtering, not a general secrets filter.
 
-Evidence: [context/sanitization](../../gig-finder/src/core/conversation-service.ts), [title](../../gig-finder/src/agent/ai-sdk-conversation-runtime.ts), [agent defaults](../../gig-finder/src/agent/gig-finder-agent.ts).
+Evidence: [context/sanitization](app::src/core/conversation-service.ts), [title](app::src/agent/ai-sdk-conversation-runtime.ts), [agent defaults](app::src/agent/gig-finder-agent.ts).
 
 ## Persistence and Guarantees
 
@@ -48,7 +48,7 @@ Evidence: [context/sanitization](../../gig-finder/src/core/conversation-service.
 
 The completion callback skips save on abort/error. Step exhaustion can save. Model finish is emitted before callback persistence completes, so finish is not a persistence acknowledgement. Callback failure becomes an error event.
 
-Evidence: [repository](../../gig-finder/src/data/conversation-store.ts), [service](../../gig-finder/src/core/conversation-service.ts), [stream translator](../../gig-finder/src/agent/ai-sdk-conversation-runtime.ts).
+Evidence: [repository](app::src/data/conversation-store.ts), [service](app::src/core/conversation-service.ts), [stream translator](app::src/agent/ai-sdk-conversation-runtime.ts).
 
 ## Staging
 
@@ -56,7 +56,7 @@ Extracted uploads live in an in-process Map. Defaults: 15-minute TTL, 20 items, 
 
 The creation tool reads exact staged references, preserves extracted content, and records consumption after managed creation. Reuse of a live consumed reference returns its original result. The UI discards saved references after retained completion; saved history cannot resolve discarded or expired staging. Conversion validation belongs to the [document boundary](../interfaces/api/documents-profile.md#upload-conversion-boundary).
 
-Evidence: [staging](../../gig-finder/src/core/staged-documents.ts), [configuration](../../gig-finder/src/web/app.ts), [creation tool](../../gig-finder/src/agent/gig-finder-tools.ts), [UI cleanup](../../gig-finder/src/web/client/agent/AgentPanel.tsx).
+Evidence: [staging](app::src/core/staged-documents.ts), [configuration](app::src/web/app.ts), [creation tool](app::src/agent/gig-finder-tools.ts), [UI cleanup](app::src/web/client/agent/AgentPanel.tsx).
 
 ## Model Selection and Provider
 
@@ -64,7 +64,7 @@ Catalog: Sol/Terra/Luna; built-in default: Sol. `CODEX_AGENT_MODEL` supplies the
 
 The provider reads `auth.json` from configured `CODEX_HOME` or the home `.codex` directory, extracts an access token and ChatGPT account ID (including JWT fallback), rejects tokens expiring within 60 seconds, and calls the Responses adapter at `https://chatgpt.com/backend-api/codex`. It implements no refresh. Requests submit `store: false`; response generation requests automatic reasoning summaries. These are submitted options, not independently verified provider retention guarantees.
 
-Evidence: [settings](../../gig-finder/src/core/application-settings.ts), [settings store](../../gig-finder/src/data/settings-store.ts), [provider](../../gig-finder/src/agent/codex-provider.ts), [agent](../../gig-finder/src/agent/gig-finder-agent.ts).
+Evidence: [settings](app::src/core/application-settings.ts), [settings store](app::src/data/settings-store.ts), [provider](app::src/agent/codex-provider.ts), [agent](app::src/agent/gig-finder-agent.ts).
 
 ## Reversal and Failure Modes
 
@@ -74,7 +74,7 @@ Revert examines histories for gigs, people, gig-person relationships, tasks, int
 
 The tool wrapper converts domain/schema failures to structured results; unexpected exceptions become generic `tool_failed`. Runtime errors usually become generic messages, with selected Codex authentication/model/smoke errors passed through. Debug model logging contains generated text, reasoning, and tool inputs; display sanitization does not establish log redaction.
 
-Evidence: [tool wrapper](../../gig-finder/src/agent/gig-finder-tools.ts), [reversal](../../gig-finder/src/data/store.ts), [logging](../../gig-finder/src/agent/gig-finder-agent.ts), [safe errors](../../gig-finder/src/agent/ai-sdk-conversation-runtime.ts).
+Evidence: [tool wrapper](app::src/agent/gig-finder-tools.ts), [reversal](app::src/data/store.ts), [logging](app::src/agent/gig-finder-agent.ts), [safe errors](app::src/agent/ai-sdk-conversation-runtime.ts).
 
 ## Used By
 
