@@ -1,33 +1,30 @@
 ---
 type: capability
 scope: networking
-summary: Current canonical person records, networking board, relationship lifecycle, and Gig-person associations.
+summary: Keeping contacts, prioritizing outreach, recording interactions, and remembering relationships and roles in opportunities.
 load_when:
   - understanding networking or person behavior
   - changing relationship management
-related:
-  - domain/networking.md
-  - interfaces/networking.md
-  - architecture/networking.md
-  - workflows/interactions-contact-history.md
 ---
 # Networking
 
 ## Purpose
 
-Maintain canonical people, relationship context and priorities, and their roles in tracked Gigs. Present an actionable relationship board and expose person data to the agent and CLI.
+Keep the people involved in the job search in one place, decide whom to contact next, and remember how the candidate knows them. Connect a person to the opportunities where they can help or are involved in hiring.
 
 ## Actors
 
-The user browses the board and uses the application agent or CLI to create/update people and create Gig-person relationships.
+The candidate reviews contacts on the Networking board and asks the assistant, or uses the command line, to add people, update their details, and connect them to opportunities.
 
 ## Functional Behavior
 
-Person records capture name, optional company/title/LinkedIn URL/connection date, relationship type and strength, introducer, relationship notes, priority, workflow status, reasons for interest, notes, and tags. People can exist independently of any Gig and can be associated with multiple Gigs in distinct roles.
+Each contact keeps identity details, how the candidate knows them, who introduced them, relationship strength, and notes about why the relationship matters. Priority helps the candidate focus outreach; status records where the relationship stands. A contact can exist before there is a specific opportunity and can hold different roles in several [opportunities](opportunities.md), such as recruiter for one and former peer for another.
 
-The board groups actionable people into Ready to Reach, In Motion, On Calendar, and Active Circle. It defaults to high priority, supports text/priority/first-tranche filtering, and opens a read-only person detail drawer. Summary metrics count all actionable people, independently of the current filters. Paused and do-not-contact people are omitted from the board but remain available through service, agent, CLI, and API reads.
+The board groups actionable people into Ready to Reach, In Motion, On Calendar, and Active Circle. It initially shows high-priority contacts. Search, priority, and a tagged first-group filter narrow the cards; opening a card shows the person’s details. Summary counts cover all contacts except those paused or marked do not contact, even when filters hide some cards. Paused and do-not-contact contacts remain saved and can still be retrieved through the assistant, command line, and API.
 
-Person records include managed-document summaries and compact interaction references. Contact recency comes from completed interactions, as defined in [contact history](../workflows/interactions-contact-history.md), rather than editable person contact fields. Follow-up work is represented by tasks, not person next-action fields.
+A contact also brings together references to saved [documents](documents-profile.md) and [interactions](../domain/interactions.md). The application shows when the candidate was last in touch, the communication method, and a short summary from completed interactions. The authoritative rules for calculating and correcting those details are in [contact history](../workflows/interactions-contact-history.md). Planned follow-up work belongs in [tasks](tasks.md).
+
+Networking also covers the interaction records that make contact history useful. The candidate can record an email, call, meeting, interview, or other exchange with one or more contacts, optionally link it to an opportunity, and later correct or remove it. Interaction fields, statuses, query behavior, and mutation rules remain in the supporting [interaction domain](../domain/interactions.md), [interfaces](../interfaces/interactions.md), and [architecture](../architecture/interactions.md) documents.
 
 ## Business Rules
 
@@ -39,15 +36,21 @@ Person records include managed-document summaries and compact interaction refere
 
 ## State and Lifecycle
 
-Statuses are not-contacted, outreach-planned, outreach-sent, awaiting-response, conversation-scheduled, active-relationship, follow-up-due, paused, and do-not-contact. They can be set directly without an enforced transition graph. Neither an interaction nor a date automatically changes the relationship status. See [domain](../domain/networking.md) for exact values and board mapping.
+Statuses are not-contacted, outreach-planned, outreach-sent, awaiting-response, conversation-scheduled, active-relationship, follow-up-due, paused, and do-not-contact. The candidate can change directly between these statuses. Recording a conversation or reaching a date does not change the status automatically. See [domain](../domain/networking.md) for exact values and board mapping.
 
 ## Capability-Specific Nonfunctional Requirements
 
-No distinct networking service-level target was established from the inspected code/tests. Current storage and query limitations are [architecture details](../architecture/networking.md).
+No networking-specific performance or capacity target is established. [Shared quality constraints](../requirements/global-nfrs.md) describe application-wide guarantees and limits.
 
 ## Related Workflows
 
 - [Derived contact history](../workflows/interactions-contact-history.md)
+
+## Related Interaction Detail
+
+- [Interaction domain](../domain/interactions.md)
+- [Interaction interfaces](../interfaces/interactions.md)
+- [Interaction architecture](../architecture/interactions.md)
 
 ## Related Domain Objects
 
@@ -66,3 +69,10 @@ No distinct networking service-level target was established from the inspected c
 The board is read-only. Current People service/agent/CLI expose create and update but no dedicated delete/merge operation; Gig-person relationships expose create/read/query without a public update/delete operation.
 
 The label `profileStatus: verified` only means a LinkedIn URL is present; the application does not verify the remote profile. `hasProfile` separately means a linked managed document of type profile exists. A profile document does not by itself change profileStatus. Do-not-contact is a recorded workflow value and board exclusion; interaction creation is not blocked by it.
+
+## Related documents
+
+- [Networking Domain](../domain/networking.md)
+- [Networking Interfaces](../interfaces/networking.md)
+- [Networking Architecture](../architecture/networking.md)
+- [Record and Correct Contact History](../workflows/interactions-contact-history.md)

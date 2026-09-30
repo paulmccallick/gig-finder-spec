@@ -1,33 +1,31 @@
 ---
 type: requirement
 scope: application
-summary: Distinguish enforced constraints from unmeasured service targets.
+summary: Shared data-protection and consistency constraints, and unspecified service targets.
 load_when:
-  - Distinguish enforced constraints from unmeasured service targets.
-related:
-  - requirements/security.md
-  - requirements/reliability.md
-  - architecture/overview.md
+  - shared data-protection and consistency constraints, and unspecified service targets
 ---
 
-# Global Nonfunctional Constraints
+# Shared Quality Constraints
 
-## Evidence Policy
+These documents describe how GigFinder protects saved information and what callers can rely on when work fails. Capability-specific rules and input limits remain in the relevant [capability documents](../APPLICATION.md#major-capabilities).
 
-This corpus separates enforced behavioral constraints, documented operating policies, and unknown service objectives. Implementation constants are not automatically business requirements. Capability-specific limits belong with that capability/interface; implementation mechanisms belong in architecture.
+## Saving Consistent Data
 
-## Consistency and Recovery
+A supported domain operation saves its related database writes together. Some operations also check a caller-supplied revision or document version to reject outdated edits. Other edit services only check for a conflicting write during their own read/write interval. [Reliability](reliability.md) explains those boundaries and the consequences of an interrupted conversation or Scout job.
 
-Supported audited mutations preserve transaction consistency and reject stale updates. This applies to a domain operation, not an entire conversation or integration. See [reliability](reliability.md).
+## Access and Private Information
 
-## Security and Privacy
+GigFinder uses one configured set of job-search data and has no application login or separate user permissions. Candidate information can be included in model requests and logs. [Security and privacy](security.md) describes these limits and the operating assumptions.
 
-The application has one configured context and no application authentication boundary. State and credentials are external runtime inputs. See [security](security.md).
+## Targets Not Specified
 
-## Unestablished Targets
+The inspected source does not specify a service-wide response-time target, throughput, supported record volume, uptime percentage, maximum acceptable data loss, or maximum recovery time. Configuration limits and retry settings are not measured performance or recovery guarantees.
 
-No quantified service-wide latency SLO, throughput target, maximum business-record volume, availability percentage, or RPO/RTO was established by inspected code. Queue defaults, body limits, lock timeouts, and test timeouts are not such targets. No production performance measurement was performed.
+The [architecture overview](../architecture/overview.md) explains the current implementation. [Deployment](../operations/deployment.md) describes the supplied operating setup; neither is a promise that a larger or different deployment has been tested.
 
-## Implementation
+## Related documents
 
-[Architecture](../architecture/overview.md), [persistence](../architecture/persistence.md), [deployment](../operations/deployment.md).
+- [Security and Privacy](security.md)
+- [Reliability and Consistency](reliability.md)
+- [Architecture Overview](../architecture/overview.md)

@@ -1,57 +1,82 @@
 ---
 type: domain
 scope: gig-scout
-summary: Scout concepts and the independent lifecycle of discovery, processing, and user decisions.
+summary: Companies, search inputs, positions, observations, evaluations, and the states that connect discovery to tracked opportunities.
 load_when:
   - interpreting Scout states or provenance
   - changing position identity or lifecycle
-related:
-  - capabilities/gig-scout.md
-  - workflows/gig-scout-review-processing.md
 ---
-# Scout Domain
+# Scout Companies, Positions, and Evaluations
 
-## Definition and Relationships
+## Definition
 
-| Concept | Meaning and relationships |
+Scout organizes a candidate's job search around configured companies and the official positions those companies publish. A position is a posting that Scout has discovered; a Gig is an opportunity the user has chosen to track. Discovering a position does not automatically create a Gig.
+
+## Attributes
+
+| Concept | Meaning |
 | --- | --- |
-| Scout company | Stable catalog identity and display name, active flag, and current source configuration. Distinct from a tracked Gig's company text. |
-| Configuration version | Immutable collection of source settings used for a company scan; later imports can establish a new current version. |
-| Search profile | Run-owned title terms, optional title variants, and location intents used for discovery filtering. Distinct from the candidate profile used in scoring. |
-| Run | Full discovery, legacy source-run backfill, or explicit position backfill. Contains execution scope and saved inputs. |
-| Source outcome | Result of reading one official source, including validation evidence, counts, and diagnostics. |
-| Position | Durable posting identity within a company/source, based on external ID when present, otherwise canonical URL. Can be observed in many runs. |
-| Observation | Posting title, URL, location, time, source, and evidence as seen during a particular run. Historical observations remain separate from the latest position display. |
-| Description | Official posting content converted to Markdown, with hashes, source URL, retrieval time, and conversion provenance. |
-| Relevance evaluation | Versioned-criteria result, reason, confidence, evidence, ambiguities, and model identity. |
-| Candidate-match evaluation | Profile/rubric-specific score and explanation linked to a relevance evaluation. |
-| Decision | Agent, user, or system action with origin, actor, review evidence, and state revision; optional note and defer time. |
-| Promotion | Reviewed intent to create/update a Gig and its managed description. Has its own pending/failed/completed status and durable Gig/document links. |
+| Scout company | A catalog entry with a stable identifier, display name, active flag, and official source settings. Only active companies participate in a full search. |
+| Configuration version | The source settings saved for a company at a particular version. A later import can establish new current settings without rewriting past searches. |
+| Search profile | Title terms, permitted title variants, and locations used to filter listings. Built-in defaults apply when full-run terms or locations are empty or omitted. |
+| Candidate profile | The candidate's configured background and goals, saved with a run for fit scoring. It is separate from search filters and relevance criteria. |
+| Run | One full company search or one execution of position reprocessing. It records the selected scope, saved inputs, progress, and outcomes. |
+| Source outcome | Whether reading an official source succeeded, was incomplete, or failed, with counts and diagnostic evidence. |
+| Position | A stable posting identity within a company and source, using its external job identifier when available and otherwise its canonical posting URL. |
+| Observation | What a source reported about a position in a particular run: title, location, URL, time, and source evidence. |
+| Description | The official posting text saved for evaluation, with its retrieval and conversion history. |
+| Relevance evaluation | A criteria-based pass/fail judgment with confidence, reason, evidence, and ambiguities. |
+| Candidate-match evaluation | A score from 1 to 10 and explanation produced from the description, candidate profile, and scoring rubric. |
+| Decision | An agent, user, or system action with its author, reviewed evidence, revision, optional note, and optional return time. |
+| Promotion | Pursuit that creates or updates a tracked Gig and saves its job description; its progress is tracked separately until completed. |
 
-## States and Transitions
+## Relationships
 
-Full discovery runs begin `queued`, become `running` as results are committed, and finish `completed`, `partial`, or `failed`. A zero-company run completes immediately. Individual companies remain `queued` until `succeeded`, `partial`, or `failed`; company status has no separate running value.
+A company has configuration versions and exactly one active source in its current configuration. A full run selects every active company and records source outcomes. A position can have observations in many runs; a later observation does not erase what an earlier search saw.
 
-Source outcomes are `succeeded_with_results`, `succeeded_empty_verified`, `suspicious_empty`, `partial`, or `failed`. Verified emptiness is evidence of success; suspicious emptiness is not.
+Descriptions and evaluations belong to positions and retain the inputs used to produce them. A review decision refers to the exact description and evaluations the user saw. A promoted position links to its accepted Gig and managed description. The [candidate and document model](documents-profile.md) explains how configured candidate context differs from saved documents.
 
-| Position state | Meaning / transitions |
+## States
+
+| Area | States and meaning |
 | --- | --- |
-| `processing` | Initial discovery and active pursuit state. Screening can lead to review or irrelevance; successful pursuit leads to promoted. A failed stage may leave the position processing. |
-| `needs_user_review` | Completed candidate evaluation awaits pursue, irrelevant, or defer decision. |
-| `irrelevant` | Agent confidence-based or user decision. Direct restore supports agent origin only; backend reversal can reverse user decisions. Hidden from current list filters. |
-| `deferred` | User postponement; a due time returns it to review on list access. |
-| `promoted` | Durable link to a Gig; excluded from ordinary workspace list/detail. Reversing a user decision does not unlink an existing Gig. |
-| `rejected` | Retained state vocabulary and excluded from current workspace; no current review action writes this state. |
+| Full run | `queued`, `running`, then `completed`, `partial`, or `failed`. |
+| Company within a run | `queued`, then `succeeded`, `partial`, or `failed`; there is no separate company running state. |
+| Source result | `succeeded_with_results`, `succeeded_empty_verified`, `suspicious_empty`, `partial`, or `failed`. An empty result is successful only when validation supports it. |
+| Position | `processing`, `needs_user_review`, `irrelevant`, `deferred`, `promoted`, or the retained `rejected` state. |
+| Processing step | `pending`, `completed`, `failed`, or `superseded`. Superseded means newer work replaced the step's inputs. |
+| Promotion | `pending`, `failed`, or `completed`, independently of source discovery. |
 
-Processing stages are `reconcile_gig`, `acquire_description`, `screen_relevance`, and `score_candidate_match`. Each has status `pending`, `completed`, `failed`, or `superseded`. Processing failure is not a relevance decision. Superseded work represents an input replaced by newer work.
+## State Transitions
 
-## Invariants and Revision Rules
+A new position normally starts processing. A sufficiently confident relevance rejection moves it to irrelevant. Other relevance results continue to scoring, whose completion makes the position ready for user review. A failed processing step can leave the position in processing; failure is not a relevance decision.
 
-Position identity is source-scoped; equal external IDs across different companies or source keys are not the same position. Observations preserve historical run evidence. Review decisions compare the current revision and exact reviewed evaluation IDs. Successful promotion requires the Gig and managed-document results to be coordinated before the position is marked promoted.
+From review, the user can dismiss a position as irrelevant, defer it, or pursue it. A due deferred position returns to review when the list is requested. Pursuit processes the Gig and description changes, then marks the position promoted after they succeed. Promoted positions leave ordinary Scout list and detail views.
 
-Explicit position backfill keeps its selected observation, configuration, candidate profile, and screening model bindings. New overlapping backfill work supersedes unfinished work for the same position. User-owned deferred/irrelevant/promoted workflow is preserved during explicit backfill, while machine evaluation evidence can change.
+Agent-marked irrelevance has a direct backend restore action. User decisions have a separate backend reversal action, which does not unlink an existing Gig. The current review actions do not write `rejected`, and ordinary list filters do not expose irrelevant, rejected, or promoted positions.
 
-## Related Capabilities and Workflows
+A full run finishes once company discovery finishes, even if position evaluation is still underway. A run with no active companies completes immediately.
+
+## Invariants
+
+Position identity is scoped to a company and source: equal external identifiers from different companies or source keys do not identify the same position. Historical observations remain attributable to their original runs.
+
+Review decisions must match the current position revision and exact evaluated description. A score alone cannot dismiss or promote a position. Promotion completes only after the Gig and managed description have both been coordinated.
+
+Explicit position reprocessing retains its chosen observation, source settings, candidate profile, and model. New overlapping requests supersede unfinished work for the same positions. This path preserves user decisions while refreshing evaluation evidence. Changing relevance criteria follows a different rule: it restarts processing for unlinked described positions, including user-deferred and user-irrelevant positions.
+
+## Related Capabilities
 
 - [Gig Scout](../capabilities/gig-scout.md)
-- [Processing and review](../workflows/gig-scout-review-processing.md)
+- [Tracked opportunities](../capabilities/opportunities.md)
+- [Documents and candidate context](../capabilities/documents-profile.md)
+
+## Related Workflows
+
+- [Search configured companies](../workflows/gig-scout-discovery.md)
+- [Evaluate, review, and pursue positions](../workflows/gig-scout-review-processing.md)
+
+## Related documents
+
+- [Gig Scout](../capabilities/gig-scout.md)
+- [Evaluate Positions, Review Results, and Pursue Opportunities](../workflows/gig-scout-review-processing.md)

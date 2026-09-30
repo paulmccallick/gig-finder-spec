@@ -1,18 +1,20 @@
 ---
 type: application
 scope: gig-finder
-summary: Entry point to the source-verified application documentation.
+summary: Starting points and validation instructions for GigFinder documentation.
 load_when:
-  - locating current GigFinder documentation
-related:
-  - MAP.md
-  - APPLICATION.md
+  - finding the documentation or checking an edit
 ---
 
-# GigFinder Application Documentation
+# GigFinder Documentation
 
-Start with [MAP.md](MAP.md), then load only the documents relevant to the task. [APPLICATION.md](APPLICATION.md) describes purpose, users, scope, and capabilities.
+Read [what GigFinder does](APPLICATION.md), or use the [documentation map](MAP.md) to find a specific capability, workflow, interface, or implementation.
 
-The application documentation lives at this repository root. It follows [LLM-Facing Application Documentation Structure](llm-facing-application-documentation.md), with the repository root serving as the guide's documentation root. Code is authoritative; documentation from the code repository is used only after verification against implementation.
+The documentation lives at this repository root. [Authoring instructions](AGENTS.md) apply the [documentation format](llm-facing-application-documentation.md) here, without a nested documentation directory. Describe behavior from code; verify any older code-repository documentation before reusing it. Implementation evidence uses revision-pinned GitHub links so it works without a sibling code checkout; [evidence and currency](APPLICATION.md#evidence-and-currency) records the audit baseline.
 
-Run `bun validate-docs.ts` from this repository to check metadata, required sections, local links, and heading anchors.
+Run `bun validate-docs.ts` to check metadata, required sections, links, and heading anchors. The checks also require every Related documents entry to be a clickable Markdown link and every current-state document to be reachable from the map. The [validator](validate-docs.ts) excludes the format guide and agent instructions from application-document metadata rules. The [imported ADRs](decisions/README.md) retain their recorded format and wording; their status, core sections, links, and reachability are checked without requiring new metadata or prose.
+
+## Related documents
+
+- [Documentation Map](MAP.md)
+- [GigFinder](APPLICATION.md)

@@ -1,67 +1,79 @@
 ---
 type: capability
 scope: opportunities
-summary: Opportunity pipeline, independent availability, creation and posting resolution, and board behavior.
+summary: Track applications through outcome, compare recorded fit, and keep the next action visible.
 load_when:
   - understanding Gig lifecycle and opportunity views
   - changing opportunity capture, updates, or posting identity
-related:
-  - domain/opportunities-gig.md
-  - workflows/opportunities-posting-resolution.md
-  - interfaces/api/opportunities.md
-  - architecture/opportunities.md
 ---
 # Opportunities
 
 ## Purpose
-Maintain the candidate's opportunity pipeline, current assessments and next actions, with links to the actual posting and managed supporting documents.
+Help a job seeker track roles from discovery through applications, interviews, and a final outcome. The opportunity board brings together progress, fit assessments, and next actions so the candidate can compare roles and decide what needs attention.
 
 ## Actors
-The candidate viewing the board, conversational agent acting through tools, CLI user, and [Gig Scout](gig-scout.md) supplying official posting observations and accepted opportunities.
+The candidate reviews opportunities and asks the [conversational agent](conversational-agent.md) to record changes. [Gig Scout](gig-scout.md) supplies discovered postings and observations about whether roles are still available. A command-line interface also supports record maintenance.
 
 ## Functional Behavior
-Users can discover, create, read, and update Gigs. Each carries company/title, posting identity and URL, pipeline stage/outcome, status narrative, last-activity date, optional next action, fit assessment, compensation, tags, and optional role details. Related people, tasks, interactions, and documents retain their own identities.
+Each tracked role is a **Gig**. It records the company and title, application progress, current status, most recent activity, fit assessment, and an optional next action with a due date. It can also hold a posting link, compensation, location, working arrangement, and other role details.
 
-Creation through the conversational tool is instructed to follow explicit user confirmation and duplicate resolution. Ordinary creation rejects an existing exact external job ID or a case-insensitive company/title pair. Scout posting acceptance uses a separate reviewed candidate-resolution process: matches suggest reuse but never silently merge. See [posting resolution](../workflows/opportunities-posting-resolution.md).
+The board helps the candidate review these records by stage, search for a role, filter by recorded fit, and find overdue next actions. Selecting a card opens the **Gig dossier**, a detail panel with the role's information and saved job description. “Apply / view posting” opens the saved posting URL. If no URL or description has been saved, the panel says so.
 
-The opportunity board is read-only; changes occur through agent tools, CLI, and Scout operations. Clicking a card opens its dossier. Apply / view posting uses the Gig's captured source URL; missing URLs display an explicit unavailable message. The description panel reads the selected managed job-description version, supports expand/collapse, and links to its version-specific document viewer. No legacy file fallback supplies missing content.
+The board itself is read-only. The candidate can create and update roles through the agent or command-line interface. The agent's creation instructions require explicit confirmation and a duplicate check. Ordinary creation rejects an existing exact external job ID or a company/title pair that differs only in capitalization or surrounding spaces.
+
+Scout can add a new opportunity or refresh a tracked one. When a posting resembles an existing Gig, the candidate chooses whether it is the same opportunity or a separate role; the application does not silently combine them. See [posting review](../workflows/opportunities-posting-resolution.md).
+
+[People](networking.md), [tasks](tasks.md), [interactions](../domain/interactions.md), and [documents](documents-profile.md) can be associated with a Gig. Each remains a separate record with its own behavior.
 
 ## Business Rules
-- A Gig requires company, title, status summary, valid last-activity date, stage, outcome, and fit rating.
-- Nonclosed stages require outcome `pending`. Closed stage requires a nonpending outcome and no next action.
-- A next action needs nonblank description; its due date may be null. Last activity, due date, and posted date use valid calendar dates.
-- Compensation is optional, USD, hourly or annual, with nonnegative nullable bounds. If both bounds exist, minimum cannot exceed maximum.
-- Availability is independent of pipeline stage/outcome. Ordinary creation initializes it to `unknown`; ordinary input cannot assign availability or its timestamp. Dedicated observation updates set available/unavailable and change the timestamp only when the state changes.
-- Updating availability does not close a Gig, change fit, or remove its next action. A repeated equal availability value creates no change.
-- Partial updates preserve omitted fields and merge nested next-action, fit, and pay fields. Clearing the full next action or pay range is explicit. Tags are replaced as an array.
+- Company, title, status summary, last-activity date, stage, outcome, and fit rating are required.
+- Every stage except Closed has outcome Pending. Closing requires another outcome and clearing the next action.
+- A next action requires a description; its due date is optional. Last activity, due date, and posted date must be valid calendar dates.
+- Compensation is optional and expressed in USD per hour or year. Bounds can be unknown, but known values must be nonnegative and the minimum cannot exceed the maximum.
+- Posting availability is independent of application progress. A role becoming unavailable does not close the Gig, change its fit, or remove its next action.
+- New Gigs start with unknown availability. Scout observations can mark them available or unavailable. The recorded availability date changes only when availability changes.
+- Updates retain fields that were not supplied. Changing part of the next action, fit assessment, or pay range preserves the rest; removing the entire next action or pay range must be explicit. A supplied tag list replaces the old list.
 
 ## State and Lifecycle
-The [Gig domain](../domain/opportunities-gig.md) lists supported stages, outcomes, fit ratings, and availability states. There is no enforced sequential stage progression: any resulting combination satisfying the lifecycle rules can be saved, including reopening with pending outcome.
+The [Gig model](../domain/opportunities-gig.md) defines stages, outcomes, fit ratings, and availability. Stages need not be followed in order. A closed Gig can reopen if its outcome returns to Pending.
 
-| Board view | Membership and presentation |
+| Board view | What the candidate sees |
 | --- | --- |
-| Active | Nonclosed Gigs with available or unknown availability, grouped by pipeline stage. |
-| Unavailable | Nonclosed unavailable Gigs in one list, newest valid availability timestamp first; cards retain pipeline stage and show unavailable-since date. |
-| Archive | All closed Gigs regardless of availability, grouped into rejected, not pursuing, role pulled, no response, or Other. |
+| Active | Roles that are not closed and whose postings are available or unknown, grouped by application stage. |
+| Unavailable | Roles that are not closed but whose postings are unavailable, with the most recent availability changes first. Their application stages remain visible. |
+| Archive | All closed roles, grouped into Rejected, Not Pursuing, Role Pulled, No Response, or Other. |
 
-All views support case-insensitive company/title/status/next-action search and fit filters. Active/Unavailable additionally support stage and overdue filters. Overdue means a nonclosed Gig's next-action due date is before today in America/Los_Angeles. Ordinary board ordering prioritizes overdue, then due date, most recent activity, then company. Missing/invalid unavailable timestamps follow valid ones, with ordinary ordering as fallback.
+All views support search across company, title, status, and next-action text, plus fit filtering. Active and Unavailable also offer stage and overdue filters. An action is overdue when its due date is before today in Pacific time and its Gig is not closed.
 
-Entering Archive clears stage/overdue filters while preserving search/fit. Counts reflect the unfiltered view. Applications counts Gigs currently at applied, including unavailable ones; Actions overdue includes unavailable nonclosed Gigs.
+Within ordinary board groups, overdue actions appear first, followed by earliest due date, most recent activity, and company name. Unavailable uses availability-change time first, with missing or invalid times last and ordinary ordering to break ties.
+
+Opening Archive clears the stage and overdue filters but preserves search and fit. View counts ignore filters. “Applications” counts roles currently at Applied, including unavailable postings; it is not a count of every application ever submitted. “Actions overdue” also includes unavailable roles that are not closed.
 
 ## Capability-Specific Nonfunctional Requirements
-Mutations retain audited revisions and enforce valid final state. Reviewed posting choices are invalidated when the candidate snapshot changes. No numeric response-time or capacity objective was established by inspected contracts.
+Saved changes retain an audit history and must satisfy the record rules. If an existing opportunity changes after a posting match was reviewed, the application requires a fresh review before accepting that choice. No numeric performance or capacity target is established.
 
 ## Related Workflows
-- [Resolve an incoming posting](../workflows/opportunities-posting-resolution.md)
+- [Review a posting before adding or updating a Gig](../workflows/opportunities-posting-resolution.md)
 
 ## Related Domain Objects
-- [Gig](../domain/opportunities-gig.md)
+- [Gig: attributes, relationships, and states](../domain/opportunities-gig.md)
 
 ## Related Interfaces
-- [Opportunity interfaces](../interfaces/api/opportunities.md)
+- [Opportunity reads and updates](../interfaces/api/opportunities.md)
 
 ## Related Architecture
 - [Opportunity implementation](../architecture/opportunities.md)
 
 ## Known Constraints
-The agent's default unfiltered discovery is narrower than the board's Active view: it selects applied, recruiter contact, screening, and technical interview stages and does not filter availability. Neither the board nor the source link submits an application or changes stage automatically. Multiple job descriptions are allowed; the dossier chooses the lexically first managed ID, not the newest-created document.
+Opening the posting link does not submit an application or change the recorded stage. Fit filters compare saved assessments; the board does not calculate fit.
+
+The agent's default opportunity list includes only Applied, Recruiter Contact, Screening, and Technical Interview, regardless of availability. It therefore differs from the board's Active view.
+
+A Gig can have several job descriptions. The dossier displays the one selected by document ID order, which is not necessarily the newest description. See the [document selection contract](../interfaces/api/opportunities.md#http-and-browser).
+
+## Related documents
+
+- [Gig](../domain/opportunities-gig.md)
+- [Review a Posting Before Adding or Updating a Gig](../workflows/opportunities-posting-resolution.md)
+- [Opportunity Interfaces](../interfaces/api/opportunities.md)
+- [Opportunity Architecture](../architecture/opportunities.md)

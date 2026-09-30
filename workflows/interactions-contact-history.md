@@ -1,67 +1,68 @@
 ---
 type: workflow
 scope: interactions-contact-history
-summary: How recording, correcting, and deleting interactions changes person contact history and linked Gig references.
+summary: Record or correct a job-search conversation and see the resulting last-contact details on each participant.
 load_when:
   - explaining last-contact values
   - correcting an interaction while preserving history
-related:
-  - capabilities/interactions.md
-  - domain/interactions.md
-  - interfaces/interactions.md
-  - architecture/interactions.md
 ---
 # Record and Correct Contact History
 
 ## Purpose
 
-Retain communication history and derive person contact recency from recorded completed interactions.
+Save what happened in an email exchange, call, meeting, or interview so the candidate can review it before the next conversation. Each participant's last-contact details then show the most recent completed interaction, helping the candidate remember when they last spoke and what they discussed.
 
 ## Actors
 
-User or agent, interaction service, and subsequent readers of people or Gigs.
+The job seeker, assisted by the [application agent](../capabilities/conversational-agent.md) or command-line tool, records the conversation. Later, the candidate or agent reads a person's contact details or a Gig's interaction history.
 
 ## Trigger
 
-Record an interaction, change its status/content/participants, record a superseding correction, or delete a record. Subsequent person/Gig reads expose changed history.
+The candidate records a conversation or appointment, corrects its details or participants, changes whether it happened, or deletes it.
 
 ## Preconditions
 
-Resolve exact existing person IDs and, if needed, Gig ID. Deletion requires the current interaction revision.
+The participants must already be saved as people. Any linked Gig must also exist. To edit or delete an interaction, identify the existing record; deletion also requires its current version.
 
 ## Inputs
 
-Subject and start instant, plus meaningful kind/channel/direction/status. A correction may supply a predecessor ID.
+Supply who was involved, a subject, and a start time. Choose the kind of interaction, how it took place, whether it was incoming or outgoing, and its status. Add a summary, notes, and a Gig link when useful. A new correction may identify the earlier record it corrects.
 
 ## Normal Flow
 
-1. Validate the complete interaction, timestamp order, participants, and references.
-2. Persist the interaction and its participant memberships together as one audited change.
-3. When reading a person, collect active interactions involving that person's active participant links.
-4. Select the completed interaction with greatest start instant, breaking ties by ascending interaction ID.
-5. Derive last-contact date in the declared timezone; without one, use the date encoded in the original start timestamp. Method is channel; summary is the first non-null value among summary, notes, and subject.
-6. Return person interaction references and, for an associated Gig, its compact interaction references, ordered newest first.
+1. Record the conversation and participants, including what happened in the summary or notes. For example, record a completed video interview with the recruiter and link it to the relevant Gig.
+2. The application checks the details and saved people/Gig, then saves the interaction and its participant links together.
+3. On the next person read, the application finds that person's latest undeleted, completed interaction by start time. If two start at the same instant, their IDs determine which is selected.
+4. The person's last-contact details show that interaction's date and communication channel. The summary uses the saved summary, otherwise notes, otherwise subject. An empty saved summary remains empty.
+5. Person and linked Gig records include brief interaction references, newest first. These references also include planned, confirmed, canceled, and no-show records, although those statuses do not set last-contact details.
 
 ## Alternate Flows
 
-A planned/confirmed interaction can be marked completed later, making it eligible for recency. A completed record changed to another status stops contributing. Changing participants changes which people's histories include it. Updating the optional Gig moves its Gig association without creating a person-Gig role.
+After a planned or confirmed appointment happens, mark it completed and add notes. If a completed record changes to another status, it stops setting last-contact details. Changing participants changes whose history includes it; changing the Gig link moves it to the other Gig's history without assigning participants a role on that Gig.
 
-A superseding correction leaves the prior record active. Both remain in queries and can contribute to contact history. The supersession relation does not establish which completed record wins: start time still controls.
+A new record can point to an earlier record as a correction. Both remain visible and both can set last-contact details if completed. The start time, rather than the correction link, determines which is latest.
 
-Deletion soft-deletes the interaction and its participant records. The next read derives recency from the next qualifying completed record, or returns null contact fields. Audited change reversion can restore eligible history through the shared change capability.
+Deleting an interaction removes it from ordinary history. Last-contact details then come from the next most recent completed interaction, or become empty if none remains. The shared [change-reversion mechanism](../interfaces/api/conversational-agent.md) can restore an eligible deleted change.
 
 ## Failure Behavior
 
-Reject missing references, empty/duplicate participants, invalid timestamps/timezone, reversed start/end order, or a supersession cycle before mutation. Reject stale deletion revisions. Malformed persisted interaction data returns a consistency error on structured read and causes ordinary get/list composition to fail rather than silently omitting the record.
+The application rejects missing people or Gigs, an empty or repeated participant selection, invalid times or timezones, an end before the start, or a correction chain that loops. A deletion using an outdated version is rejected. Invalid stored records cause a read error; technical error responses are described in the [interface contract](../interfaces/interactions.md).
 
 ## Completion / Postconditions
 
-A committed mutation returns the record and change ID. Contact fields are read-time projections rather than separately written person fields. No outbound message or calendar operation is implied.
+The saved record contains the conversation details and participants. Reading a participant now calculates their last-contact details from the current history. The date uses the interaction's timezone if supplied, otherwise the date written in its start timestamp. Saving the record does not contact anyone or create a calendar invitation.
 
 ## Nonfunctional Requirements
 
-No separate end-to-end timing target is established. See [architecture](../architecture/interactions.md) for transaction and read composition.
+No separate timing target is established. The [architecture](../architecture/interactions.md) explains how conversation details and participant links remain part of the same saved change.
 
 ## Related Documentation
 
-[Capability](../capabilities/interactions.md) · [Domain](../domain/interactions.md) · [Interfaces](../interfaces/interactions.md)
+[Networking capability](../capabilities/networking.md) · [Interaction model](../domain/interactions.md) · [Interfaces](../interfaces/interactions.md) · [Architecture](../architecture/interactions.md)
+
+## Related documents
+
+- [Networking](../capabilities/networking.md)
+- [Interaction](../domain/interactions.md)
+- [Interaction Interfaces](../interfaces/interactions.md)
+- [Interaction Architecture](../architecture/interactions.md)
