@@ -1,24 +1,23 @@
 ---
 type: domain
 scope: networking
-summary: What a contact represents, how relationship status and priority work, and how people relate to opportunities.
+summary: Person identity, relationship vocabulary, board status mapping, and Gig-person roles.
 load_when:
   - interpreting person fields and status
   - modeling person-to-Gig relationships
+related:
+  - capabilities/networking.md
+  - workflows/interactions-contact-history.md
 ---
 # Networking Domain
 
-## Definition
+## Definition and Attributes
 
-A Person is a saved contact who can remain part of the candidate’s network across several opportunities. The same contact record holds relationship context wherever the person is involved.
+A Person is a canonical contact independent of any particular Gig. Name, company, title, LinkedIn profile URL, and connection date describe identity. Relationship type is nonblank free text describing how the candidate knows the person; relationship strength is strong, warm, limited, or unknown. Introducer is optional text, not a required reference to another Person.
 
-## Attributes
+Priority is high, medium, low, or unranked, in that order. Notes and tags are replacement lists; relationship notes and why-interesting are nullable text. Derived contact fields and document/profile indicators are not mutable identity fields.
 
-Name, company, title, LinkedIn profile URL, and connection date describe identity. Relationship type is nonblank free text describing how the candidate knows the person; relationship strength is strong, warm, limited, or unknown. Introducer is optional text, not a required reference to another Person.
-
-Priority is high, medium, low, or unranked, in that order. Relationship notes describe the connection; why-interesting explains why the candidate wants to stay in touch. General notes and tags provide additional context. The last time in touch and profile indicators are calculated from other saved information.
-
-## States
+## States and Board Mapping
 
 | Stored status | Board lane |
 | --- | --- |
@@ -28,13 +27,11 @@ Priority is high, medium, low, or unranked, in that order. Relationship notes de
 | `active_relationship` | Active Circle |
 | `paused`, `do_not_contact` | Excluded from board; retained in underlying people collection. |
 
-## State Transitions
-
-The candidate can move a person directly to any supported status. Time passing and recording interactions do not change it automatically. “Meeting Scheduled” therefore reflects the chosen contact status; it does not itself confirm that a scheduled interaction exists.
+No enforced transitions or time-driven status changes exist. The statuses describe manually maintained relationship workflow, not necessarily the status of a specific interaction.
 
 ## Relationships
 
-A Person can have saved [documents](documents-profile.md), participate in [interactions](interactions.md), be the subject of [tasks](tasks-task.md), and hold roles in [opportunities](opportunities-gig.md). A Gig-person association has its own ID, one Gig ID, one Person ID, a role, and nullable notes. Roles are `interviewer`, `hiring_manager`, `recruiter`, `recruiting_coordinator`, `employee`, `former_peer`, `professional_contact`, and `personal_contact`.
+A Person can own managed documents, participate in interactions, and have multiple Gig-person role associations. A Gig-person association has its own ID, one Gig ID, one Person ID, a role, and nullable notes. Roles are `interviewer`, `hiring_manager`, `recruiter`, `recruiting_coordinator`, `employee`, `former_peer`, `professional_contact`, and `personal_contact`.
 
 The person-level relationship type and Gig-specific role are separate concepts. An interaction involving a Person and Gig does not implicitly create a Gig-person role.
 
@@ -42,21 +39,12 @@ The person-level relationship type and Gig-specific role are separate concepts. 
 
 `lastContacted`, `lastContactMethod`, and `lastContactSummary` follow the [interaction contact-history workflow](../workflows/interactions-contact-history.md). `profileStatus` is verified when a LinkedIn URL is present, otherwise missing. `hasProfile` reflects a linked document with type profile. These indicators can differ. Person creation/update dates are exposed as calendar-date strings.
 
-## Invariants
+## Invariants and Lifecycle Constraints
 
 Public mutation inputs reject blank names, unknown priority/status/strength values, unsupported fields, invalid LinkedIn URLs, and invalid connection dates. At least one field is required for a patch. Notes and tags are not implicitly append-only; supplying an array replaces the existing array.
 
 The active Gig/person/role combination is unique, while multiple different roles may connect the same person and Gig. Public relationship creation validates both references. No standalone person or relationship deletion/merge lifecycle is exposed by the current shared service.
 
-## Related Capabilities
+## Related Capabilities and Workflows
 
-[Networking](../capabilities/networking.md) explains how the candidate uses contacts and outreach priorities. [Networking interfaces](../interfaces/networking.md) define accepted inputs and read results.
-
-## Related Workflows
-
-[Contact history](../workflows/interactions-contact-history.md) owns the rules for showing when the candidate was last in touch.
-
-## Related documents
-
-- [Networking](../capabilities/networking.md)
-- [Record and Correct Contact History](../workflows/interactions-contact-history.md)
+[Networking](../capabilities/networking.md) · [Contact history](../workflows/interactions-contact-history.md)

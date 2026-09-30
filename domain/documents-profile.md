@@ -1,59 +1,41 @@
 ---
 type: domain
 scope: documents-profile
-summary: Reusable documents, saved versions, owner links, and the separate forms of candidate context.
+summary: Managed documents, immutable versions, owner links, and structured candidate context.
 load_when:
   - reasoning about document ownership or provenance
   - distinguishing candidate Profile from Person profile documents
+related:
+  - capabilities/documents-profile.md
+  - workflows/documents-profile-maintenance.md
 ---
-
 # Documents and Candidate Context
 
 ## Definition
-A document is saved text the candidate can reuse while evaluating roles, preparing for interviews, or working with contacts. The implementation calls it a **managed document** because the application stores its identity, owner links, descriptive information, and version history together.
-
-Candidate context has two separate forms: saved candidate-wide documents that the assistant can read, and a structured profile containing the candidate's background and search preferences. A document of type `profile` instead describes a contact; these three concepts must not be confused.
+A managed document is reusable text content with a stable identity and one or more owner links. Its current content is one selected immutable version. Its type describes its purpose: job description, notes, interview preparation, or a profile of a Person.
 
 ## Attributes
-| Concept | Meaning |
-| --- | --- |
-| Document identity | Stable ID used to find the document again, independent of its current text. |
-| Type | Job description (`job_description`), notes (`notes`), interview preparation (`interview_prep`), or contact profile (`profile`). |
-| Display name | Title when supplied, otherwise the original upload filename, otherwise a label derived from the type. |
-| Description and source description | Optional explanations of what the document contains and where it came from. |
-| Current version | The version whose text is returned when the caller does not request a particular historical version. |
-| Version | A saved snapshot of the full text, numbered in sequence, with its predecessor, author, time, and change summary. |
-| Source information | Upload filename, format, conversion details and warnings, or version-specific information about an official job posting retrieved by Scout. The technical term for this source history is provenance. |
+A document carries identity, type, optional title and description, media type, source description, optional upload provenance, current version, and creation/update timestamps. Its display name is the title, otherwise original upload filename, otherwise the type label.
 
-The structured candidate profile contains a version label; identity, profession, focus, experience, situation and career horizon; target roles, company and location preferences; strengths, best-fit and poor-fit domains; and decision rules. Its version label is independent of document version numbers.
+A version carries its ordinal and parent ordinal, content and content hash, author/time, change identity and summary, and optional official-source provenance. Version 1 has no parent; later versions name their preceding version.
+
+Upload provenance describes original filename, detected format, source byte hash, converter/version, extraction warnings, and upload time. Official-source provenance instead describes retrieved URL/time, source and extracted hashes, source configuration and extraction/converter versions; it belongs to the version created from that source.
 
 ## Relationships
-A document links to one or more roles or people, subject to the [type-specific ownership rules](../capabilities/documents-profile.md#business-rules). Multiple owners share the same document and history rather than receiving separate copies.
+Several gigs or people can reference the same document and history, subject to the [ownership rules](../capabilities/documents-profile.md#business-rules).
 
-Candidate-wide documents use the singleton owner `profile:candidate`. They cannot also link to roles or people, must have a title, and can be notes or interview preparation. This owner is not a Person record. A contact profile document must link to exactly one person and can also link to roles.
+The singleton candidate Profile, identified as `candidate`, owns candidate context documents. It is not a Person. A document whose type is `profile` describes a Person and cannot be candidate-owned.
 
-Updating candidate-wide documents does not rewrite the structured candidate profile. The assistant sees a catalog of candidate documents containing names, descriptions, types, IDs, and current versions; it reads the selected document bodies separately.
+The structured CandidateProfile is independently loaded context: a version label; candidate identity, profession, focus, experience and situation; targets; strengths; fit and poor-fit domains; and decision rules. Updating a candidate context document does not rewrite this structured profile.
 
-## States
-A saved document has one current version and zero or more earlier versions. Each saved version is immutable: later revisions create new snapshots rather than altering old ones. Documents saved from uploads are also fixed at the document level and do not accept revisions.
-
-A staged attachment is temporary converted upload content. It is not yet a managed document.
-
-## State Transitions
-Creation establishes identity, links, and version 1. A changed update advances the current version by one; an unchanged update leaves it as is. The expected current version must match before an update can succeed.
-
-Explicitly saving a staged attachment creates a managed document containing the converted text and upload source information. The [maintenance workflow](../workflows/documents-profile-maintenance.md) covers saving, reading, and revision failures.
+## States and Transitions
+Managed documents move from first version to successive current versions. Uploaded source documents remain at saved content. Staged attachments are temporary inputs and acquire managed identity only when explicitly saved.
 
 ## Invariants
-Every document has at least one unique owner link. A new version follows the previous current version and retains earlier text. Source-upload content cannot be changed by the document update operation. The complete ownership and content rules are in the [document capability](../capabilities/documents-profile.md#business-rules).
+Links are unique. Versions retain prior content and require the expected current predecessor for updates. Content-size and ownership rules are authoritative in the [capability](../capabilities/documents-profile.md).
 
 ## Related Capabilities
 - [Documents and Candidate Profile](../capabilities/documents-profile.md)
 
 ## Related Workflows
 - [Maintain and reuse documents](../workflows/documents-profile-maintenance.md)
-
-## Related documents
-
-- [Documents and Candidate Profile](../capabilities/documents-profile.md)
-- [Maintain and Reuse Documents](../workflows/documents-profile-maintenance.md)

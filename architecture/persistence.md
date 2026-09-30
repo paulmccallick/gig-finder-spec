@@ -1,61 +1,41 @@
 ---
 type: architecture
 scope: persistence
-summary: Where data is stored and which writes, versions, and restores belong together.
+summary: Investigate transactions, versions, storage, and recovery boundaries.
 load_when:
-  - where data is stored and which writes, versions, and restores belong together
+  - Investigate transactions, versions, storage, and recovery boundaries.
+related:
+  - requirements/reliability.md
+  - operations/recovery.md
+  - decisions/README.md
 ---
 
 # Persistence
 
-## What Is Stored Where
+## Components
 
-| Storage | Contents |
-|---|---|
-| Application SQLite database | Gigs, people, relationships, tasks, interactions, change history, managed documents and versions, conversations, settings, and Scout records. |
-| Two Scout queue databases | Jobs waiting for company searches and position processing. These are separate from the application database. |
-| Scout description directory | Retrieved descriptions stored as files, with their identities and source details in the database. |
-| Candidate profile JSON | Structured candidate information loaded from configuration. |
-| Managed candidate-document files | Copies written from saved database content. Editing a copy does not edit the document in the application. |
+The application database contains domain records, typed histories, change envelopes, managed documents/versions, conversations, settings, and Scout state. Separate queue databases track discovery and position work. Scout description artifacts have a filesystem root. Managed profile files materialize authoritative database content.
 
-The [context resolver](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/context.ts) chooses paths. See [document storage](documents-profile.md) and [Scout storage](gig-scout.md) for their detailed formats and responsibilities.
+## Processing Model and Guarantees
 
-## Saving a Domain Change
+`openDatabase` enables foreign keys and a 5,000 ms busy timeout. Normal opening uses `create: false`; initialization/migration are explicit maintenance operations. Do not infer WAL mode or distributed storage from SQLite usage.
 
-For supported records, `DataStore.change` creates a change-history entry and applies the associated writes in one SQLite transaction. A transaction saves all of those writes together or rolls them back together. Previous record contents go into history tables, and each updated record receives the next revision number. See [change execution](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/changes.ts), [transaction implementation](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/store.ts), and [database schema](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/schema.ts).
+For typed audited entities, `DataStore.change` executes an audit envelope and domain writes in one transaction. At the persistence boundary, updates require expected revisions, store prior versions in typed history, and increment revisions. Ordinary Gig, Person, Task, and Interaction update services read that revision internally; this protects their read/write interval, not every stale client edit. Surface-specific contracts identify where the caller must supply a revision. Supported deletion is soft deletion. Reversal creates a new change and checks later revisions/dependencies.
 
-At the storage layer, updates compare an expected revision with the current record. Ordinary Gig, Person, Task, and Interaction update services obtain that revision by reading the record internally. This protects the interval between the service's read and write; it does not tell the service whether the user's earlier view was outdated. Some interfaces instead require the caller to supply a version or revision, such as document updates and interaction deletion. The [interface guide](../interfaces/README.md) links to those contracts.
+These rules do not cover all persisted objects uniformly. Managed documents have separate versions; conversations/settings have their own repositories; Scout state and queues require separate coordination. Filesystem materialization and provider calls are not in one transaction with all business state.
 
-Supported deletions mark a record deleted and retain history. Reverting an eligible change creates another recorded change; it checks for later edits and dependent records before restoring earlier data. The [conversation implementation](conversational-agent.md) describes the undo tool and its limits.
+## Failure Modes
 
-## Separate Save Boundaries
+Stale revisions fail instead of overwriting newer state. Postcommit profile materialization failures are logged/pending; startup synchronization rewrites copies and can fail application opening. Database restore does not restore Scout artifacts or queue files. See [recovery](../operations/recovery.md).
 
-Document versions, conversation turns, settings, Scout records, queue jobs, and files do not all share one transaction. For example, a tool can commit an update before its conversation is saved, and a Scout promotion can create a Gig before its job description has finished saving. Each owning implementation documents how it handles partial completion: [conversations](conversational-agent.md), [documents](documents-profile.md), and [Scout](gig-scout.md).
+## Scaling Characteristics and Constraints
 
-For managed candidate documents, a failed file-copy write after a database commit is reported and left for retry. Opening the local application rewrites these copies from database content; a failure during that startup synchronization can prevent the application from opening. See [local application startup](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/local-application.ts) and [document persistence](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/document-store.ts).
+Current deployment uses a local database and application-owned workers. No replicated database, distributed lock service, or measured multi-instance capacity target is established. The busy timeout is a lock-wait setting, not a latency guarantee.
 
-## Database Opening and Scale
+## Source Evidence
 
-[Database opening](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/data/database.ts) enables foreign-key checks and a 5,000 ms wait for database locks. Normal startup opens an existing database; creation and migration are explicit [maintenance operations](../operations/recovery.md). The lock wait is an implementation setting, not a promise about request response time.
+[Database](../../gig-finder/src/data/database.ts), [transactions/history](../../gig-finder/src/data/store.ts), [schema](../../gig-finder/src/data/schema.ts), [change execution](../../gig-finder/src/core/changes.ts), [composition](../../gig-finder/src/data/local-application.ts), [documents](../../gig-finder/src/data/document-store.ts), [paths](../../gig-finder/src/data/context.ts).
 
-The supplied deployment uses local SQLite files. The source does not establish a replicated database or coordinated multi-server deployment. Database backup and restore cover the application database, not all queues and external files; see [recovery](../operations/recovery.md).
+## Used By
 
-## Related Documentation
-
-[Reliability guarantees](../requirements/reliability.md) explains the effects visible to callers. [Architectural decisions](../decisions/README.md) records why revisioned changes and external runtime state were chosen.
-
-## Reading the Earlier Decisions
-
-[ADR 0005](../decisions/0005-revisioned-audited-change-transactions.md) uses broad language about mutable rows. Its revision/history contract applies to the supported audited domain records described here; settings, conversations, managed documents, and Scout state do not all use that same contract. The original ADR wording is retained as recorded rationale.
-
-## Related ADRs
-
-- [ADR 0005: Store mutations as revisioned, audited transactions](../decisions/0005-revisioned-audited-change-transactions.md)
-- [ADR 0006: Make database document state authoritative](../decisions/0006-authoritative-document-state.md)
-- [ADR 0016: Mutate domain-owned tables through the owning domain service](../decisions/0016-own-domain-table-mutations.md)
-
-## Related documents
-
-- [Reliability and Consistency](../requirements/reliability.md)
-- [Recovery and Maintenance](../operations/recovery.md)
-- [Architectural Decisions](../decisions/README.md)
+All [capabilities](../APPLICATION.md#major-capabilities). See [reliability](../requirements/reliability.md) and [decisions](../decisions/README.md).

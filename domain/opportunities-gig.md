@@ -1,60 +1,42 @@
 ---
 type: domain
 scope: opportunities
-summary: Define a tracked role, its application progress, fit assessment, next action, and posting availability.
+summary: Gig attributes, related objects, and independent pipeline and availability state.
 load_when:
   - reasoning about opportunity state or posting identity
   - interpreting stage, outcome, fit, or availability
+related:
+  - capabilities/opportunities.md
+  - workflows/opportunities-posting-resolution.md
+  - domain/documents-profile.md
 ---
 # Gig
 
 ## Definition
-A **Gig** is a role the candidate has chosen to track in their job search. It holds the candidate's progress and assessment over time, from identifying the role to recording an outcome. A Scout posting is a discovered listing; accepting it can create a Gig or update an existing one after review.
+A Gig is a durable opportunity in the candidate's search. A Scout posting is observed source material that can become a new Gig or refresh an existing one after identity review.
 
 ## Attributes
-| Information | Meaning |
-| --- | --- |
-| Identity | A stable Gig ID, company, title, optional employer job/requisition ID, and saved posting URL. |
-| Progress | Application stage, outcome, current status summary, and last-activity date. |
-| Next action | What the candidate should do next, with an optional due date. |
-| Fit | A recorded rating and optional explanation of how well the role suits the candidate. |
-| Compensation | Optional USD hourly or annual range and notes, plus optional bonus, equity, and other compensation details. |
-| Role details | Optional location, working arrangement, posted date, team, recruiter source, and tags. |
-| Availability | Whether Scout has observed the posting as available or unavailable, or has not established either; includes the time this state last changed. |
+Identity includes durable ID, company, title, optional external job/requisition ID, and captured canonical source URL. Search management includes stage/outcome, status narrative, last-activity date, next action, fit assessment, tags, and optional compensation. Role details can include location, work arrangement, posted date, team, recruiter source, bonus, equity, and other compensation.
 
-Availability describes the posting, while stage and outcome describe the candidate's search. An unavailable posting can still have an interview in progress and a next action.
+Availability and its state-change timestamp describe observed posting availability. They do not describe the candidate's decision or pipeline progress. A revision identifies the current saved record; it is separate from managed-document version.
 
 ## Relationships
-A Gig can have linked [people](networking.md), [tasks](tasks-task.md), [interactions](interactions.md), and [managed documents](documents-profile.md). A managed document is content saved and versioned by the application, such as a job description. The Gig refers to that document; the description is not a text field on the Gig itself.
-
-The [opportunity interface](../interfaces/api/opportunities.md) describes record revisions used to detect changes. A Gig revision and a document version track different records and can change independently.
+A Gig can have managed documents, links to canonical People, associated Tasks, and Interactions. Its record includes document summaries and interaction references. Linked job-description content belongs to the [document domain](documents-profile.md), not a body field or file-presence flag on the Gig.
 
 ## States
-| Dimension | Supported values |
-| --- | --- |
-| Stage | Identified, Applied, Recruiter Contact, Screening, Technical Interview, Final Round, Offer, Monitoring, Closed. |
-| Outcome | Pending, Accepted, Rejected, Withdrawn, Not Pursuing, Role Pulled, No Response, Position Filled, On Hold, Stale / Unverified. |
-| Fit | Strong, Good, Stretch, Long Shot, Weak, Poor, Support, TBD, N/A. |
-| Availability | Unknown, Available, Unavailable. |
-
-The [interface contract](../interfaces/api/opportunities.md) links to the exact machine-readable values. The application accepts these fit labels without defining a scoring rubric for each one.
+- Stages: `identified`, `applied`, `recruiter_contact`, `screening`, `technical_interview`, `final_round`, `offer`, `monitoring`, `closed`.
+- Outcomes: `pending`, `accepted`, `rejected`, `withdrawn`, `not_pursuing`, `role_pulled`, `no_response`, `position_filled`, `on_hold`, `stale_or_unverified`.
+- Fit ratings: `strong`, `good`, `stretch`, `long_shot`, `weak`, `poor`, `support`, `tbd`, `not_applicable`.
+- Availability: `unknown`, `available`, `unavailable`.
 
 ## State Transitions
-Stages can be changed directly without passing through earlier steps. Closing requires a non-Pending outcome and removal of the next action; reopening requires Pending. Outcomes such as On Hold still require Closed in the current model.
-
-Availability can change between Available and Unavailable independently of stage. The observation operation does not reset it to Unknown.
+Stage changes are not constrained to adjacent steps. Closing requires a terminal/nonpending outcome and removal of next action; reopening requires pending outcome. Availability can change independently between available and unavailable after an initially unknown state. The dedicated observation mutation does not reset availability to unknown.
 
 ## Invariants
-[Opportunity business rules](../capabilities/opportunities.md#business-rules) govern valid records. A possible match on company and requisition ID, posting URL, or title does not establish that two postings are the same opportunity. Several Gigs, including closed ones, can be candidates for review.
+Lifecycle, compensation, and partial-update rules are defined in [Opportunities](../capabilities/opportunities.md#business-rules). A potential identity match is not itself authorization to merge postings. Company-scoped requisition, URL, and title evidence can yield several candidates, including closed Gigs.
 
 ## Related Capabilities
 - [Opportunities](../capabilities/opportunities.md)
 
 ## Related Workflows
-- [Review a posting before adding or updating a Gig](../workflows/opportunities-posting-resolution.md)
-
-## Related documents
-
-- [Opportunities](../capabilities/opportunities.md)
-- [Review a Posting Before Adding or Updating a Gig](../workflows/opportunities-posting-resolution.md)
-- [Documents and Candidate Context](documents-profile.md)
+- [Resolve an incoming posting](../workflows/opportunities-posting-resolution.md)

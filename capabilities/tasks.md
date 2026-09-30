@@ -5,59 +5,54 @@ summary: Task creation, editing, completion, related records, prioritization, an
 load_when:
   - understanding task behavior and completion dates
   - changing task defaults, relationships, or board features
+related:
+  - domain/tasks-task.md
+  - interfaces/api/tasks.md
+  - architecture/tasks.md
 ---
 # Tasks
 
 ## Purpose
-Help the job seeker keep track of work such as following up with a recruiter, submitting an application, or preparing for an interview. Tasks show what needs attention, when it is due, and what has been completed.
+Track candidate actions for a Gig, a Person, or the general job search, with priority, deadlines, status, and completion history.
 
 ## Actors
-The job seeker reviews tasks on the Tasks board and asks the conversational assistant to create or update them. A command-line interface (CLI) also supports task management.
+The candidate viewing the board, conversational agent using task tools, and CLI user.
 
 ## Functional Behavior
-A task describes one action. The job seeker supplies a title and category and chooses whether it belongs to a saved opportunity (a Gig), a saved contact (a Person), or the general job search. Optional notes hold instructions or context. For example, “Prepare leadership examples” can belong to an interview opportunity, while “Update base resume” can belong to the general search.
+Users can create, discover, read, and update tasks, including completing, canceling, or reopening them. Each task has a title, category, priority, status, optional due date/notes, and exactly one relationship scope. Related Gigs/People must exist when the relationship is assigned. The system generates the friendly relationship label from the selected record.
 
-New tasks start Open with Medium priority. The job seeker can choose another priority, add or remove a due date, revise the title or notes, change the category or related record, and mark work In progress, Completed, or Canceled. Tasks need no deadline; a past due date is also allowed.
+New tasks start open with medium priority unless priority is supplied. Due date and notes default to null. Task creation requires title, category, and relationship; it does not require a future deadline or automatically create related records.
 
-The Tasks board initially shows Open and In progress tasks, together called active tasks. Filters narrow the list by status, priority, category, or text in the title, related name, and notes. Clear restores active tasks with all priorities and categories and an empty search. Selecting a task opens its details, including dates and notes. The board provides viewing and filtering; creating, editing, and completing tasks happens through the assistant or CLI.
+The Tasks board is a read-only ledger, initially showing active tasks (open/in progress). It supports status, priority, category, and text filters; text searches title, saved related-record label, and notes. Clicking a row opens details with status, priority, category, dates, related scope, and notes. Clear restores the initial active/all-priorities/all-types/empty-search filters.
 
-Summary counts show overdue active tasks, active tasks due today, all active tasks (under “Open tasks”), and completed tasks. These counts cover the full list even when filters hide rows. Overdue tasks appear first, followed by tasks due today, other dated tasks, and tasks without deadlines. Detailed tie-breaking rules are in [Task ordering](../domain/tasks-task.md#ordering).
+Board metrics count overdue active tasks, active tasks due today, all active tasks (labeled “Open tasks”), and completed tasks. Metrics do not narrow with filters. Completing a task is available through agent update or CLI, not a board control.
 
 ## Business Rules
-- A title must contain text. Supported categories, priorities, and statuses are listed in the [Task definition](../domain/tasks-task.md#states).
-- A task belongs to exactly one opportunity, one contact, or the general search. The selected opportunity or contact must already exist. Its display name is filled in automatically.
-- Due dates are optional calendar dates in YYYY-MM-DD form. “Today” uses the America/Los_Angeles time zone. Only active tasks with a due date before today are overdue; tasks due today are counted separately.
-- Creation, update, and completion dates are assigned by the application from the day of the change. Marking a task Completed records its completion date. Repeating that status or editing other details preserves the date.
-- Changing a completed task to any other status clears its completion date. Completing it again records the day of the new completion.
-- An edit changes only the supplied details. Reassigning a task requires a complete new relationship; notes and due date can be removed explicitly.
+- Title is trimmed and nonblank. Type, status, and priority must be supported values listed in the [domain](../domain/tasks-task.md).
+- A task relates to one Gig, one Person, or general search. Gig/Person links require an exact nonnull ID; general scope requires null ID and label “General”. Callers cannot supply their own label.
+- Due dates are null or valid calendar dates in YYYY-MM-DD form.
+- Created, updated, and completion dates are service-owned. Completion assigns the mutation's Pacific calendar date. A completed task requires a completion date; every other status requires null completion date.
+- Updating unrelated fields on a completed task preserves completion date. Setting completed again also preserves its original completion date. Changing to open, in progress, or canceled clears completion date; completing again establishes a new date.
+- Partial updates preserve omitted fields. Relationship replacement must provide its complete type/ID pair. Due date and notes can be explicitly cleared.
+- A task is overdue only when open/in progress with due date before today; due today is distinct. Today uses America/Los_Angeles.
 
 ## State and Lifecycle
-Tasks start Open. They can move directly between Open, In progress, Completed, and Canceled; there is no required sequence. Reopening work restores it to the active list. Completed and canceled tasks remain available by changing the status filter.
-
-The board, assistant task tools, and CLI have no task deletion command. The application's separate change-reversal operation can undo eligible task changes, including creation; see [task implementation guarantees](../architecture/tasks.md#guarantees-and-failure-modes).
+Creation starts open. Subsequent changes can move between open, in progress, completed, and canceled without an enforced sequential progression, subject to completion-date rules. There is no task deletion control in the normal board, task tools, or supported CLI task commands. General audited change reversal can separately revert eligible task changes.
 
 ## Capability-Specific Nonfunctional Requirements
-Saved task changes have a history, and checks prevent conflicting writes during a save. The precise protection and its limits are described in [task architecture](../architecture/tasks.md#guarantees-and-failure-modes). No task-specific response-time, availability, or capacity target is established by the inspected implementation.
+Task mutations are audited and persisted with revision checks. No numeric latency, availability, or capacity objective was established by inspected contracts.
 
 ## Related Workflows
-Creating or completing a task is covered here; these short operations have no separate workflow document.
+Creation and status changes are specified here and in the domain; no separate workflow is needed for these short operations.
 
 ## Related Domain Objects
-- [Task](../domain/tasks-task.md): fields, categories, lifecycle, and ordering.
+- [Task](../domain/tasks-task.md)
 
 ## Related Interfaces
-- [Task interfaces](../interfaces/api/tasks.md): assistant tools, CLI commands, and browser reads.
+- [Task interfaces](../interfaces/api/tasks.md)
 
 ## Related Architecture
-- [Task implementation](../architecture/tasks.md): date handling, saved changes, and refresh behavior.
+- [Task implementation](../architecture/tasks.md)
 
 ## Known Constraints
-Completing an application or follow-up task records that the work is done; it does not submit an application, send a message, or update the opportunity's separate next-action field.
-
-A related name is saved when the task is assigned, so renaming the contact or opportunity does not refresh that name automatically. An open detail panel can show older task details after the list refreshes; reopen the task to see the refreshed record. Its guidance mentions CLI updates, although assistant updates are also supported.
-
-## Related documents
-
-- [Task](../domain/tasks-task.md)
-- [Task Interfaces](../interfaces/api/tasks.md)
-- [Task Architecture](../architecture/tasks.md)
+Related labels are saved snapshots, so later Person/Gig renaming does not automatically refresh task text. Task completion does not send a message, submit an application, or change an associated Gig's next action. The drawer text mentions CLI updates but agent task mutations are also supported. An open drawer retains its selected task snapshot across list refreshes until reopened.

@@ -5,47 +5,37 @@ summary: Task identity, relationship scope, status dates, categories, and priori
 load_when:
   - reasoning about task state or related objects
   - interpreting task dates and ordering
+related:
+  - capabilities/tasks.md
+  - interfaces/api/tasks.md
 ---
 # Task
 
 ## Definition
-A Task is one action the job seeker wants to track, such as contacting a recruiter or preparing interview examples. It has its own status, priority, and optional deadline. It is separate from the next-action reminder on an [opportunity](../capabilities/opportunities.md).
+A Task is one candidate action with its own identity and lifecycle. It can relate to a single opportunity, a person, or the general job search. It is distinct from the next-action field embedded in a Gig.
 
 ## Attributes
-Each task has a stable identifier (ID), title, category, status, priority, optional due date, optional notes, and a choice of related opportunity, contact, or general search. Creation and last-update dates show when it was recorded or changed. A completion date is present only while the task is Completed.
-
-Dates on returned task records are calendar days rather than times of day. The [task interfaces](../interfaces/api/tasks.md) define the field names used by software callers.
+A task carries stable ID, title, type, status, priority, optional due date/notes, related scope and saved display label, creation/update dates, and optional completion date. Public task records express dates as calendar days, not instants, and do not expose persistence revision metadata.
 
 ## Relationships
-The relationship type is `gig` for an opportunity, `person` for a contact, or `general` for the overall search. An opportunity or contact relationship includes that saved record's ID; general search has no related ID.
-
-The display label is the opportunity's company plus role title, the contact's name, or “General”. It captures the name at assignment time and changes only when the relationship is explicitly reassigned. Reassigning a task preserves the task's own ID.
+The related scope is `gig`, `person`, or `general`. A Gig label is its company plus title; a Person label is its name; general label is “General”. Labels reflect the related record when assigned or explicitly reassigned. The task does not acquire a new identity when its relationship changes.
 
 ## States
-| Concept | Supported values | Meaning |
-| --- | --- | --- |
-| Status | `open`, `in_progress`, `completed`, `canceled` | Work to do, work underway, work done, or work no longer being pursued. |
-| Priority | `high`, `medium`, `low` | Relative importance; new tasks default to medium. |
-| Category (`type`) | `networking_follow_up`, `application`, `interview_prep`, `sourcing`, `resume`, `administrative`, `learning`, `other` | The kind of job-search action. |
+- Status: `open`, `in_progress`, `completed`, `canceled`.
+- Priority: `high`, `medium`, `low`.
+- Type: `networking_follow_up`, `application`, `interview_prep`, `sourcing`, `resume`, `administrative`, `learning`, `other`.
 
-“Active” means Open or In progress. “Overdue” and “due today” describe an active task's deadline; they are not statuses. Categories classify work and do not perform it automatically.
+“Active” means open or in progress. “Overdue” and “due today” are derived timing signals for active tasks, not additional statuses.
 
 ## State Transitions
-New tasks start Open. Any status can be changed directly to any other status. Entering Completed records the change's calendar day in America/Los_Angeles. Keeping Completed preserves its date, including when other fields change. Leaving Completed clears that date; returning to Completed assigns a new one.
+New tasks start open. Completion records the Pacific mutation date. Repeating completed preserves that date; leaving completed clears it. Returning to completed records a new completion date. Updates not explicitly setting status retain both status and completion date.
 
 ## Invariants
-A completed task has a completion date, and every other status has none. An opportunity or contact must exist when linked. The application chooses the related label and creation, update, and completion dates; the job seeker chooses the optional due date. The [task business rules](../capabilities/tasks.md#business-rules) define validation and timing behavior.
+A completed task has a completion date, and a noncompleted task does not. Relationship scope and ID must agree; related Gig/Person must exist when assigned. Dates/labels are service-owned. The [capability](../capabilities/tasks.md#business-rules) owns validation and timing rules.
 
 ## Ordering
-Tasks sort by overdue first, then due today, then other dated tasks, then undated tasks. Within each group, earlier due dates come first, followed by higher priority and then title. Assistant queries use the task ID to resolve a remaining tie; the board does not add that final comparison.
-
-Completed and canceled tasks with due dates fall in the other-dated group, even when those dates are in the past. An overdue Low-priority task therefore appears before a High-priority task due in the future.
+Tasks sort by overdue first, then due today, then any other dated tasks, then undated tasks. Within those groups, order is earliest due date, high-to-low priority, then title. Service queries add ID as a final tie-breaker. Completed/canceled dated tasks remain in the other-dated group when included, even if their dates are in the past.
 
 ## Related Capabilities
-- [Tasks](../capabilities/tasks.md): planning work and recording completion.
-- [Opportunities](../capabilities/opportunities.md): the role a task can support.
-
-## Related documents
-
 - [Tasks](../capabilities/tasks.md)
-- [Task Interfaces](../interfaces/api/tasks.md)
+- [Opportunities](../capabilities/opportunities.md)

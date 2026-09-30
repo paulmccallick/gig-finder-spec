@@ -1,55 +1,43 @@
 ---
 type: interface
 scope: application
-summary: The operations available through the browser, HTTP, command line, and assistant tools.
+summary: Select the correct browser, HTTP, CLI, tool, or external boundary.
 load_when:
-  - the operations available through the browser, http, command line, and assistant tools
+  - Select the correct browser, HTTP, CLI, tool, or external boundary.
+related:
+  - APPLICATION.md
+  - architecture/overview.md
+  - requirements/security.md
 ---
 
-# Interface Guide
+# Interface Index
 
-GigFinder offers several ways to use the same records. They do not all expose the same operations or use the same default filters. Read the detailed contract for the route you are changing.
+## Surface Contracts
 
-## Detailed Contracts
-
-| Area | Contract |
+| Boundary | Contract and semantics |
 |---|---|
-| Gigs and posting identity | [Opportunity interfaces](api/opportunities.md) |
-| People and their roles in Gigs | [Networking interfaces](networking.md) |
-| Work items and completion | [Task interfaces](api/tasks.md) |
-| Communications and participants | [Interaction interfaces](interactions.md) |
-| Saved documents, versions, and upload conversion | [Document interfaces](api/documents-profile.md) |
-| Conversation, model selection, and tools | [Conversational agent interfaces](api/conversational-agent.md) |
-| Company searches, position review, and reprocessing | [Scout interfaces](gig-scout.md) |
+| Browser | Boards read Gigs, people, and tasks; Scout, documents, and agent views have specialized interactions. Browser filters are not necessarily backend query defaults. |
+| HTTP | Handwritten routing in `request-handler.ts`; selected JSON endpoints and an AI SDK message stream, not a full CRUD API. |
+| CLI | `bin/gig-finder` dispatches source CLI commands against configured local services. Input and output options belong to CLI contracts. |
+| Agent tools | Registered tools with strict schemas call application services. Tool discovery does not imply HTTP endpoint availability. |
+| External systems | Provider requests, employer/ATS retrieval, runtime filesystem inputs, and deployment registry access. |
 
-## Ways to Use the Application
+Load capability interface documents for exact operations: [opportunities](../capabilities/opportunities.md#related-interfaces), [networking](../capabilities/networking.md#related-interfaces), [tasks](../capabilities/tasks.md#related-interfaces), [interactions](../capabilities/interactions.md#related-interfaces), [documents](../capabilities/documents-profile.md#related-interfaces), [conversation](../capabilities/conversational-agent.md#related-interfaces), [Scout](../capabilities/gig-scout.md#related-interfaces).
 
-The browser boards load Gigs, people, and tasks and filter them locally. The assistant and CLI can perform edits that those boards do not offer. Scout has dedicated browser and HTTP controls for its search/review workflows. See the [application overview](../APPLICATION.md) for what those capabilities accomplish.
+## HTTP Common Behavior
 
-The [HTTP router](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/request-handler.ts) exposes a selected set of JSON endpoints and a streaming assistant response. It is not a general create/read/update/delete API for every record. The [CLI](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/cli/cli.ts) and [agent tools](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/agent/gig-finder-tools.ts) call shared application services directly. Tool schemas are executable input contracts, not additional HTTP routes.
+JSON helpers set `Cache-Control: no-store`. Responses receive `x-request-id` from the incoming header or a generated ID. Methods are checked per route. The generic non-GET fallback is 405 `Read-only API`; the GET fallback delegates to static serving or returns 404. This does not mean all APIs are read-only: agent, settings, uploads, and Scout routes are handled earlier.
 
-## Shared HTTP Behavior
-
-JSON responses produced by the router use `Cache-Control: no-store`. Responses include `x-request-id`, taken from the incoming header or generated for the request. Each recognized route checks its supported methods. Requests reaching the generic non-GET fallback receive 405 with `Read-only API`; dedicated agent, settings, upload, and Scout writes are handled before that fallback.
-
-[Error handling](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/error-response.ts) preserves the status/message of `WebRequestError`, maps domain validation errors to 422 with a code, and returns 500 for unrecognized exceptions. Some routes classify their own conflicts and input errors, so use their detailed contracts rather than assuming every conflict has the same status.
-
-`GET /healthz` returns 200 or 503 based on database validation, with the application revision and database checks. [Observability](../operations/observability.md) explains what a healthy response establishes.
+`WebRequestError` returns its specified status/message; `DomainValidationError` becomes 422 with a code; unrecognized exceptions become 500. Individual routes further classify failures, so do not assume a single global conflict status. `/healthz` returns 200 or 503 based on database validation and includes revision/integrity/foreign-key counts.
 
 ## Authentication and Compatibility
 
-The application has no login or per-user authorization checks. See [security and privacy](../requirements/security.md) for the access assumptions.
+There is no application authentication or version-negotiation layer. Current HTTP paths are unversioned. Agent UI streams declare AI SDK UI message-stream version `v1`, which is a transport marker rather than the application's API version. No authoritative OpenAPI specification was found in the inspected source; executable routing and schemas remain the boundary reference.
 
-HTTP paths have no application version prefix. Assistant responses use the installed AI SDK's UI-message stream, marked `v1`; that identifies the stream protocol. The inspected source has no separate OpenAPI specification, so routing and runtime schemas are the authoritative interface definitions.
+## External Integrations
 
-## External Systems
+Model calls use the Codex-provider adapter and runtime credentials. Scout connects to configured employer/ATS sources through source adapters and reusable templates. Candidate profile JSON is a local context input. Managed candidate-document context is read from authoritative database content; materialized profile files are derived copies. See [architecture](../architecture/overview.md), [security](../requirements/security.md), and [deployment](../operations/deployment.md).
 
-The [model provider adapter](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/agent/codex-provider.ts) uses runtime credentials to request assistant responses and Scout evaluations. [Scout sourcing](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/sourcing/source-plan.ts) retrieves postings from configured employer sites or their applicant tracking systems. The candidate's structured profile is a local JSON input; managed candidate documents are read from the database, with derived file copies.
+## Source Evidence
 
-The [architecture overview](../architecture/overview.md) explains these connections. [Deployment](../operations/deployment.md) covers runtime configuration and external state.
-
-## Related documents
-
-- [GigFinder](../APPLICATION.md)
-- [Architecture Overview](../architecture/overview.md)
-- [Security and Privacy](../requirements/security.md)
+[Router](../../gig-finder/src/web/request-handler.ts), [errors](../../gig-finder/src/web/error-response.ts), [CLI dispatcher](../../gig-finder/src/cli/cli.ts), [tool registration](../../gig-finder/src/agent/gig-finder-tools.ts), [provider adapter](../../gig-finder/src/agent/codex-provider.ts), [Scout sourcing](../../gig-finder/src/core/scout/sourcing/source-plan.ts).

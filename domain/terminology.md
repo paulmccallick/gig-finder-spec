@@ -1,37 +1,35 @@
 ---
 type: domain
 scope: application
-summary: Definitions of GigFinder terms used in behavior and implementation documents.
+summary: Resolve application-specific vocabulary.
 load_when:
-  - looking up an unfamiliar application term
+  - Resolve application-specific vocabulary.
+related:
+  - domain/model.md
+  - APPLICATION.md
 ---
 
-# Glossary
+# Terminology
 
 | Term | Meaning |
 |---|---|
-| [Gig / opportunity](opportunities-gig.md) | A role the candidate has chosen to track. |
-| [Pipeline stage](opportunities-gig.md) | Where a role stands in the candidate's process, such as identified, applied, or interviewing. The outcome records how pursuit ended. |
-| [Availability](opportunities-gig.md) | Whether the employer's posting is known to be available, unavailable, or not yet checked. It does not say whether the candidate wants the role. |
-| [Person](networking.md) | A professional contact, such as a recruiter, colleague, or hiring manager. |
-| [Latest contact](../workflows/interactions-contact-history.md) | The date, channel, and summary taken from the most recent completed interaction with a person. |
-| [Task](tasks-task.md) | Work to do, with a priority, status, and optional due date. |
-| [Interaction](interactions.md) | A recorded communication or event involving contacts. It can describe a plan or a completed exchange. |
-| [Managed document](documents-profile.md) | Text or Markdown saved by the application with an ID and version history. |
-| [Staged document](conversational-agent-conversation.md) | An uploaded document held temporarily for the assistant to read or save. Uploading alone does not make it a managed document. |
-| [Candidate profile](documents-profile.md) | Structured information about the candidate used for advice and candidate-fit scoring. |
-| [Scout source](gig-scout.md) | The configured location and retrieval instructions for a company's postings. |
-| [Scout position](gig-scout.md) | A posting found by Scout; the candidate may or may not pursue it. |
-| [Discovery](../workflows/gig-scout-discovery.md) | Searching configured companies and collecting matching postings. |
-| [Processing](../workflows/gig-scout-review-processing.md) | Fetching a position's description and evaluating its relevance and candidate fit. |
-| [Relevance](gig-scout.md) | Whether a posting meets the configured job criteria. Candidate matching separately assesses how well the candidate fits it. |
-| [Promotion](../workflows/gig-scout-review-processing.md) | Adding a pursued Scout position to a new Gig or connecting it to an existing Gig, together with its job description. |
-| [Revision](../architecture/persistence.md) | A record's update number. Some operations compare it with an earlier read to reject an edit based on outdated information. |
-| [Change](../architecture/persistence.md) | A recorded application operation that may update several related records together. Only supported changes can be undone. |
+| Gig / opportunity | Role tracked in the candidate's pipeline. |
+| Pipeline stage | Progress in pursuing a Gig; separate from outcome and availability. |
+| Availability | Posting known available, unavailable, or unknown; separate from a pursuit decision. |
+| Person | Professional contact, not an application login account. |
+| Latest contact | Facts derived from completed interactions rather than editable contact fields. |
+| Task | Work item with its own status and optional related record. |
+| Interaction | Recorded communication/event; does not send or schedule externally. |
+| Managed document | Application-owned versioned text/Markdown identified independently of a file path. |
+| Staged document | Temporary extracted upload content available before persistence by a document tool. |
+| Candidate profile | Structured candidate input; managed candidate documents provide additional context. |
+| Scout source | Configured employer-posting retrieval definition. |
+| Position | Scout-discovered posting, distinct from a tracked Gig. |
+| Discovery | Retrieving postings and availability/description evidence from sources. |
+| Processing | Applying description/evaluation work to discovered positions. |
+| Relevance | Whether a position meets configured job criteria; distinct from candidate matching. |
+| Promotion | Associating an accepted position with a new or existing Gig under resolution rules. |
+| Revision | Entity mutation version used to detect stale writes. |
+| Change | Audited domain operation, possibly affecting multiple records; reversal has defined bounds. |
 
-See the [domain model](model.md) for relationships between these concepts and the [application overview](../APPLICATION.md) for their purpose in the job search.
-
-## Related documents
-
-- [Domain Model](model.md)
-- [GigFinder](../APPLICATION.md)
+Detailed rules: [capabilities](../APPLICATION.md#major-capabilities).

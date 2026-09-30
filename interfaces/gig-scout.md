@@ -1,97 +1,68 @@
 ---
 type: interface
 scope: gig-scout
-summary: Scout web and HTTP contracts for company search, position review, source configuration, and reprocessing.
+summary: Current Scout HTTP contracts, UI availability, source import schema, and external boundaries.
 load_when:
   - calling Scout endpoints
   - changing Scout request validation or source integration
+related:
+  - capabilities/gig-scout.md
+  - workflows/gig-scout-review-processing.md
+  - architecture/gig-scout.md
 ---
 # Gig Scout Interfaces
 
-## Purpose
+## HTTP Contract
 
-Scout's web workspace lets a job seeker search configured companies, review evaluated positions, and choose opportunities to track. The HTTP API also exposes company configuration and maintenance actions that have no current web controls. The [capability](../capabilities/gig-scout.md) owns behavior and rules; this document defines inputs, outputs, and boundary errors.
+All paths below are relative to `/api/gig-scout`. The implementation is the contract; there is no separate versioned Scout OpenAPI specification in the inspected boundary. Unsupported methods return 405. Most absent Scout dependencies return 503; individual missing run/position/backfill detail returns 404.
+
+| Method/path | Input and response |
+| --- | --- |
+| POST `/companies` | Single company object; returns `{created, unchanged, versioned, rejected}`. Rejection 400; creation/versioning 201; unchanged 200. |
+| GET `/runs` | Array of run summaries, newest first; includes saved search profile and counts. |
+| POST `/runs` | Optional `{batchSize, concurrency, searchProfile}`; 202 `{run, created}`. Existing active full run returns `created:false`. |
+| GET `/runs/:id` | Summary plus per-company sources, attempts, counters, validation status, failure details, diagnostics. |
+| GET `/runs/:id/positions` | Query `company`, `text`, `offset`, `limit`; historical observation page. |
+| GET `/positions` | Query `text`, `company`, `state`, `sort`, `direction`, `offset`, `limit`; workspace page and state counts. |
+| GET `/positions/:id` | Review detail with Markdown, evaluation IDs, score explanation, source provenance, and observations; promoted/irrelevant/rejected positions are unavailable through ordinary detail. |
+| GET, PUT `/settings/relevance` | Read latest criteria; PUT `{criteria, confidenceThreshold}` appends criteria version and schedules relevant re-evaluation work. |
+| POST `/positions/:id/decision` | Reviewed decision body described below; position result or pursuit outcome. |
+| POST `/positions/:id/restore` | `{changeId, expectedStateRevision}` restores agent irrelevance. |
+| POST `/positions/:id/reverse` | `{decisionId, changeId, expectedStateRevision}` reverses user decision. |
+| POST `/positions/:id/notes` | `{decisionId?, body}`; 201 `{ok:true}`. |
+| POST `/positions/:id/promotion/retry` | No required body; 202 pursuit outcome, or null when no promotion work exists. |
+| POST `/positions/backfill/preview` | Exact-position body described below; accepted/rejected eligibility report. |
+| POST `/positions/backfill` | Exact-position body; 202 execution status. Legacy query `sourceRunId` and optional `limit` selects run-based backfill instead. |
+| GET `/positions/backfill/:runId` | Explicit-backfill stage/item/document outcomes; unknown execution 404. |
+
+Pagination requires nonnegative integer offset and limit 1–100 (default 20). Text/company filters trim and truncate to 200 characters. Position state accepts only `actionable`, `processing`, `needs_user_review` (default), or `deferred`. Sort accepts `last_seen` (default), `first_seen`, `company`, `title`, `state`, or `score`; direction defaults descending and accepts asc/desc. Full-run batch size is 1–100, concurrency 1–50; service defaults are 20 and 5 unless injected defaults override them.
+
+Decision bodies accept only `changeId`, `action` (`irrelevant`, `defer`, `pursue`), optional `note`, optional `reviewAt`, `expectedStateRevision`, `descriptionId`, `relevanceEvaluationId`, `candidateMatchEvaluationId`, and optional `resolution`. Notes contain 1–2,000 characters; defer requires a valid timestamp. The HTTP handler assigns actor `User`, and rejects a client-supplied actor in the strict decision body. It does not authenticate a distinct Scout identity itself; use the application security documentation for the overall boundary.
+
+Pursuit can return `created`, `updated`, `resolution_required`, `resolution_stale`, or `resolution_invalid`. Required/stale results carry a fingerprint and candidate list. The resolution is either `{kind:"create_new", reviewedFingerprint}` or `{kind:"use_existing", reviewedFingerprint, gigId, expectedGigRevision}`. These are domain outcome bodies, not all HTTP errors. Mutation exceptions containing “revised” map to 409; other exceptions in the Scout mutation wrapper map to 422. Decision JSON/unknown-field validation also returns 422. Other endpoint errors follow the shared handler and are not uniformly converted by that wrapper.
+
+Explicit-backfill body accepts only `{positionIds, reason}`: 1–1,000 unique IDs matching `spos_` plus 32 lowercase hex digits, and a trimmed 1–500-character reason. Duplicate IDs are normalized away and sorted. Query filters are rejected for explicit requests. Preview may contain rejected entries; start is all-or-nothing. Validation errors map to 400. Status IDs must be UUID-shaped `srun_...` values.
+
+Relevance criteria require 10–4,000 characters and numeric confidence threshold 0–1. Persistence quantizes confidence thresholds to thousandths; no readback precision beyond that is promised.
+
+## Company Import and External Source Contract
+
+The bulk core import accepts `{version:1, companies:[...]}` with at most 10,000 companies. Each strict company object supplies `id` (1–100 characters), `name` (1–200), `active` (default true), and 1–50 sources. Company IDs are unique within the import, and exactly one source per company is active. The HTTP endpoint wraps a single company into this bulk schema.
+
+Sources use HTTPS and type `json` or `html`. JSON can specify extraction/pagination directly or reference a template `{id, version}` with variables and overrides. HTML specifies selectors and pagination. Description plans support JSON detail endpoints or HTML DOM/JSON-LD extraction. JSON and DOM description plans require identity evidence, and declared HTML-entity encoding requires HTML content format. Template resolution validates inputs before import writes.
+
+Outbound `GigScoutHttpPort.request` takes URL, GET/POST, optional headers/body, timeout, response-byte bound, optional redirect mode, and abort signal. Responses provide status, final URL, headers, and body. Screening takes validated posting content plus criteria/profile/rubric bindings; model results must satisfy strict relevance and candidate-score schemas. See architecture for adapter implementations.
 
 ## Current Surfaces
 
-The web workspace at `?workspace=scout` has **Positions** and **Run History**. Run History starts full searches with title and location filters and displays company/source results and accepted observations. A full search selects every active configured company, not a company subset supplied in its request. Positions supports filters, detail, pursue/irrelevant/defer decisions, existing-Gig selection, failed-promotion retry, and relevance settings.
+The web workspace `?workspace=scout` exposes Positions and Run History. Positions supports detail/review, defer/irrelevant/pursue, candidate resolution, failed-promotion retry, and relevance settings. Run History starts scans and displays source diagnostics and observations. No current review controls were found for company import, explicit backfill, direct agent-irrelevance restore, reversal, or independent note append.
 
-Company import, explicit reprocessing, agent-irrelevance restoration, decision reversal, and independent note append are backend actions without current review controls. Scout is not exposed through the normal conversational-agent tool registry or regular CLI commands.
-
-The operator source harness is `bun run scout:source --config <private.json> --output <ignored.json>`, with optional company, source, template, term, location, and pages selectors. It tests source configuration; it does not start a persisted full search. The maintenance scripts `scout:encoded-description-selection` and `scout:verify-descriptions:live` support description verification.
-
-## HTTP Contract
-
-All routes below are relative to `/api/gig-scout`. The implementation is the current contract; the inspected boundary has no separate versioned Scout OpenAPI specification.
-
-| Method/path | Request and response |
-| --- | --- |
-| POST `/companies` | One company configuration. Returns `{created, unchanged, versioned, rejected}`; 201 for created/versioned, 200 for unchanged, 400 for rejection. |
-| GET `/runs` | Newest-first run summaries, including saved search filters and counts. |
-| POST `/runs` | Optional `{batchSize, concurrency, searchProfile}`. Returns 202 `{run, created}`; an active full run is reused with `created:false`. |
-| GET `/runs/:id` | Run and per-company/source outcomes, attempts, counters, validation, and diagnostics. |
-| GET `/runs/:id/positions` | Historical observations, filtered by `company` and `text`, paged by `offset` and `limit`. |
-| GET `/positions` | Review workspace page and state counts, using `text`, `company`, `state`, `sort`, `direction`, `offset`, and `limit`. |
-| GET `/positions/:id` | Description Markdown, score explanation, reviewed evidence identifiers, source history, and observations. Ordinary detail excludes irrelevant/rejected positions and positions linked to Gigs. |
-| GET, PUT `/settings/relevance` | Read latest settings or append a version using `{criteria, confidenceThreshold}` and schedule re-evaluation. |
-| POST `/positions/:id/decision` | Submit reviewed evidence and pursue/irrelevant/defer decision; returns the position or a pursuit outcome. |
-| POST `/positions/:id/restore` | `{changeId, expectedStateRevision}` restores agent-marked irrelevance. |
-| POST `/positions/:id/reverse` | `{decisionId, changeId, expectedStateRevision}` reverses a user decision. |
-| POST `/positions/:id/notes` | `{decisionId?, body}`; returns 201 `{ok:true}`. |
-| POST `/positions/:id/promotion/retry` | No required body; returns 202 pursuit outcome, or null if no promotion work exists. |
-| POST `/positions/backfill/preview` | Exact-position selection and reason; returns eligibility with accepted/rejected items. |
-| POST `/positions/backfill` | Exact-position selection and reason; returns 202 execution status. Legacy query `sourceRunId` with optional `limit` selects run-based backfill. |
-| GET `/positions/backfill/:runId` | Explicit-reprocessing progress and position/document outcomes; unknown execution returns 404. |
-
-Pagination uses a nonnegative integer offset and limit 1–100, default 20. Text/company filters are trimmed and limited to 200 characters. State accepts `actionable`, `processing`, `needs_user_review` (default), or `deferred`. Sort accepts `last_seen` (default), `first_seen`, `company`, `title`, `state`, or `score`; direction accepts `asc` or `desc`, default `desc`.
-
-Full-run batch size is 1–100 and concurrency is 1–50; service defaults are 20 and 5 unless overridden at construction. `searchProfile` contains `terms`, `titleVariants`, and `locations`. Omitted or empty lists resolve to built-in defaults. The candidate profile is loaded from application configuration and saved with the run for scoring; it is not a field in the start-run request. See the [discovery workflow](../workflows/gig-scout-discovery.md) for default filters and selection semantics.
-
-## Review and Reprocessing Requests
-
-A decision body permits only `changeId`, `action` (`irrelevant`, `defer`, `pursue`), optional `note`, optional `reviewAt`, `expectedStateRevision`, `descriptionId`, `relevanceEvaluationId`, `candidateMatchEvaluationId`, and optional `resolution`. Notes contain 1–2,000 characters. Defer requires a valid timestamp. The handler supplies actor `User` and rejects a client-supplied actor.
-
-The revision and evaluation identifiers identify exactly what the user reviewed. Pursuit can return `created`, `updated`, `resolution_required`, `resolution_stale`, or `resolution_invalid`. A required/stale resolution includes possible Gigs and a fingerprint identifying that candidate set. The subsequent choice is `{kind:"create_new", reviewedFingerprint}` or `{kind:"use_existing", reviewedFingerprint, gigId, expectedGigRevision}`. These outcomes are response bodies, not uniformly HTTP errors. See [posting resolution](../workflows/opportunities-posting-resolution.md).
-
-Explicit reprocessing accepts only `{positionIds, reason}`: 1–1,000 unique identifiers matching `spos_` followed by 32 lowercase hexadecimal digits, plus a trimmed 1–500-character reason. Duplicate identifiers are removed and the selection sorted. Query filters are rejected for explicit requests. Preview can report ineligible items; start rejects the entire selection if any item is ineligible. Status identifiers must be UUID-shaped `srun_...` values.
-
-Relevance settings require criteria of 10–4,000 characters and a numeric confidence threshold from 0 to 1. Stored thresholds are rounded to thousandths. The [processing workflow](../workflows/gig-scout-review-processing.md) explains how changing criteria differs from explicit reprocessing.
-
-## Company Import and Source Contract
-
-The core bulk import accepts `{version:1, companies:[...]}` with at most 10,000 companies. Each strict company object supplies `id` (1–100 characters), `name` (1–200), `active` (default true), and 1–50 sources. Company IDs must be unique within the import, and each company must have exactly one active source. The HTTP endpoint wraps one company in this bulk schema.
-
-Sources use HTTPS and type `json` or `html`. A JSON source either supplies extraction and pagination settings or references a versioned template `{id, version}` with variables and overrides. An HTML source supplies selectors and pagination. Description retrieval can use a JSON detail endpoint, HTML elements, or embedded JSON-LD metadata. JSON and HTML-element description plans require evidence that retrieved content belongs to the expected posting. Declared HTML-entity encoding requires HTML content format. Templates are resolved and validated before import writes.
-
-The outbound `GigScoutHttpPort.request` contract accepts URL, GET/POST, optional headers/body, timeout, response-byte limit, optional redirect policy, and abort signal. Its response provides status, final URL, headers, and body. The relevance model receives validated posting content and criteria. Candidate scoring additionally receives the saved candidate profile and rubric. Both model responses must satisfy strict schemas; [architecture](../architecture/gig-scout.md) identifies the implementations.
-
-## Authentication and Errors
-
-Scout routes do not authenticate a distinct Scout identity themselves. The [application security boundary](../requirements/security.md) describes the surrounding access model.
-
-Unsupported methods return 405. Most unavailable Scout dependencies return 503, and unknown individual runs, positions, or reprocessing executions return 404. The mutation wrapper maps exceptions containing “revised” to 409 and other mutation exceptions to 422. Invalid decision JSON or unknown fields also return 422. Explicit-backfill validation errors return 400. Other endpoint errors follow shared handling rather than that mutation wrapper.
-
-## Compatibility and Guarantees
-
-There is no declared independent Scout API version. Strict request schemas reject unsupported fields. Reusing an active full run retains its original saved settings. Review requests must identify current evidence, and explicit reprocessing starts only for a wholly eligible selection. Source failures remain visible instead of implying that a company has no positions.
-
-## Related Documentation
-
-- [Gig Scout behavior](../capabilities/gig-scout.md)
-- [Search workflow](../workflows/gig-scout-discovery.md)
-- [Evaluation, review, and reprocessing workflow](../workflows/gig-scout-review-processing.md)
-- [Implementation and recovery](../architecture/gig-scout.md)
+The source harness is `bun run scout:source --config <private.json> --output <ignored.json>` with optional company, source, template, term, location, and pages selectors. It tests configured sourcing; it is not the persisted full-run API. `scout:encoded-description-selection` and `scout:verify-descriptions:live` are maintenance/verification scripts. No Scout tools were found in the normal agent tool registry or regular CLI commands.
 
 ## Source Evidence
 
-- [HTTP routing, input parsing, response/error mapping](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/request-handler.ts)
-- [Run service validation](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/engine/runs.ts) and [position-service validation](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/engine/scout-position-service.ts)
-- [Company import schema](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/engine/company-import.ts), [source contracts](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/sourcing/contracts.ts), [HTTP port](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/core/scout/sourcing/ports.ts)
-- [Run-history UI](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/client/GigScoutPage.tsx), [review UI](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/client/ScoutPositionReview.tsx), [workspace route](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/web/client/App.tsx)
-- [Source harness entrypoint](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/scripts/scout-source.ts), [package scripts](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/package.json), [agent tool registry](https://github.com/paulmccallick/gig-finder/blob/3dca919a98d25a33cf7f0bf0c6738a1c03944584/src/agent/gig-finder-tools.ts)
-
-## Related documents
-
-- [Gig Scout](../capabilities/gig-scout.md)
-- [Evaluate Positions, Review Results, and Pursue Opportunities](../workflows/gig-scout-review-processing.md)
-- [Gig Scout Architecture](../architecture/gig-scout.md)
+- [HTTP routing, input parsing, response/error mapping](../../gig-finder/src/web/request-handler.ts)
+- [Run service validation](../../gig-finder/src/core/scout/engine/runs.ts) and [position-service validation](../../gig-finder/src/core/scout/engine/scout-position-service.ts)
+- [Company import schema](../../gig-finder/src/core/scout/engine/company-import.ts), [source contracts](../../gig-finder/src/core/scout/sourcing/contracts.ts), [HTTP port](../../gig-finder/src/core/scout/sourcing/ports.ts)
+- [Run-history UI](../../gig-finder/src/web/client/GigScoutPage.tsx), [review UI](../../gig-finder/src/web/client/ScoutPositionReview.tsx), [workspace route](../../gig-finder/src/web/client/App.tsx)
+- [Source harness entrypoint](../../gig-finder/scripts/scout-source.ts), [package scripts](../../gig-finder/package.json), [agent tool registry](../../gig-finder/src/agent/gig-finder-tools.ts)

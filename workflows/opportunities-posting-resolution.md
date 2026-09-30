@@ -1,63 +1,56 @@
 ---
 type: workflow
 scope: opportunities
-summary: Review possible existing roles before accepting a Scout posting, preserving application progress and notes.
+summary: Review candidate Gigs before accepting a Scout posting as a new or existing opportunity.
 load_when:
   - changing posting identity resolution or promotion handoff
   - diagnosing stale choices or duplicate opportunities
+related:
+  - capabilities/opportunities.md
+  - domain/opportunities-gig.md
+  - interfaces/api/opportunities.md
+  - architecture/opportunities.md
 ---
-# Review a Posting Before Adding or Updating a Gig
+# Resolve an Incoming Posting
 
 ## Purpose
-Help the candidate decide whether a discovered posting belongs to a role they already track. Updating a matching Gig keeps its application progress and notes; choosing a separate role keeps two opportunities distinct.
+Accept an incoming official posting without silently conflating opportunities or overwriting candidate-managed pipeline information.
 
 ## Actors
-The candidate, [Gig Scout](../capabilities/gig-scout.md), and the opportunity service that saves Gigs.
+Candidate, Scout promotion flow, and Gig domain service.
 
 ## Trigger
-The [Scout review and promotion workflow](gig-scout-review-processing.md) submits a posting for acceptance into the candidate's tracked opportunities.
+The [Scout promotion flow](gig-scout-review-processing.md) hands a normalized posting to opportunity acceptance.
 
 ## Preconditions
-The posting has a company, title, and valid posting URL. Creating a new Gig from it also requires a unique change ID, which identifies the save operation and allows a repeated request to be recognized.
+Posting company, title, and a valid canonical URL exist. Creating a posting-based Gig requires an explicit change identity. Optional input includes external requisition ID, location, work arrangement, and description/source evidence.
 
 ## Inputs
-The posting can include an employer requisition ID, location, working arrangement, and source description. After review, the input also includes the candidate's choice and a **review fingerprint**: a value identifying the incoming posting and matching records as they appeared at review time. Choosing an existing Gig includes its saved revision, a number that changes when that record is updated.
+Normalized posting; optionally a reviewed fingerprint and either create-new choice or an existing Gig ID with expected revision.
 
 ## Normal Flow
-1. Find tracked Gigs at the same company with a matching requisition ID, posting URL, or title. Closed Gigs are included.
-2. If there are no matches and no earlier reviewed choice, create a new Gig. Otherwise, return the matches for review without changing them—even when the requisition ID matches exactly.
-3. The candidate reviews the roles and their recorded progress, then chooses a separate new Gig or one of the existing matches.
-4. Check that the reviewed matches and selected Gig revision are still current. If they have changed, request another review.
-5. Create the new Gig or update the selected Gig's title and posting URL. Update requisition ID, location, and working arrangement only when the posting supplies nonblank values.
-6. Return the saved Gig to Scout, which handles saving the job description and continuing promotion.
+1. Find Gigs in the same normalized company matching requisition ID, exact trimmed canonical URL, or normalized title. Include closed candidates.
+2. If none match and no prior choice needs review, create a new Gig. If any match, return candidates and a fingerprint without mutation, even for an exact requisition match.
+3. The user reviews candidate identity and pipeline details and explicitly chooses a separate new Gig or one existing candidate.
+4. Recompute the candidate snapshot. Reject a stale fingerprint or existing-Gig revision; reject a chosen Gig outside the candidate set.
+5. Create the new Gig or update the selected existing Gig's posting-owned fields: title and source URL, plus nonblank supplied external ID, location, and work arrangement.
+6. Return the created/updated Gig to Scout, which owns managed-description promotion and subsequent processing.
 
 ## Alternate Flows
-Choosing a separate opportunity explicitly allows the new Gig to share a company/title or requisition identity with an existing one. Ordinary Gig creation would reject such duplicates.
+A confirmed separate opportunity can reuse company/title or requisition identity; this route intentionally differs from ordinary duplicate-rejecting creation. A new posting-derived Gig starts identified/pending, unknown availability, TBD fit, no next action/pay range, empty tags, and status “Promoted from Gig Scout”; last activity is the change date in Pacific time.
 
-A new Gig starts at Identified with outcome Pending, availability Unknown, fit TBD, and status “Promoted from Gig Scout.” Its last-activity date is the save date in Pacific time. It starts without a next action or pay range and with an empty tag list.
-
-Updating an existing Gig preserves company, stage, outcome, status, last activity, next action, fit, compensation, tags, availability, other role details, and related records. Missing or blank optional posting values do not erase saved information.
+An existing-Gig update preserves company, stage/outcome, status, last activity, next action, fit, compensation, tags, availability, other role details, and related records. Blank/missing optional posting fields preserve stored values rather than clearing them.
 
 ## Failure Behavior
-If the review fingerprint or selected revision is stale, return the current matches for another review without accepting the choice. Selecting a Gig outside the matching set is invalid and makes no change. Updating the selected job description can invalidate a review even when the Gig itself has not changed.
-
-A repeated request can return its earlier accepted result when its change ID, posting data, and reviewed choice match the recorded operation. The posting fields on the Gig must still agree with that request. Later edits to application progress do not by themselves prevent this replay. The [implementation](../architecture/opportunities.md#posting-review-and-repeated-requests) explains the checks.
+Stale review returns a refreshed candidate list/fingerprint for renewed review. Invalid selection returns no mutation. Job-description version changes can stale a choice even when the Gig revision is unchanged. A replay with the same recorded posting/change fingerprint can return the accepted result if posting-owned fields still match; later candidate-owned pipeline edits are allowed, but posting-field drift rejects replay.
 
 ## Completion / Postconditions
-Successful acceptance returns a newly created or updated Gig. Other results request a fresh review or reject an invalid choice. Acceptance alone does not save job-description content or mark the posting available; Scout performs those operations separately.
+The result identifies a created or updated Gig, or explicitly requests fresh identity resolution. Acceptance alone does not create/update managed job-description content or mark availability available; those are separate operations in the Scout flow.
 
 ## Nonfunctional Requirements
-A reviewed choice must still match the current records when accepted. There is no documented numeric time or throughput target for this workflow.
+Reviewed choice must match current candidate state. Implementation details and replay limitations are in [architecture](../architecture/opportunities.md).
 
 ## Related Documentation
 - [Opportunity behavior](../capabilities/opportunities.md)
-- [Gig concepts](../domain/opportunities-gig.md)
-- [Posting-acceptance contract](../interfaces/api/opportunities.md#internal-posting-and-availability-ports)
-- [Implementation and repeat-request handling](../architecture/opportunities.md)
-
-## Related documents
-
-- [Opportunities](../capabilities/opportunities.md)
-- [Gig](../domain/opportunities-gig.md)
-- [Opportunity Interfaces](../interfaces/api/opportunities.md)
-- [Opportunity Architecture](../architecture/opportunities.md)
+- [Domain concepts](../domain/opportunities-gig.md)
+- [Interface contract](../interfaces/api/opportunities.md)
