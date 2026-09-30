@@ -1,0 +1,40 @@
+#!/usr/bin/env bun
+
+import { readFile } from "node:fs/promises";
+import {
+  checkRepositoryReference,
+  registerRepository,
+  resolveRepositoryReference,
+  type RepositoryAlias,
+  type RepositoryEnvironment,
+} from "./repository-ref";
+
+export async function runCli(
+  arguments_: string[],
+  options: RepositoryEnvironment = {},
+  write: (value: string) => void = value => process.stdout.write(value),
+) {
+  const [command, first, second] = arguments_;
+  if (command === "register" && (first === "app" || first === "spec") && second) {
+    write(`${await registerRepository(first as RepositoryAlias, second, options)}\n`);
+    return;
+  }
+  if ((command === "path" || command === "show" || command === "check") && first && !second) {
+    const resolved = command === "path"
+      ? await resolveRepositoryReference(first, options)
+      : await checkRepositoryReference(first, options);
+    if (command === "show") write(await readFile(resolved.absolutePath, "utf8"));
+    else write(`${resolved.absolutePath}\n`);
+    return;
+  }
+  throw new Error("Usage: gf-ref register <app|spec> <checkout> | gf-ref <path|show|check> <reference>");
+}
+
+if (import.meta.main) {
+  try {
+    await runCli(Bun.argv.slice(2));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
