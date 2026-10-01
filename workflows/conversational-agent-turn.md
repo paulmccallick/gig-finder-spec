@@ -15,7 +15,7 @@ related:
 
 ## Purpose
 
-Answer a candidate message using application context and supported tools, preserving the completed turn.
+**AGENT-WF-001** Answer a candidate message using application context and supported tools, preserving the completed turn.
 
 ## Actors
 

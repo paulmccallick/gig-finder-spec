@@ -32,4 +32,4 @@ network access or assumptions about checkout layout:
 ./gf-ref show app::src/core/application.ts
 ```
 
-Run `bun validate-docs.ts` from this repository to check metadata, required sections, local links, and heading anchors.
+Run `bun validate-docs.ts` from this repository to check metadata, required sections, local links and anchors, implementation-map rows and targets, and that current-state documents keep code-level implementation references in `IMPLEMENTATION_MAP.md`. Run `bun test documentation-rules.test.ts` to exercise the map and reference-placement rules.

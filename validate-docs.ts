@@ -1,11 +1,13 @@
 import path from "node:path";
 import { readdir, readFile } from "node:fs/promises";
 import { checkRepositoryReference, extractRepositoryReferences } from "./repository-ref";
+import { findUnmappedImplementationReference, validateImplementationMapRows } from "./documentation-rules";
 
 const root = import.meta.dir;
 const excluded = new Set([".git", "AGENTS.md", "llm-facing-application-documentation.md"]);
 const failures: string[] = [];
 const types = new Set(["application", "capability", "workflow", "domain", "requirement", "architecture", "interface", "operations", "adr", "change"]);
+const currentStateRoots = ["architecture", "capabilities", "domain", "interfaces", "requirements", "workflows"];
 async function markdownFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const result: string[] = [];
@@ -31,9 +33,31 @@ function headingAnchors(text: string) {
 }
 const files = await markdownFiles(root);
 let links = 0;
+const mapText = await readFile(path.join(root, "IMPLEMENTATION_MAP.md"), "utf8");
+const mapRows = mapText.split("\n").filter(line => /^\|\s*`[A-Z][A-Z0-9]*-(?:BR|FB|WF|API|ARCH)-\d{3}`\s*\|/.test(line));
+for (const issue of validateImplementationMapRows(mapText)) failures.push(`IMPLEMENTATION_MAP.md: ${issue}`);
+for (const row of mapRows) {
+  const cells = row.split("|").slice(1, -1).map(cell => cell.trim());
+  const id = cells[0]?.replaceAll("`", "");
+  const statementLink = cells[1]?.match(/\[[^\]]+\]\(([^)]+)\)/)?.[1];
+  if (!statementLink) failures.push(`IMPLEMENTATION_MAP.md: missing specification link for ${id ?? "row"}`);
+  else {
+    const [filePart, fragment] = statementLink.split("#", 2);
+    const target = path.resolve(root, filePart ?? "");
+    if (!await Bun.file(target).exists()) failures.push(`IMPLEMENTATION_MAP.md: missing statement target ${statementLink}`);
+    else {
+      const targetText = await readFile(target, "utf8");
+      if (!id || !targetText.includes(id)) failures.push(`IMPLEMENTATION_MAP.md: ${id ?? "row"} is absent from ${statementLink}`);
+      if (fragment && !headingAnchors(targetText).has(decodeURIComponent(fragment))) failures.push(`IMPLEMENTATION_MAP.md: missing statement anchor ${statementLink}`);
+    }
+  }
+}
 for (const filename of files) {
   const text = await readFile(filename, "utf8");
   const label = path.relative(root, filename);
+  if (label !== "IMPLEMENTATION_MAP.md" && currentStateRoots.some(directory => label.startsWith(`${directory}${path.sep}`)) && findUnmappedImplementationReference(text)) {
+    failures.push(`${label}: code-level implementation reference must be recorded in IMPLEMENTATION_MAP.md`);
+  }
   const importedDecision = /^decisions[/\\]00\d{2}-.*\.md$/.test(label);
   if (label.startsWith(`capabilities${path.sep}`)) {
     for (const heading of ["Purpose", "Actors", "Functional Behavior", "Business Rules", "Capability-Specific Nonfunctional Requirements", "Related Workflows", "Related Domain Objects", "Related Interfaces", "Related Architecture", "Known Constraints"]) {
