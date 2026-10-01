@@ -30,4 +30,4 @@ No quantified recovery time, acceptable data-loss window, periodic backup schedu
 
 ## Evidence and Implementation
 
-[Persistence](../architecture/persistence.md), [recovery](../operations/recovery.md), [change executor](app::src/core/changes.ts), [backup/validation implementation](app::src/data/maintenance.ts).
+[Persistence](../architecture/persistence.md) and [recovery](../operations/recovery.md). **REL-ARCH-001** Current implementation references for change execution and backup/validation are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#rel-arch-001).

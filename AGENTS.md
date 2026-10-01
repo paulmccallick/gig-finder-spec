@@ -17,6 +17,6 @@ substitute a website. If `app` is not registered, report that prerequisite.
 Existing application documentation may provide leads, but verify it against
 implementation and tests.
 
-Code is the baseline source of truth for documenting current behavior. Surface discrepancies explicitly rather than silently treating either prose or code as a new requirement. Do not invent NFR targets, architectural rationale, or surface support. Keep code evidence in supporting interface/architecture documents. Do not load historical PRDs/plans by default.
+The specification describes intended application behavior; implementation sources describe what currently runs. If they disagree, surface the discrepancy explicitly and resolve it as a deliberate specification or implementation change. Do not automatically edit the specification to match code or treat code as a new requirement. Keep volatile source, symbol, and test references in `IMPLEMENTATION_MAP.md`, not architecture prose. Do not invent NFR targets, architectural rationale, or surface support. Do not load historical PRDs/plans by default.
 
 When behavior changes, update relevant current-state documents. Keep metadata and relative links valid; preserve unrelated user changes. New documents other than `MAP.md` require YAML `type`, `scope`, `summary`, `load_when`, and `related` fields.

@@ -28,17 +28,17 @@ Unsupported methods return 405. Conversation IDs match `[A-Za-z0-9_-]{1,100}`. M
 
 These handlers establish no per-user authentication or conversation ownership and expose no approval endpoint. Broader deployment controls cannot be inferred from conversation IDs. The wire format delegates to installed AI SDK helpers; there is no application version segment or explicit stream-resume API.
 
-Evidence: [routing](app::src/web/request-handler.ts), [adapter](app::src/web/agent-handler.ts), [validation](app::src/core/conversation-service.ts).
+**AGENT-API-001** Current routing, adapter, and validation references are in [IMPLEMENTATION_MAP.md](../../IMPLEMENTATION_MAP.md#agent-api-001).
 
 ## Stream Contract
 
 Internal events cover start/message ID; start/finish step; text/reasoning start, delta, end; tool input start, delta, available; tool output available/error; finish/reason; and error/errorText. The web adapter maps to the SDK UI protocol. A tool failure may be a structured output value, not a transport error. Finish does not acknowledge persistence; see [architecture](../../architecture/conversational-agent.md).
 
-Evidence: [event contracts](app::src/core/conversation-contracts.ts), [translation](app::src/agent/ai-sdk-conversation-runtime.ts).
+**AGENT-API-002** Current event contract and translation references are in [IMPLEMENTATION_MAP.md](../../IMPLEMENTATION_MAP.md#agent-api-002).
 
 ## Agent Tools
 
-Authoritative strict Zod schemas reside in [tool registrations](app::src/agent/gig-finder-tools.ts) and [update operations](app::src/agent/update-tool-schemas.ts). These are runtime tools, not HTTP endpoints.
+**AGENT-API-003** Authoritative strict schemas are registered for runtime tools, not HTTP endpoints. Current schema and registration references are in [IMPLEMENTATION_MAP.md](../../IMPLEMENTATION_MAP.md#agent-api-003).
 
 | Area | Tools |
 |---|---|

@@ -56,9 +56,6 @@ The parser also accepts inline `--patch` JSON, as verified by the CLI test. Add/
 
 The web request handler has no dedicated `/api/interactions` CRUD route and the workspace has no standalone interaction editor. The application agent provides interaction tools; networking cards/details display derived contact fields. Person/Gig records include compact interaction references. The current vocabulary replaces legacy meeting-specific persistence; source/legacy metadata is not a promise of supported inbound calendar synchronization.
 
-## Source Evidence
+## Implementation References
 
-- [Domain and input schemas](app::src/core/interactions.ts), [service](app::src/core/interaction-service.ts), [pagination](app::src/core/queries.ts)
-- [Agent tool schemas/implementations](app::src/agent/gig-finder-tools.ts), [set/clear operation schemas](app::src/agent/update-tool-schemas.ts)
-- [CLI parser](app::src/cli/cli.ts), [CLI service adapters](app::src/cli/db-store.ts), [CLI integration test](app::src/cli/test/cli.test.ts)
-- [Web route boundary](app::src/web/request-handler.ts), [networking display](app::src/web/client/NetworkingBoard.tsx)
+**INTERACTION-API-001** Current domain, service, agent, CLI, and browser references are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#interaction-api-001).

@@ -14,7 +14,7 @@ related:
 
 ## Components and Processing Model
 
-`InteractionService` combines the interaction repository, participant repository, People reads, Gig reads, and shared `ChangeExecutor`. The CLI and agent tools invoke this service. `PeopleService` independently derives contact recency and compact references from persisted interactions/participants. `GigDomainService` similarly adds compact interaction references by Gig ID.
+**INTERACTION-ARCH-001** The interaction service combines interaction and participant repositories, People reads, Gig reads, and the shared change boundary. CLI and agent tools invoke this service. People reads independently derive contact recency and compact references from persisted interactions/participants. Gig reads similarly add compact interaction references by Gig ID.
 
 Interaction and participant repositories use the shared revisioned, soft-deleted storage model, with `interaction_history` and `interaction_participant_history` snapshots. Structured metadata is serialized in `structured_data_json`. Schema checks enforce enum values, timestamp order, JSON object shape, and no self-supersession; service validation additionally checks participants, references, timezone, and supersession cycles.
 
@@ -46,14 +46,6 @@ Audited transactions keep interaction and participant writes together. Revision 
 
 [Interactions](../capabilities/interactions.md) and [contact history](../workflows/interactions-contact-history.md). Cross-capability consumers are people/networking and tracked Gigs. No rationale or service-level target is inferred from the current implementation.
 
-## Source Evidence and Verification Anchors
+## Implementation References
 
-- [Interaction service](app::src/core/interaction-service.ts), [schemas](app::src/core/interactions.ts), [ChangeExecutor](app::src/core/changes.ts)
-- [People projections and calendar-date conversion](app::src/core/services.ts), [Gig projection](app::src/core/gig-domain-service.ts)
-- [Repository/history/reversion](app::src/data/store.ts), [schema](app::src/data/schema.ts), [legacy migration](app::src/data/interaction-migration.ts)
-- [Core service tests](app::src/core/test/services.test.ts): timestamp offsets/timezones/references, participant identity collisions, shared update contract, and contact dates.
-- [Read-service tests](app::src/core/test/read-services.test.ts): composable queries, absolute-time sort, invalid records, missing participants.
-- [Persistence tests](app::src/data/test/store.test.ts): participant versioning, soft deletion/reversion, contact projection, legacy conversion and retained business events.
-- [CLI tests](app::src/cli/test/cli.test.ts): create/read/query/update/delete through the shared contract.
-
-These tests were inspected as evidence; no additional broad test run was required for this documentation-only addition.
+Current source symbols and verification locations are in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#interaction-arch-001).

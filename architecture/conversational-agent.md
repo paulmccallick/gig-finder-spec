@@ -15,11 +15,11 @@ related:
 
 ## Components and Processing Model
 
-`AgentPanel` uses AI SDK `useChat` and `DefaultChatTransport`. The web adapter translates SDK UI messages/events to application-owned contracts. `ConversationService` owns validation, history selection, sanitization, document rehydration, and saving. `GigFinderConversationRuntime` converts model messages and translates `fullStream` events. `GigFinderAgent` invokes `streamText` with profile instructions, current UTC time, and core-service tools.
+**AGENT-ARCH-001** The browser agent panel uses the AI SDK chat transport. The web adapter translates SDK UI messages/events to application-owned contracts. The conversation service owns validation, history selection, sanitization, document rehydration, and saving. The runtime converts model messages and translates stream events. The agent invokes text generation with profile instructions, current UTC time, and core-service tools.
 
 The runtime requires read, mutation, and tool-extension capabilities together, or none. Production composition supplies all three. Without them the prompt states the lack of live data. There is no separate consent arbiter.
 
-Evidence: [composition](app::src/web/app.ts), [adapter](app::src/web/agent-handler.ts), [service](app::src/core/conversation-service.ts), [runtime](app::src/agent/ai-sdk-conversation-runtime.ts).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Context and Current Limits
 
@@ -40,15 +40,15 @@ These are implementation defaults, not service objectives.
 
 Recognized internal identifiers are sanitized in assistant text/reasoning and titles. User text only has staged references hidden. Structured parts retain references. Streaming sanitization buffers the last six whitespace-delimited tokens to reduce split-identifier exposure; this is pattern-based display filtering, not a general secrets filter.
 
-Evidence: [context/sanitization](app::src/core/conversation-service.ts), [title](app::src/agent/ai-sdk-conversation-runtime.ts), [agent defaults](app::src/agent/gig-finder-agent.ts).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Persistence and Guarantees
 
-`saveTurn` wraps conversation insertion/update, audit change creation, and both message inserts in one SQLite transaction. Messages receive consecutive sequence values. Updates save a before-image and increment revision. Tool commits happen independently before the final conversation save; no response-level rollback, server queue, or cross-request lock exists in the conversation service. Browser guards serialize only its own active workspace.
+Conversation saving wraps conversation insertion/update, audit change creation, and both message inserts in one SQLite transaction. Messages receive consecutive sequence values. Updates save a before-image and increment revision. Tool commits happen independently before the final conversation save; no response-level rollback, server queue, or cross-request lock exists in the conversation service. Browser guards serialize only its own active workspace.
 
 The completion callback skips save on abort/error. Step exhaustion can save. Model finish is emitted before callback persistence completes, so finish is not a persistence acknowledgement. Callback failure becomes an error event.
 
-Evidence: [repository](app::src/data/conversation-store.ts), [service](app::src/core/conversation-service.ts), [stream translator](app::src/agent/ai-sdk-conversation-runtime.ts).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Staging
 
@@ -56,7 +56,7 @@ Extracted uploads live in an in-process Map. Defaults: 15-minute TTL, 20 items, 
 
 The creation tool reads exact staged references, preserves extracted content, and records consumption after managed creation. Reuse of a live consumed reference returns its original result. The UI discards saved references after retained completion; saved history cannot resolve discarded or expired staging. Conversion validation belongs to the [document boundary](../interfaces/api/documents-profile.md#upload-conversion-boundary).
 
-Evidence: [staging](app::src/core/staged-documents.ts), [configuration](app::src/web/app.ts), [creation tool](app::src/agent/gig-finder-tools.ts), [UI cleanup](app::src/web/client/agent/AgentPanel.tsx).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Model Selection and Provider
 
@@ -64,7 +64,7 @@ Catalog: Sol/Terra/Luna; built-in default: Sol. `CODEX_AGENT_MODEL` supplies the
 
 The provider reads `auth.json` from configured `CODEX_HOME` or the home `.codex` directory, extracts an access token and ChatGPT account ID (including JWT fallback), rejects tokens expiring within 60 seconds, and calls the Responses adapter at `https://chatgpt.com/backend-api/codex`. It implements no refresh. Requests submit `store: false`; response generation requests automatic reasoning summaries. These are submitted options, not independently verified provider retention guarantees.
 
-Evidence: [settings](app::src/core/application-settings.ts), [settings store](app::src/data/settings-store.ts), [provider](app::src/agent/codex-provider.ts), [agent](app::src/agent/gig-finder-agent.ts).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Reversal and Failure Modes
 
@@ -74,7 +74,7 @@ Revert examines histories for gigs, people, gig-person relationships, tasks, int
 
 The tool wrapper converts domain/schema failures to structured results; unexpected exceptions become generic `tool_failed`. Runtime errors usually become generic messages, with selected Codex authentication/model/smoke errors passed through. Debug model logging contains generated text, reasoning, and tool inputs; display sanitization does not establish log redaction.
 
-Evidence: [tool wrapper](app::src/agent/gig-finder-tools.ts), [reversal](app::src/data/store.ts), [logging](app::src/agent/gig-finder-agent.ts), [safe errors](app::src/agent/ai-sdk-conversation-runtime.ts).
+Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
 ## Used By
 

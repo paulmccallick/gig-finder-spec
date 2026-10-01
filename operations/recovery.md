@@ -35,6 +35,6 @@ Backup acceptance requires intrinsic SQLite integrity and no foreign-key violati
 
 ## Evidence
 
-[Maintenance entry point](app::src/operations/maintenance.ts), [backup/restore implementation](app::src/data/maintenance.ts), [artifact validation](app::src/data/runtime-artifacts.ts), [deployment rollback](app::bin/deploy-local.sh), [maintenance tests](app::src/data/test/maintenance-entrypoint.test.ts).
+**REC-ARCH-001** Current implementation and verification references for maintenance, backup/restore, artifact validation, and deployment rollback are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#rec-arch-001).
 
 See [reliability](../requirements/reliability.md), [persistence](../architecture/persistence.md), and [Scout](../capabilities/gig-scout.md).

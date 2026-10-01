@@ -28,12 +28,13 @@ This tree describes the inspected application. Load only the documents relevant 
 - Business concepts: [model](domain/model.md), [terminology](domain/terminology.md); capability documents route to detailed entities.
 - Application boundaries: [interface index](interfaces/README.md); capability interfaces own surface-specific contracts.
 - Cross-cutting constraints: [global NFRs](requirements/global-nfrs.md), [security/privacy](requirements/security.md), [reliability](requirements/reliability.md).
-- Implementation only when needed: [architecture overview](architecture/overview.md), [persistence](architecture/persistence.md), then capability-specific architecture.
+- Implementation design only when needed: [architecture overview](architecture/overview.md), [persistence](architecture/persistence.md), then capability-specific architecture.
+- Volatile source paths, symbols, and verification locations: [implementation map](IMPLEMENTATION_MAP.md), keyed by stable specification statement IDs.
 - Operating the application: [deployment](operations/deployment.md), [observability](operations/observability.md), [recovery](operations/recovery.md).
 - Why a technical approach exists: [recorded decisions and qualifications](decisions/README.md). Do not infer rationale from code alone.
 
 ## Authority and Maintenance
 
-Read behavior before implementation. Use code evidence links to verify facts when changing the application. If code and documentation disagree, identify and resolve the discrepancy; this baseline was written with code as truth. Do not infer a new requirement from an implementation constant.
+Read the specification before implementation. Use [IMPLEMENTATION_MAP.md](IMPLEMENTATION_MAP.md) to locate current code and verification evidence. If code and specification disagree, record and resolve the discrepancy explicitly; do not automatically change either side or infer a requirement from an implementation constant.
 
 Superseded spec-repository documentation has been removed and was not used as source material. Code-repository PRDs/plans are historical leads, not current behavior. Update affected capability, domain, interface, workflow, requirement, and architecture documents together when behavior changes.

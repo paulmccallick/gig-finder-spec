@@ -28,4 +28,4 @@ Selected authorization/cookie headers are redacted; general content is not compr
 
 ## Evidence
 
-[Logger](app::src/observability/logger.ts), [HTTP instrumentation](app::src/web/request-handler.ts), [startup](app::src/web/server.ts), [composition](app::src/web/app.ts), [database validation](app::src/data/maintenance.ts).
+**OBS-ARCH-001** Current implementation references for logging, HTTP instrumentation, startup, composition, and database validation are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#obs-arch-001).

@@ -18,9 +18,9 @@ The application database contains domain records, typed histories, change envelo
 
 ## Processing Model and Guarantees
 
-`openDatabase` enables foreign keys and a 5,000 ms busy timeout. Normal opening uses `create: false`; initialization/migration are explicit maintenance operations. Do not infer WAL mode or distributed storage from SQLite usage.
+**PERSIST-ARCH-001** Database connections enable foreign keys and a 5,000 ms busy timeout. Normal opening does not create a missing database; initialization and migration are explicit maintenance operations. Do not infer WAL mode or distributed storage from SQLite usage.
 
-For typed audited entities, `DataStore.change` executes an audit envelope and domain writes in one transaction. At the persistence boundary, updates require expected revisions, store prior versions in typed history, and increment revisions. Ordinary Gig, Person, Task, and Interaction update services read that revision internally; this protects their read/write interval, not every stale client edit. Surface-specific contracts identify where the caller must supply a revision. Supported deletion is soft deletion. Reversal creates a new change and checks later revisions/dependencies.
+For typed audited entities, the persistence change boundary executes an audit envelope and domain writes in one transaction. At that boundary, updates require expected revisions, store prior versions in typed history, and increment revisions. Ordinary Gig, Person, Task, and Interaction update services read that revision internally; this protects their read/write interval, not every stale client edit. Surface-specific contracts identify where the caller must supply a revision. Supported deletion is soft deletion. Reversal creates a new change and checks later revisions/dependencies.
 
 These rules do not cover all persisted objects uniformly. Managed documents have separate versions; conversations/settings have their own repositories; Scout state and queues require separate coordination. Filesystem materialization and provider calls are not in one transaction with all business state.
 
@@ -32,9 +32,9 @@ Stale revisions fail instead of overwriting newer state. Postcommit profile mate
 
 Current deployment uses a local database and application-owned workers. No replicated database, distributed lock service, or measured multi-instance capacity target is established. The busy timeout is a lock-wait setting, not a latency guarantee.
 
-## Source Evidence
+## Implementation References
 
-[Database](app::src/data/database.ts), [transactions/history](app::src/data/store.ts), [schema](app::src/data/schema.ts), [change execution](app::src/core/changes.ts), [composition](app::src/data/local-application.ts), [documents](app::src/data/document-store.ts), [paths](app::src/data/context.ts).
+Current source symbols and verification locations are in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#persist-arch-001).
 
 ## Used By
 
