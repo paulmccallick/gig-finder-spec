@@ -38,6 +38,6 @@ There is no application authentication or version-negotiation layer. Current HTT
 
 Model calls use the Codex-provider adapter and runtime credentials. Scout connects to configured employer/ATS sources through source adapters and reusable templates. Candidate profile JSON is a local context input. Managed candidate-document context is read from authoritative database content; materialized profile files are derived copies. See [architecture](../architecture/overview.md), [security](../requirements/security.md), and [deployment](../operations/deployment.md).
 
-## Source Evidence
+## Implementation References
 
-[Router](app::src/web/request-handler.ts), [errors](app::src/web/error-response.ts), [CLI dispatcher](app::src/cli/cli.ts), [tool registration](app::src/agent/gig-finder-tools.ts), [provider adapter](app::src/agent/codex-provider.ts), [Scout sourcing](app::src/core/scout/sourcing/source-plan.ts).
+**INTERFACE-ARCH-001** Current router, error, CLI, tool, provider, and Scout sourcing references are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#interface-arch-001).

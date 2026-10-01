@@ -40,7 +40,7 @@ Import supplies company IDs, names, active flags, and source configurations. Ful
 3. Dispatch one job per company. Read each active source using its configured extraction and pagination rules.
 4. Normalize positions and apply title/location filtering. Preserve source attempts, counters, diagnostics, and accepted observations.
 5. Establish durable position identities and enqueue downstream position processing independently of company discovery completion.
-6. For a successful company result, compare observed positions with tracked Gigs for that company and update posting availability. Complete the company result and roll up run status.
+6. **SCOUT-WF-001** For a successful company result, compare observed positions with tracked Gigs for that company and update posting availability. Complete the company result and roll up run status.
 7. Display run history, company/source details, and paginated observations. Position processing can continue after the run reaches its terminal discovery status.
 
 ## Alternate Flows

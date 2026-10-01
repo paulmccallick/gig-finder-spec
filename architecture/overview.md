@@ -23,7 +23,7 @@ CLI composition ──> Core services <┤
 Core ports <── SQLite adapters + managed content / artifact adapters
 ```
 
-`GigFinderApplication` composes Gigs, people, relationships, tasks, interactions, history, changes, documents, document reading, context search, and settings. Conversations and Scout are composed alongside it by `openLocalApplication` and the web app.
+**APPLICATION-ARCH-001** The shared application layer composes Gigs, people, relationships, tasks, interactions, history, changes, documents, document reading, context search, and settings. Conversations and Scout are composed alongside it by the local and web application roots.
 
 The React client presents opportunity, networking, task, Scout, document, and agent views. HTTP exposes selected operations, not generic CRUD for every service. CLI and agent tools call shared domain services through separate adapters.
 
@@ -43,6 +43,6 @@ See [persistence](persistence.md) for transaction scope. A conversation is not o
 
 [Global constraints](../requirements/global-nfrs.md), [security](../requirements/security.md), [decision index](../decisions/README.md).
 
-## Source Evidence
+## Implementation References
 
-[Application](app::src/core/application.ts), [local composition](app::src/data/local-application.ts), [web composition](app::src/web/app.ts), [server](app::src/web/server.ts), [router](app::src/web/request-handler.ts), [CLI](app::src/cli/app.ts), [tools](app::src/agent/gig-finder-tools.ts), [dependency rules](app::.dependency-cruiser.cjs), [package scripts](app::package.json).
+Current source symbols and verification locations are in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#application-arch-001).

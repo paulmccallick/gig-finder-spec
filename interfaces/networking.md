@@ -52,9 +52,6 @@ Service `createNew` accepts partial inputs with defaults but still requires a va
 
 People query combines status/priority/strength/text filters, sorts priority then name then ID, and returns items/page. Page offset is nonnegative; limit is 1–50, default 20. Relationship query sorts Gig ID, Person ID, role, ID and returns structured ok/not-found/consistency results at its relevant read boundaries. People structured read returns ok/not_found. Authentication and general agent access remain application-wide concerns; these contracts add no separate networking authentication mechanism.
 
-## Source Evidence
+## Implementation References
 
-- [People schema](app::src/core/people.ts), [role schema](app::src/core/gig-people.ts), [services](app::src/core/services.ts)
-- [Board](app::src/web/client/NetworkingBoard.tsx), [HTTP handler](app::src/web/request-handler.ts)
-- [Agent registry and schemas](app::src/agent/gig-finder-tools.ts), [set/clear schema](app::src/agent/update-tool-schemas.ts)
-- [CLI parser](app::src/cli/cli.ts), [CLI service bindings](app::src/cli/db-store.ts), [pagination](app::src/core/queries.ts)
+**NETWORK-API-001** Current schema, service, browser, HTTP, agent, CLI, and pagination references are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#network-api-001).

@@ -36,6 +36,6 @@ Deployment maintenance deliberately excludes the runtime artifact mount. State i
 
 ## Evidence
 
-[Package scripts](app::package.json), [Dockerfile](app::Dockerfile), [CI](app::.github/workflows/ci.yml), [bootstrap](app::bin/bootstrap-production.sh), [deployment](app::bin/deploy-local.sh), [context resolver](app::src/data/context.ts), [web configuration](app::src/web/app.ts).
+**DEPLOY-ARCH-001** Current implementation references for packaging, CI, bootstrap, deployment, context resolution, and web configuration are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#deploy-arch-001).
 
 See [observability](observability.md), [recovery](recovery.md), and [decision provenance](../decisions/README.md).

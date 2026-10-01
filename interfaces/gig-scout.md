@@ -59,10 +59,6 @@ The web workspace `?workspace=scout` exposes Positions and Run History. Position
 
 The source harness is `bun run scout:source --config <private.json> --output <ignored.json>` with optional company, source, template, term, location, and pages selectors. It tests configured sourcing; it is not the persisted full-run API. `scout:encoded-description-selection` and `scout:verify-descriptions:live` are maintenance/verification scripts. No Scout tools were found in the normal agent tool registry or regular CLI commands.
 
-## Source Evidence
+## Implementation References
 
-- [HTTP routing, input parsing, response/error mapping](app::src/web/request-handler.ts)
-- [Run service validation](app::src/core/scout/engine/runs.ts) and [position-service validation](app::src/core/scout/engine/scout-position-service.ts)
-- [Company import schema](app::src/core/scout/engine/company-import.ts), [source contracts](app::src/core/scout/sourcing/contracts.ts), [HTTP port](app::src/core/scout/sourcing/ports.ts)
-- [Run-history UI](app::src/web/client/GigScoutPage.tsx), [review UI](app::src/web/client/ScoutPositionReview.tsx), [workspace route](app::src/web/client/App.tsx)
-- [Source harness entrypoint](app::scripts/scout-source.ts), [package scripts](app::package.json), [agent tool registry](app::src/agent/gig-finder-tools.ts)
+**SCOUT-API-001** Current HTTP, service, source-schema, browser, harness, and package references are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#scout-api-001).

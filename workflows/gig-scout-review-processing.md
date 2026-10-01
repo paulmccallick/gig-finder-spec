@@ -35,7 +35,7 @@ Bound observation and configuration; user decisions supply current state revisio
 
 ## Normal Flow
 
-1. Validate the bound observation and schedule description acquisition. Despite its `reconcile_gig` stage name, this step does not automatically attach a matching Gig.
+1. **SCOUT-WF-002** Validate the bound observation and schedule description acquisition. This step does not automatically attach a matching Gig.
 2. Acquire or reuse official description content according to the source's description strategy and validate posting identity. Persist converted Markdown and source/conversion provenance.
 3. Screen relevance against the bound criteria. A confident failure becomes agent irrelevance. Passing or insufficient-confidence failure proceeds to candidate match.
 4. Score against the candidate profile and rubric. Store the integer score and short explanation, then expose the position for user review.

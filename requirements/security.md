@@ -28,4 +28,4 @@ No application-level encryption-at-rest or automatic complete private-data redac
 
 ## Evidence
 
-[Router](app::src/web/request-handler.ts), [configuration](app::src/web/app.ts), [deployment](app::bin/deploy-local.sh), [logging](app::src/observability/logger.ts), [agent policy](app::src/agent/system-prompt.ts), [repository policy](app::.agents/skills/coding-guide/SKILL.md).
+**SEC-ARCH-001** Current implementation references for routing, configuration, deployment, logging, agent policy, and repository policy are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#sec-arch-001).

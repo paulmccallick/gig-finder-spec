@@ -19,12 +19,15 @@ async function markdownFiles(directory: string): Promise<string[]> {
 }
 function headingAnchors(text: string) {
   const seen = new Map<string, number>();
-  return new Set([...text.matchAll(/^#{1,6}\s+(.+)$/gm)].map(match => {
+  const headings = [...text.matchAll(/^#{1,6}\s+(.+)$/gm)].map(match => {
     const base = match[1]!.trim().toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/ /g, "-");
     const occurrence = seen.get(base) ?? 0;
     seen.set(base, occurrence + 1);
     return occurrence ? `${base}-${occurrence}` : base;
-  }));
+  });
+  const statementIds = [...text.matchAll(/\b([A-Z][A-Z0-9]*-(?:BR|FB|WF|API|ARCH)-\d{3})\b/g)]
+    .map(match => match[1]!.toLowerCase());
+  return new Set([...headings, ...statementIds]);
 }
 const files = await markdownFiles(root);
 let links = 0;

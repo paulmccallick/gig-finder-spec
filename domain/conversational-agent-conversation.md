@@ -37,4 +37,4 @@ Messages preserve sequence; the pair is saved together. Recognized internal iden
 
 [Agent](../capabilities/conversational-agent.md), [turn lifecycle](../workflows/conversational-agent-turn.md).
 
-Evidence: [contracts](app::src/core/conversation-contracts.ts), [service](app::src/core/conversation-service.ts), [repository](app::src/data/conversation-store.ts), [staging](app::src/core/staged-documents.ts), [creation tool](app::src/agent/gig-finder-tools.ts).
+**AGENT-FB-003** Current implementation references for conversation contracts, persistence, staging, and creation tools are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-fb-003).

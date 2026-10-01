@@ -65,4 +65,4 @@ No separate workflow target is established; [architecture](../architecture/conve
 
 ## Related Documentation
 
-[Capability](../capabilities/conversational-agent.md), [workspace source](app::src/web/client/agent/AgentPanel.tsx), [service](app::src/core/conversation-service.ts), [runtime](app::src/agent/ai-sdk-conversation-runtime.ts), [turn save](app::src/data/conversation-store.ts), [uploads](app::src/web/document-upload-handler.ts).
+[Capability](../capabilities/conversational-agent.md). Current implementation and verification references for this workflow are listed in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-wf-001).

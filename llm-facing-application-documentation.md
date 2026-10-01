@@ -73,6 +73,37 @@ The second describes the current technical solution.
 
 Changing the implementation should not require changing the requirement unless the application's actual requirement also changes.
 
+The specification records intended behavior and constraints. Implementation
+sources record what currently runs. When they disagree, surface the
+discrepancy explicitly and resolve it through a deliberate specification or
+implementation change; do not automatically edit the specification to match
+code or promote observed code behavior into a requirement.
+
+### Stable Statement IDs
+
+Give stable IDs to statements that need independent references from the
+implementation map or other tooling. Use the form `<AREA>-<KIND>-<NNN>`, where
+`KIND` is `BR` (business rule), `FB` (functional behavior), `WF` (workflow
+step), `API` (interface contract), or `ARCH` (architecture/operations
+constraint), for example `TASK-BR-001`, `TASK-FB-003`, `SCOUT-WF-002`, or
+`TASK-ARCH-001`. Put the ID in bold at the start of the exact bullet, numbered
+step, or paragraph it identifies. Keep one independently meaningful
+statement per ID. IDs are immutable identifiers: do not renumber them when
+text moves, and never reuse a retired ID. Assign IDs only where independent
+traceability is useful; ordinary explanatory prose does not need one.
+
+### Implementation Map
+
+`IMPLEMENTATION_MAP.md` is the mutable index from stable specification IDs to
+current implementation and verification locations. Keep exact source paths,
+symbols, test-file paths, and other volatile implementation references there,
+not in architecture prose. Each entry identifies the specification document
+and statement, implementation location(s), verification location(s), and any
+known discrepancy or verification status. Use repository-qualified paths so
+the map remains useful across separate checkouts. Update the map when code or
+tests move; do not change the specification ID solely because an
+implementation location changed.
+
 ---
 
 ## 2.4 Avoid Duplication
@@ -127,6 +158,7 @@ docs/
 │
 ├── MAP.md
 ├── APPLICATION.md
+├── IMPLEMENTATION_MAP.md
 │
 ├── capabilities/
 │   ├── authentication.md
@@ -204,6 +236,7 @@ The map should contain:
 * important architectural areas
 * major interfaces
 * cross-cutting requirements
+* where to find implementation and verification references when coding
 * instructions about when each should be loaded
 
 ## Example
@@ -694,6 +727,11 @@ Architecture documents explain:
 * important technical boundaries
 * significant failure behavior
 
+Keep exact source paths, implementation symbols, test-file references, and
+other volatile implementation locations in `IMPLEMENTATION_MAP.md`, keyed by
+stable statement IDs. Link to the relevant map entry instead of maintaining a
+`Source Evidence` or `Verification Anchors` list in architecture documents.
+
 ---
 
 ## architecture/overview.md
@@ -1081,4 +1119,3 @@ When it begins determining how to implement the change, it may additionally load
 ```text
 architecture
 ```
-
