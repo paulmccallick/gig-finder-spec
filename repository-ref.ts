@@ -108,7 +108,27 @@ export async function resolveRepositoryReference(
     throw new Error(`No local checkout is registered for '${parsed.alias}'`);
   }
 
-  const repositoryRoot = path.resolve(configured.stdout);
+  const configuredRoot = path.resolve(configured.stdout);
+  const repository = await runGit(["-C", configuredRoot, "rev-parse", "--show-toplevel"], options);
+  if (repository.exitCode !== 0) {
+    throw new Error(`Registered checkout for '${parsed.alias}' is not a Git checkout: ${configuredRoot}`);
+  }
+
+  const repositoryRoot = path.resolve(repository.stdout);
+  if (repositoryRoot !== configuredRoot) {
+    throw new Error(`Registered checkout for '${parsed.alias}' is not a repository root: ${configuredRoot}`);
+  }
+
+  let marker: string;
+  try {
+    marker = (await readFile(path.join(repositoryRoot, ".gf-repository"), "utf8")).trim();
+  } catch {
+    throw new Error(`Repository marker is missing from ${repositoryRoot}`);
+  }
+  if (marker !== parsed.alias) {
+    throw new Error(`Repository marker identifies '${marker}', not '${parsed.alias}'`);
+  }
+
   const absolutePath = path.resolve(repositoryRoot, parsed.relativePath);
   const prefix = `${repositoryRoot}${path.sep}`;
   if (absolutePath !== repositoryRoot && !absolutePath.startsWith(prefix)) {

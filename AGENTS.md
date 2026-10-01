@@ -8,7 +8,14 @@ Current-state application documentation is at this repository root. Read `MAP.md
 4. Load architecture when implementation is relevant.
 5. Load verified decision provenance when rationale matters.
 
-Use `llm-facing-application-documentation.md` as the documentation format, interpreting its `docs/` directory as this repository root. Do not create a nested `docs/` directory. Existing documentation inside the sibling `gig-finder` code repository may provide leads, but verify it against implementation and tests.
+Use `llm-facing-application-documentation.md` as the documentation format,
+interpreting its `docs/` directory as this repository root. Do not create a
+nested `docs/` directory. The application checkout is the locally registered
+`app` repository. Resolve evidence with `./gf-ref show app::<path>` or validate
+it with `./gf-ref check app::<path>`; do not assume a sibling layout or
+substitute a website. If `app` is not registered, report that prerequisite.
+Existing application documentation may provide leads, but verify it against
+implementation and tests.
 
 Code is the baseline source of truth for documenting current behavior. Surface discrepancies explicitly rather than silently treating either prose or code as a new requirement. Do not invent NFR targets, architectural rationale, or surface support. Keep code evidence in supporting interface/architecture documents. Do not load historical PRDs/plans by default.
 

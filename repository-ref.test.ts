@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import {
   checkRepositoryReference,
   checkMarkdownRepositoryReferences,
@@ -107,6 +107,23 @@ describe("local repository resolution", () => {
     );
   });
 
+  test("revalidates a registered checkout before resolving a reference", async () => {
+    const appRoot = await createRepository("replaced-application", "app");
+    await writeFile(path.join(appRoot, "README.md"), "# Application\n");
+    await registerRepository("app", appRoot, environment);
+
+    await writeFile(path.join(appRoot, ".gf-repository"), "spec\n");
+    await expect(resolveRepositoryReference("app::README.md", environment)).rejects.toThrow(
+      "Repository marker identifies 'spec', not 'app'",
+    );
+
+    await writeFile(path.join(appRoot, ".gf-repository"), "app\n");
+    await rm(path.join(appRoot, ".git"), { recursive: true, force: true });
+    await expect(resolveRepositoryReference("app::README.md", environment)).rejects.toThrow(
+      "Registered checkout for 'app' is not a repository root",
+    );
+  });
+
   test("fails locally for missing registration, files, and symbols", async () => {
     await expect(resolveRepositoryReference("app::README.md", environment)).rejects.toThrow(
       "No local checkout is registered for 'app'",
@@ -150,5 +167,21 @@ describe("Markdown repository references", () => {
     await expect(checkMarkdownRepositoryReferences("[missing](app::missing.md)", environment)).rejects.toThrow(
       "Referenced file does not exist",
     );
+  });
+});
+
+describe("repository entrypoints", () => {
+  test("agent and maintainer guidance use registered aliases without sibling assumptions", async () => {
+    const [agents, readme] = await Promise.all([
+      readFile(path.join(import.meta.dir, "AGENTS.md"), "utf8"),
+      readFile(path.join(import.meta.dir, "README.md"), "utf8"),
+    ]);
+
+    expect(agents).toContain("app::");
+    expect(agents).toContain("./gf-ref");
+    expect(agents).not.toMatch(/sibling [`']?gig-finder/);
+    expect(readme).toContain("./gf-ref register spec .");
+    expect(readme).toContain("./gf-ref register app /path/to/gig-finder");
+    expect(readme).not.toMatch(/sibling [`']?gig-finder/);
   });
 });
