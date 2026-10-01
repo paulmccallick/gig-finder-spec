@@ -54,7 +54,7 @@ People query combines status/priority/strength/text filters, sorts priority then
 
 ## Source Evidence
 
-- [People schema](../../gig-finder/src/core/people.ts), [role schema](../../gig-finder/src/core/gig-people.ts), [services](../../gig-finder/src/core/services.ts)
-- [Board](../../gig-finder/src/web/client/NetworkingBoard.tsx), [HTTP handler](../../gig-finder/src/web/request-handler.ts)
-- [Agent registry and schemas](../../gig-finder/src/agent/gig-finder-tools.ts), [set/clear schema](../../gig-finder/src/agent/update-tool-schemas.ts)
-- [CLI parser](../../gig-finder/src/cli/cli.ts), [CLI service bindings](../../gig-finder/src/cli/db-store.ts), [pagination](../../gig-finder/src/core/queries.ts)
+- [People schema](app::src/core/people.ts), [role schema](app::src/core/gig-people.ts), [services](app::src/core/services.ts)
+- [Board](app::src/web/client/NetworkingBoard.tsx), [HTTP handler](app::src/web/request-handler.ts)
+- [Agent registry and schemas](app::src/agent/gig-finder-tools.ts), [set/clear schema](app::src/agent/update-tool-schemas.ts)
+- [CLI parser](app::src/cli/cli.ts), [CLI service bindings](app::src/cli/db-store.ts), [pagination](app::src/core/queries.ts)

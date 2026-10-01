@@ -1,5 +1,6 @@
 import path from "node:path";
 import { readdir, readFile } from "node:fs/promises";
+import { checkRepositoryReference, extractRepositoryReferences } from "./repository-ref";
 
 const root = import.meta.dir;
 const excluded = new Set([".git", "AGENTS.md", "llm-facing-application-documentation.md"]);
@@ -30,6 +31,7 @@ let links = 0;
 for (const filename of files) {
   const text = await readFile(filename, "utf8");
   const label = path.relative(root, filename);
+  const importedDecision = /^decisions[/\\]00\d{2}-.*\.md$/.test(label);
   if (label.startsWith(`capabilities${path.sep}`)) {
     for (const heading of ["Purpose", "Actors", "Functional Behavior", "Business Rules", "Capability-Specific Nonfunctional Requirements", "Related Workflows", "Related Domain Objects", "Related Interfaces", "Related Architecture", "Known Constraints"]) {
       if (!text.split("\n").includes(`## ${heading}`)) failures.push(`${label}: missing capability heading ${heading}`);
@@ -40,7 +42,7 @@ for (const filename of files) {
       if (!text.split("\n").includes(`## ${heading}`)) failures.push(`${label}: missing workflow heading ${heading}`);
     }
   }
-  if (label !== "MAP.md") {
+  if (label !== "MAP.md" && !importedDecision) {
     const match = text.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
     if (!match) failures.push(`${label}: missing front matter`);
     else {
@@ -57,6 +59,14 @@ for (const filename of files) {
           if (!await Bun.file(path.resolve(root, target)).exists()) failures.push(`${label}: missing related ${target}`);
         }
       } catch (error) { failures.push(`${label}: YAML ${String(error)}`); }
+    }
+  }
+  for (const target of extractRepositoryReferences(text)) {
+    links++;
+    try {
+      await checkRepositoryReference(target);
+    } catch (error) {
+      failures.push(`${label}: broken repository reference ${target}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   for (const match of text.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {

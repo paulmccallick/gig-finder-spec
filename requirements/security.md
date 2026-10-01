@@ -28,4 +28,4 @@ No application-level encryption-at-rest or automatic complete private-data redac
 
 ## Evidence
 
-[Router](../../gig-finder/src/web/request-handler.ts), [configuration](../../gig-finder/src/web/app.ts), [deployment](../../gig-finder/bin/deploy-local.sh), [logging](../../gig-finder/src/observability/logger.ts), [agent policy](../../gig-finder/src/agent/system-prompt.ts), [repository policy](../../gig-finder/.agents/skills/coding-guide/SKILL.md).
+[Router](app::src/web/request-handler.ts), [configuration](app::src/web/app.ts), [deployment](app::bin/deploy-local.sh), [logging](app::src/observability/logger.ts), [agent policy](app::src/agent/system-prompt.ts), [repository policy](app::.agents/skills/coding-guide/SKILL.md).

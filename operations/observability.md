@@ -28,4 +28,4 @@ Selected authorization/cookie headers are redacted; general content is not compr
 
 ## Evidence
 
-[Logger](../../gig-finder/src/observability/logger.ts), [HTTP instrumentation](../../gig-finder/src/web/request-handler.ts), [startup](../../gig-finder/src/web/server.ts), [composition](../../gig-finder/src/web/app.ts), [database validation](../../gig-finder/src/data/maintenance.ts).
+[Logger](app::src/observability/logger.ts), [HTTP instrumentation](app::src/web/request-handler.ts), [startup](app::src/web/server.ts), [composition](app::src/web/app.ts), [database validation](app::src/data/maintenance.ts).

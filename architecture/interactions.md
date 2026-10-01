@@ -48,12 +48,12 @@ Audited transactions keep interaction and participant writes together. Revision 
 
 ## Source Evidence and Verification Anchors
 
-- [Interaction service](../../gig-finder/src/core/interaction-service.ts), [schemas](../../gig-finder/src/core/interactions.ts), [ChangeExecutor](../../gig-finder/src/core/changes.ts)
-- [People projections and calendar-date conversion](../../gig-finder/src/core/services.ts), [Gig projection](../../gig-finder/src/core/gig-domain-service.ts)
-- [Repository/history/reversion](../../gig-finder/src/data/store.ts), [schema](../../gig-finder/src/data/schema.ts), [legacy migration](../../gig-finder/src/data/interaction-migration.ts)
-- [Core service tests](../../gig-finder/src/core/test/services.test.ts): timestamp offsets/timezones/references, participant identity collisions, shared update contract, and contact dates.
-- [Read-service tests](../../gig-finder/src/core/test/read-services.test.ts): composable queries, absolute-time sort, invalid records, missing participants.
-- [Persistence tests](../../gig-finder/src/data/test/store.test.ts): participant versioning, soft deletion/reversion, contact projection, legacy conversion and retained business events.
-- [CLI tests](../../gig-finder/src/cli/test/cli.test.ts): create/read/query/update/delete through the shared contract.
+- [Interaction service](app::src/core/interaction-service.ts), [schemas](app::src/core/interactions.ts), [ChangeExecutor](app::src/core/changes.ts)
+- [People projections and calendar-date conversion](app::src/core/services.ts), [Gig projection](app::src/core/gig-domain-service.ts)
+- [Repository/history/reversion](app::src/data/store.ts), [schema](app::src/data/schema.ts), [legacy migration](app::src/data/interaction-migration.ts)
+- [Core service tests](app::src/core/test/services.test.ts): timestamp offsets/timezones/references, participant identity collisions, shared update contract, and contact dates.
+- [Read-service tests](app::src/core/test/read-services.test.ts): composable queries, absolute-time sort, invalid records, missing participants.
+- [Persistence tests](app::src/data/test/store.test.ts): participant versioning, soft deletion/reversion, contact projection, legacy conversion and retained business events.
+- [CLI tests](app::src/cli/test/cli.test.ts): create/read/query/update/delete through the shared contract.
 
 These tests were inspected as evidence; no additional broad test run was required for this documentation-only addition.

@@ -34,7 +34,7 @@ Current deployment uses a local database and application-owned workers. No repli
 
 ## Source Evidence
 
-[Database](../../gig-finder/src/data/database.ts), [transactions/history](../../gig-finder/src/data/store.ts), [schema](../../gig-finder/src/data/schema.ts), [change execution](../../gig-finder/src/core/changes.ts), [composition](../../gig-finder/src/data/local-application.ts), [documents](../../gig-finder/src/data/document-store.ts), [paths](../../gig-finder/src/data/context.ts).
+[Database](app::src/data/database.ts), [transactions/history](app::src/data/store.ts), [schema](app::src/data/schema.ts), [change execution](app::src/core/changes.ts), [composition](app::src/data/local-application.ts), [documents](app::src/data/document-store.ts), [paths](app::src/data/context.ts).
 
 ## Used By
 
