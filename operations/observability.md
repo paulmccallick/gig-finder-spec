@@ -20,6 +20,11 @@ related:
 
 Pino writes JSON logs to the configured log directory as `server.log`, rotates at 10 MB with at most five files, and tees output to stdout. Log level defaults to `debug`. Request loggers carry `requestId`; HTTP records include path/method, status, latency, and errors. Streaming response start is separately logged, so its recorded latency is not total conversation completion time.
 
+The per-user macOS production host defaults file logs to
+`~/Library/Logs/GigFinder`. Docker stdout logs provide a separate copy for
+the lifetime of a retained container; replacing a container can remove that
+copy, so archive it first when preserving history.
+
 Startup logs report address, revision, active log path, level, and devtools diagnostics. Scout runtimes emit processing events. Profile materialization failure is separately logged. AI SDK devtools are enabled only by the exact configured `true` value; Docker defaults them off.
 
 ## Privacy and Limits
