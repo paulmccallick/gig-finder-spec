@@ -26,6 +26,14 @@ Normal startup requires an existing initialized/migrated database and a valid ca
 
 ## Supplied Production Path
 
+For the per-user macOS installation, the host defaults are
+`~/Library/Application Support/GigFinder/state` for persistent state,
+`~/Library/Application Support/GigFinder/backups` for database backups,
+`~/Library/Application Support/GigFinder/config.json` for configuration, and
+`~/Library/Logs/GigFinder` for file logs. The Docker image remains managed by
+OrbStack. Linux paths inside the container remain unchanged. The existing
+absolute-path environment overrides remain available for other hosts.
+
 1. Bootstrap operator-owned state/configuration with the supplied bootstrap script when preparing a new environment.
 2. CI publishes a commit-tagged image. `bin/deploy-local.sh sha-<40-character-commit>` accepts only that tag shape and pulls the image.
 3. The deploy script checks external paths and credentials, stops the prior writer, creates a verified database backup, synchronizes source-managed inputs, migrates, and validates.
@@ -33,6 +41,12 @@ Normal startup requires an existing initialized/migrated database and a valid ca
 5. Failure paths attempt database/input rollback and restore the prior container; failed recovery leaves retained state for operator action.
 
 Deployment maintenance deliberately excludes the runtime artifact mount. State is not embedded in the application image. This describes checked-in automation, not the configuration or health of a running host.
+
+For a migration from older `/var` host paths, stop the old container before
+copying state and configuration. Verify the copied database and artifacts,
+create a verified backup in the new backup directory, and retain old paths
+until the new container is healthy and validated. Historical backups require
+separate inspection before any old directory is removed.
 
 ## Evidence
 
