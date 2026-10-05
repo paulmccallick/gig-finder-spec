@@ -33,6 +33,11 @@ For the per-user macOS installation, the host defaults are
 `~/Library/Logs/GigFinder` for file logs. The Docker image remains managed by
 OrbStack. Linux paths inside the container remain unchanged. The existing
 absolute-path environment overrides remain available for other hosts.
+The host directories must be created under the operator's account before
+deployment; `deploy-local.sh` refuses missing state, log, or backup roots.
+`bootstrap-production.sh` also requires the target state root to exist before
+it copies a new database. Provider credentials remain in the separate Codex
+directory mounted read-only.
 
 1. Bootstrap operator-owned state/configuration with the supplied bootstrap script when preparing a new environment.
 2. CI publishes a commit-tagged image. `bin/deploy-local.sh sha-<40-character-commit>` accepts only that tag shape and pulls the image.

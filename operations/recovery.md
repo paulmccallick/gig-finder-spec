@@ -31,6 +31,11 @@ Stop application writers before manually replacing the database; the maintenance
 
 Backup serialization covers the application database. It does not back up every queue database, artifact, candidate file, credential, or log. Artifact recovery is a separate operator concern; do not describe database restore as complete runtime restoration. Startup can reconstruct managed candidate-document copies from database content, but does not recreate every external artifact.
 
+The default macOS backup directory is on the same host volume as the live
+state. Those managed snapshots support database rollback but do not protect
+against Mac or disk loss. An independent backup must cover the full persistent
+state and configuration; preserve logs separately when their history matters.
+
 Backup acceptance requires intrinsic SQLite integrity and no foreign-key violations. Other validation issues may still be present in the report. The `ensureDailyBackup` helper supports age/retention handling, but no periodic invocation was found in the running application. No RPO/RTO is asserted.
 
 ## Evidence
