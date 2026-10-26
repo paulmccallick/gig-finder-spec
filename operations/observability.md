@@ -25,6 +25,12 @@ The per-user macOS production host defaults file logs to
 the lifetime of a retained container; replacing a container can remove that
 copy, so archive it first when preserving history.
 
+Scout response bodies are logged only in bounded, sanitized form by default.
+Set `GIG_FINDER_SCOUT_LOG_FULL_RESPONSES=true` for a controlled diagnostic run
+to include the complete sanitized response body; disable it immediately after
+capturing evidence because response logs may contain sensitive career-site
+content and can grow rapidly.
+
 Startup logs report address, revision, active log path, level, and devtools diagnostics. Scout runtimes emit processing events. Profile materialization failure is separately logged. AI SDK devtools are enabled only by the exact configured `true` value; Docker defaults them off.
 
 ## Privacy and Limits
