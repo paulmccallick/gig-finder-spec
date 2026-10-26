@@ -2,6 +2,8 @@
 
 This tree describes the inspected application. Load only the documents relevant to the task. Begin with [APPLICATION.md](APPLICATION.md) for purpose, actors, scope, and system context.
 
+For runtime, production, database, deployment, recovery, or troubleshooting tasks, read [deployment](operations/deployment.md), [observability](operations/observability.md), and [recovery](operations/recovery.md) first.
+
 ## Capabilities
 
 | When working on… | Start here |
