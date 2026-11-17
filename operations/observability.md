@@ -15,8 +15,9 @@ related:
 ## Health
 
 `GET /healthz` is a lightweight container liveness probe. It reports the
-application revision with database integrity marked `skipped`; it does not run
-database integrity or foreign-key validation. Run the explicit maintenance
+application revision with database integrity marked `skipped` and the
+foreign-key violation count set to `null`; it does not run database integrity
+or foreign-key validation. Run the explicit maintenance
 validation command for those checks. A healthy response is not a
 model-provider check, source-retrieval check, queue-progress assertion, or full
 artifact-integrity audit.

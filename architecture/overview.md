@@ -37,7 +37,7 @@ Dependency-cruiser rules prohibit core dependencies on application adapters and 
 
 ## Guarantees and Failure Modes
 
-See [persistence](persistence.md) for transaction scope. A conversation is not one transaction across tools. Scout asynchronously reconciles persisted work and queue state. `/healthz` checks database validity and reports the revision; it does not verify model-provider or employer-source availability.
+See [persistence](persistence.md) for transaction scope. A conversation is not one transaction across tools. Scout asynchronously reconciles persisted work and queue state. `/healthz` is a lightweight process-liveness probe that reports the revision without checking database validity, model-provider availability, or employer-source availability.
 
 ## Requirements and Decisions
 
