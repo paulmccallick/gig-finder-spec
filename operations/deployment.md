@@ -29,12 +29,13 @@ Normal startup requires an existing initialized/migrated database and a valid ca
 For the per-user macOS installation, the host defaults are
 `~/Library/Application Support/GigFinder/state` for persistent state,
 `~/Library/Application Support/GigFinder/backups` for database backups,
-`~/Library/Application Support/GigFinder/config.json` for configuration, and
-`~/Library/Logs/GigFinder` for file logs. The Docker image remains managed by
-OrbStack. Linux paths inside the container remain unchanged. The existing
-absolute-path environment overrides remain available for other hosts.
-The host directories must be created under the operator's account before
-deployment; `deploy-local.sh` refuses missing state, log, or backup roots.
+`~/Library/Application Support/GigFinder/config.json` for configuration.
+The container writes structured logs to stdout; Docker/OrbStack retains them
+using its configured logging driver. Linux paths inside the container remain
+unchanged. The existing absolute-path environment overrides remain available
+for other hosts. The host directories must be created under the operator's
+account before
+deployment; `deploy-local.sh` refuses missing state or backup roots.
 `bootstrap-production.sh` also requires the target state root to exist before
 it copies a new database. Provider credentials remain in the separate Codex
 directory mounted read-only.
@@ -42,7 +43,7 @@ directory mounted read-only.
 1. Bootstrap operator-owned state/configuration with the supplied bootstrap script when preparing a new environment.
 2. CI publishes a commit-tagged image. `bin/deploy-local.sh sha-<40-character-commit>` accepts only that tag shape and pulls the image.
 3. The deploy script checks external paths and credentials, stops the prior writer, creates a verified database backup, synchronizes source-managed inputs, migrates, and validates.
-4. The new container mounts persistent data/artifacts/logs/configuration and read-only provider credentials, publishes port 3001 on host loopback, and must report healthy at the requested revision.
+4. The new container mounts persistent data/artifacts/configuration and read-only provider credentials, publishes port 3001 on host loopback, and must report healthy at the requested revision.
 5. Failure paths attempt database/input rollback and restore the prior container; failed recovery leaves retained state for operator action.
 
 Deployment maintenance deliberately excludes the runtime artifact mount. State is not embedded in the application image. This describes checked-in automation, not the configuration or health of a running host.
