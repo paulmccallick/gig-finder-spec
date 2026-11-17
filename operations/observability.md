@@ -14,7 +14,12 @@ related:
 
 ## Health
 
-`GET /healthz` reports application revision, database integrity, and foreign-key violation count. Its status also reflects the full database validation result. A healthy response is not a model-provider check, source-retrieval check, queue-progress assertion, or full artifact-integrity audit.
+`GET /healthz` is a lightweight container liveness probe. It reports the
+application revision with database integrity marked `skipped`; it does not run
+database integrity or foreign-key validation. Run the explicit maintenance
+validation command for those checks. A healthy response is not a
+model-provider check, source-retrieval check, queue-progress assertion, or full
+artifact-integrity audit.
 
 ## Logging
 
