@@ -14,7 +14,7 @@ related:
 
 ## Runtime and Build
 
-The source package pins Bun 1.3.14. `bun run build` produces the React client and Bun server/maintenance bundles, copies migrations and PDF worker assets, and verifies production bundles. The Dockerfile uses a build stage and a non-root release stage containing `dist`; it runs `dist/server/server.js` and checks `/healthz` on port 3001.
+The source package, CI, and Docker build/release stages pin Bun 1.4.4. This runtime includes the upstream HTMLRewriter end-tag callback lifetime fix needed by Scout. `bun run build` produces the React client and Bun server/maintenance bundles, copies migrations and PDF worker assets, and verifies production bundles. The Dockerfile uses a build stage and a non-root release stage containing `dist`; it runs `dist/server/server.js` and checks `/healthz` on port 3001.
 
 CI runs application checks, migration checks, browser tests, and build. On main, it builds a smoke image, exercises it, then separately builds/publishes amd64/arm64 images under `sha-<commit>` and `latest`. The smoke image and published image are separate builds; no byte-identical promotion guarantee is inferred.
 
