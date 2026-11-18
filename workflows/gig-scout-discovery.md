@@ -64,3 +64,12 @@ No separate workflow latency or throughput target is established. [Architecture]
 ## Related Documentation
 
 [Capability](../capabilities/gig-scout.md) · [Domain](../domain/gig-scout.md) · [Interfaces](../interfaces/gig-scout.md) · [Processing workflow](gig-scout-review-processing.md)
+
+## JSON Source Coverage Repair
+
+For paginated JSON sources, keep the largest valid reported total within each search term. A later zero or missing total must not erase earlier evidence of remaining records. Count actual records received rather than assumed page capacity when deciding exhaustion. Replayed pages, missing records, and safety ceilings cannot report complete coverage.
+
+Direct diagnostics use unrestricted title/location filters as well as the normal profile. Validate sampled official job pages and reconciled pagination before treating a source as working. Confirmed access challenges or access-denied HTTP responses are classified separately as access-blocked and are not pursued with bypass attempts. Timeouts and extraction/configuration failures remain repairable failures, not access blocks.
+
+Implementation plan: repair shared pagination and provider request/extraction definitions; support declared total/offset pagination for custom JSON sources; retain informative failure codes; strengthen harness coverage checks; add synthetic regression tests and run direct live validation across affected templates. Keep all live source configurations and evidence private. HTML-source repair and production release without approval are out of scope.
+
