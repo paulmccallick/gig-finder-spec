@@ -32,6 +32,8 @@ Matching normalizes Unicode and whitespace, performs token-sequence title matchi
 
 The bounded HTTP implementation streams responses while enforcing declared and received byte limits, aborts timed-out requests, and defaults to redirect errors. Current runtime-policy defaults are 2,000 pages, 10,000 records, 2,500 requests, 6,000,000 listing bytes, 1,000,000 detail bytes, two source retries, and 1,800,000 milliseconds per source. These are configurable implementation limits, not throughput or latency commitments.
 
+Outbound Scout requests identify the application with a default `GigFinder/1.0` User-Agent. An explicitly supplied User-Agent takes precedence regardless of header-name casing. This applies to listing and description retrieval; timeout, byte, redirect, and access-block checks remain unchanged.
+
 ## Persistence and Processing Identity
 
 Company import fingerprints canonicalized active/source configuration content; names are excluded. Changed imports append configuration versions. Full-run creation is transactional and singleton-guarded for active full runs. Run-company work captures company name and configuration, and outbox records are created with run work. The run stores its resolved search profile and candidate-profile snapshot/cache key when available.
