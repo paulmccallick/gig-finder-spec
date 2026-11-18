@@ -77,3 +77,8 @@ until deliberately resolved.
 | `DEPLOY-ARCH-001` | [Deployment implementation](operations/deployment.md#evidence) | `app::package.json`; `app::Dockerfile`; `app::.github/workflows/ci.yml`; `app::bin/bootstrap-production.sh`; `app::bin/deploy-local.sh`; `app::src/data/context.ts`; `app::src/web/app.ts` |  | Source locations inspected; focused tests not recorded. |
 | `SEC-ARCH-001` | [Security implementation](requirements/security.md#evidence) | `app::src/web/request-handler.ts`; `app::src/web/app.ts`; `app::bin/deploy-local.sh`; `app::src/observability/logger.ts`; `app::src/agent/system-prompt.ts`; `app::.agents/skills/coding-guide/SKILL.md` |  | Source locations inspected; focused tests not recorded. |
 | `REL-ARCH-001` | [Reliability implementation](requirements/reliability.md#evidence-and-implementation) | `app::src/core/changes.ts`; `app::src/data/maintenance.ts` | `app::src/data/test/maintenance-entrypoint.test.ts` | Source and test locations inspected; tests not-run for this documentation change. |
+
+## JSON source coverage verification
+
+- `app::src/core/scout/engine/test/source-coverage.test.ts`: retained totals, actual page counts, custom JSON envelopes/offsets, ADP offsets, access blocks, Oracle totals, and Phenom URLs.
+- `app::src/operations/test/scout-harness.test.ts`: pagination reconciliation in direct reports.

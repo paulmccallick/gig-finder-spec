@@ -26,7 +26,7 @@ Web / import API → company catalog and run service → company outbox
 
 ## Source Adapters and Data Flow
 
-The company scan validates the request, scans each active source, and applies the configured display company name to normalized results. Source adapters select JSON or HTML; JSON templates resolve versioned extraction, request, pagination, and detail-description definitions from the checked-in catalog. Specialized session request hooks exist for providers such as ADP and Avature. Source attempts preserve pagination/record validation, filter decisions, and diagnostics.
+The company scan validates the request, scans each active source, and applies the configured display company name to normalized results. Source adapters select JSON or HTML; JSON templates resolve versioned extraction, request, pagination, and detail-description definitions from the checked-in catalog. Specialized session request hooks exist for providers such as ADP and Avature. Source attempts preserve pagination/record validation, filter decisions, and diagnostics. JSON pagination retains the highest reported total within a search term and reconciles actual received counts, including when a provider resets its total or returns fewer records than the requested page size. An access-denied HTTP response or explicit WAF challenge records `access_blocked` without retrying; generic timeouts and invalid source content remain distinct failures.
 
 Matching normalizes Unicode and whitespace, performs token-sequence title matching, and uses structured locations/work arrangements. Variants apply only to configured title terms. Default profile resolution substitutes built-in terms/locations for empty lists.
 
