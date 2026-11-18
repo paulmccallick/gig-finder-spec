@@ -54,6 +54,8 @@ Discovery persistence first prepares observations/results while company work sta
 
 Promotion saves exact reviewed observation/description and resolution intent before invoking the Gig service. It then creates or updates the Gig's managed job description through the managed-document service, verifies document ownership/content/provenance and replayed versions, and only then records promotion completion. Partial success can leave a Gig/document committed before the promotion is complete. Retry reconciles durable intent and change IDs. A completed-promotion retry reconstructs current complete evidence, uses the linked nonclosed Gig, and verifies replayed posting-owned fields.
 
+Scout promotion keeps source summaries within the managed-document 500-character limit. Summaries that fit retain their existing JSON representation; oversized summaries use compact JSON containing the Scout description ID and an explicit truncation marker. Complete Markdown and structured official-source provenance are preserved, including the full source URL. Oversized summary metadata alone must not block pursuit or promotion retry.
+
 Promoted-description backfill similarly uses the managed-document service and persists document projection status. Scout persistence does not directly mutate managed-document tables or tracked Gig availability; these boundaries have focused regression tests.
 
 ## Failure Modes and Constraints
