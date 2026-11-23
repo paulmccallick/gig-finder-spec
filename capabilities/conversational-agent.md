@@ -25,6 +25,7 @@ The candidate uses the browser workspace; the language model selects application
 
 - Start or reopen conversations; submit messages; watch text, reasoning, and tool activity; stop or retry responses. Initial load opens the most recently active conversation. Empty new conversations are not persisted.
 - Use a resizable side panel or full workspace. Conversation switching and new-conversation actions are disabled during an active response.
+- Render assistant replies as Markdown during streaming and when reopening history, using the same safe rendering as managed documents. Conversation and composer text use a readable 16px baseline in both side-panel and full-workspace layouts. Tables and code remain contained within the conversation.
 - Read gigs, people, relationships, tasks, interactions, and documents; perform the supported mutations listed in the [interface](../interfaces/api/conversational-agent.md).
 - Attach DOCX, Markdown, or PDF content for temporary use. Uploading alone does not register a managed document. The agent can read staging and separately create a document from it.
 - Choose GPT-5.6 Sol, Terra, or Luna. The saved application preference is read for new model requests; it does not replace an already running response.
