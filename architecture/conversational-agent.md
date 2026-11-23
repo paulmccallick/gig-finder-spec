@@ -60,9 +60,9 @@ Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATI
 
 ## Model Selection and Provider
 
-Catalog: Sol/Terra/Luna; built-in default: Sol. `CODEX_AGENT_MODEL` supplies the fallback when no preference exists. The global SQLite key is `agent_model`, not scoped to a conversation. Response and title independently read selection.
+Catalog: GPT-5.6 Sol/Terra/Luna and GPT-6-Astra Medium; built-in default: Sol. `CODEX_AGENT_MODEL` supplies the fallback when no preference exists. The global SQLite key is `agent_model`, not scoped to a conversation. Response and title independently read selection and both use streaming provider requests; title text is collected before saving.
 
-The provider reads `auth.json` from configured `CODEX_HOME` or the home `.codex` directory, extracts an access token and ChatGPT account ID (including JWT fallback), rejects tokens expiring within 60 seconds, and calls the Responses adapter at `https://chatgpt.com/backend-api/codex`. It implements no refresh. Requests submit `store: false`; response generation requests automatic reasoning summaries. These are submitted options, not independently verified provider retention guarantees.
+The provider reads `auth.json` from configured `CODEX_HOME` or the home `.codex` directory, extracts an access token and ChatGPT account ID (including JWT fallback), rejects tokens expiring within 60 seconds, and calls the Responses adapter at `https://chatgpt.com/backend-api/codex`. It implements no refresh. Requests submit `store: false`; response generation requests automatic reasoning summaries. GPT-6-Astra models receive medium reasoning and an explicit reasoning-model override through shared provider defaults, including title generation. Other model settings remain unchanged. These are submitted options, not independently verified provider retention guarantees.
 
 Implementation locations are recorded in [IMPLEMENTATION_MAP.md](../IMPLEMENTATION_MAP.md#agent-arch-001).
 
