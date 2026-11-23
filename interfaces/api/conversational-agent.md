@@ -22,7 +22,7 @@ related:
 | POST `/api/agent/documents` | Multipart `file` | 201 staging metadata; [conversion boundary](documents-profile.md#upload-conversion-boundary) |
 | DELETE `/api/agent/documents/:reference` | URL-encoded reference | 204 removed or 404 missing |
 | GET `/api/settings/agent-model` | None | `{agentModel}` |
-| PUT `/api/settings/agent-model` | `{modelId: "gpt-5.6-sol" | "gpt-5.6-terra" | "gpt-5.6-luna"}` | Saved `{agentModel}` |
+| PUT `/api/settings/agent-model` | `{modelId: "gpt-5.6-sol" | "gpt-5.6-terra" | "gpt-5.6-luna" | "gpt-6-astra"}` | Saved `{agentModel}` |
 
 Unsupported methods return 405. Conversation IDs match `[A-Za-z0-9_-]{1,100}`. Missing ID, malformed JSON, invalid message/history, and excessive user text produce 400. Request size rejection at 32,000 bytes checks declared Content-Length, not a separately counted body size. A user message requires an ID string and valid parts; nonempty text is not required by service validation. The adapter discards unsupported UI parts; saved attachment parts are hidden from returned UI messages.
 
